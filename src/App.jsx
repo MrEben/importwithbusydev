@@ -1,5 +1,10 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { lead as trackLead } from "./utils/metaPixel";
+import { initiateCheckout as trackInitiateCheckout, lead as trackLead } from "./utils/metaPixel";
+import MetaPixel from "./components/MetaPixel";
+
+const GOOGLE_SCRIPT_URL = import.meta.env.VITE_APP_TITLE;
+const PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID;
+const PIXEL_ENABLED = Boolean(PIXEL_ID);
 
 const trainingSections = {
   china: {
@@ -18,7 +23,7 @@ const trainingSections = {
   gadget: {
     title: "GADGET & ELECTRONICS IMPORTATION MASTERCLASS",
     points: [
-      "Source smartphones, laptops, accessories from certified distributors",
+      "Source smartphones, laptops, accessories from certified distributors from China, UK and the US",
       "Evaluate gadget specifications and authentication to avoid counterfeits",
       "Handle warranty, returns, and repair processes for electronics",
       "Navigate tech product compliance and import regulations",
@@ -66,8 +71,15 @@ const faqItems = [
 export default function App() {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
-  const [registrationDetails, setRegistrationDetails] = useState({ name: "", phone: "" });
+  const [isSending, setIsSending] = useState(false);
+  const [registrationDetails, setRegistrationDetails] = useState({ name: "", phone: "", training: "" });
   const testimonialCarouselRef = useRef(null);
+
+  useEffect(() => {
+    if (!PIXEL_ENABLED) {
+      console.warn("VITE_META_PIXEL_ID is not configured. Meta Pixel events will be skipped.");
+    }
+  }, []);
 
   function moveTestimonials(direction) {
     testimonialCarouselRef.current?.scrollBy({
@@ -124,25 +136,85 @@ export default function App() {
   }, []);
 
   function handleJoinClick() {
+    if (PIXEL_ENABLED) {
+      try {
+        trackInitiateCheckout({
+          name: "Import with BusyDev Masterclass",
+          price: 0,
+        });
+      } catch (error) {
+        console.error("InitiateCheckout tracking failed:", error);
+      }
+    }
+
     setIsRegistrationOpen(true);
   }
 
-  function handleRegistrationSubmit(event) {
+  async function handleRegistrationSubmit(event) {
     event.preventDefault();
 
-    try {
-      trackLead({ name: registrationDetails.name, phone: registrationDetails.phone, price: 0 });
-    } catch {
-      // ignore tracking failures
+    const name = registrationDetails.name.trim();
+    const phone = registrationDetails.phone.trim();
+    const training = registrationDetails.training.trim();
+    const phoneRegex = /^(?:\+233|233|0)(2[03456789]|5[0-9])[0-9]{7}$/;
+
+    if (!name || !phone || !training) {
+      alert("Please fill all fields");
+      return;
     }
 
+    if (!phoneRegex.test(phone)) {
+      alert("Please enter a valid Ghanaian phone number");
+      return;
+    }
+
+    setIsSending(true);
+
+    if (PIXEL_ENABLED) {
+      try {
+        trackLead({ name, phone, training, price: 0 });
+      } catch (error) {
+        console.error("Pixel tracking failed:", error);
+      }
+    }
+
+    const sendRegistrationInBackground = async () => {
+      if (!GOOGLE_SCRIPT_URL) {
+        console.error("Google Script URL is missing");
+        return;
+      }
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+          body: JSON.stringify({
+            secret: "IMPORTWITHBUSYDEV123",
+            name,
+            phone,
+            training,
+          }),
+        });
+
+        console.log("Registration sent to Google Sheets");
+      } catch (error) {
+        console.error("Registration submission failed:", error);
+      }
+    };
+
+    sendRegistrationInBackground();
     window.open("https://chat.whatsapp.com/CtgFUM4RyxIDFEFIcAHYGA", "_blank", "noopener,noreferrer");
     setIsRegistrationOpen(false);
-    setRegistrationDetails({ name: "", phone: "" });
+    setRegistrationDetails({ name: "", phone: "", training: "" });
+    setIsSending(false);
   }
 
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--text)]">
+      <MetaPixel id={PIXEL_ID} />
       {/* Navigation */}
       <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-slate-200/80 bg-white/90 px-6 py-4 backdrop-blur-xl text-slate-950 shadow-sm sm:px-10">
         <div className="text-lg font-bold uppercase tracking-wide">
@@ -153,7 +225,7 @@ export default function App() {
           <a href="#faq" className="text-slate-700 transition hover:text-slate-950">FAQ</a>
           <button 
             onClick={handleJoinClick}
-            className="rounded-sm cursor-pointer bg-orange-600 px-6 py-2 text-white font-semibold hover:bg-orange-700 transition bump-animation"
+            className="rounded-sm cursor-pointer bg-orange-600 px-6 py-2 text-white font-semibold hover:bg-orange-700 transition "
           >
             Join Free
           </button>
@@ -507,11 +579,29 @@ export default function App() {
                   className="w-full rounded-md border-2 border-slate-200 px-4 py-3 focus:border-orange-600 focus:outline-none"
                 />
               </div>
+              <div>
+                <label htmlFor="registration-training" className="mb-1 block text-sm font-semibold">
+                  Which training are you most interested in?
+                </label>
+                <select
+                  id="registration-training"
+                  value={registrationDetails.training}
+                  onChange={(event) => setRegistrationDetails({ ...registrationDetails, training: event.target.value })}
+                  required
+                  className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 focus:border-orange-600 focus:outline-none"
+                >
+                  <option value="" disabled>Select a training</option>
+                  <option value="China/Turkey/Dubai Import Training">China/Turkey/Dubai Import Training</option>
+                  <option value="Gadget Import Training">Gadget Import Training</option>
+                  <option value="Both">Both</option>
+                </select>
+              </div>
               <button
                 type="submit"
-                className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-3 font-bold text-white transition hover:bg-orange-700"
+                disabled={isSending}
+                className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-3 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Register For Free Training
+                {isSending ? "Submitting..." : "Register For Free Training"}
               </button>
             </form>
           </div>
