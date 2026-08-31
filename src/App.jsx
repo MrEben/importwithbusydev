@@ -216,7 +216,7 @@ export default function App() {
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--text)]">
       <MetaPixel id={PIXEL_ID} />
       {/* Navigation */}
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-slate-200/80 bg-white/90 px-6 py-4 backdrop-blur-xl text-slate-950 shadow-sm sm:px-10">
+      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-slate-200/80 bg-white/90 px-3 py-3 backdrop-blur-xl text-slate-950 shadow-sm sm:px-10">
         <div className="text-lg font-bold uppercase tracking-wide">
           <span className="text-orange-600">Import</span> with BusyDev
         </div>
@@ -285,26 +285,26 @@ export default function App() {
 
             <div className="grid md:grid-cols-2 gap-12">
               {/* China Importation */}
-              <div>
-                <h3 className="text-2xl lg:text-3xl font-bold text-slate-950 mb-8 uppercase tracking-wide">{trainingSections.china.title}</h3>
+              <div className="min-w-0">
+                <h3 className="text-2xl lg:text-3xl font-bold text-slate-950 mb-8 uppercase tracking-wide break-words">{trainingSections.china.title}</h3>
                 <ul className="space-y-3">
                   {trainingSections.china.points.map((point, idx) => (
-                    <li key={idx} className="flex gap-3 text-slate-700 leading-relaxed">
-                      <span className="text-orange-600 font-bold flex-shrink-0">•</span>
-                      <span>{point}</span>
+                    <li key={idx} className="flex items-start gap-3 text-slate-700 leading-relaxed break-words">
+                      <span className="text-orange-600 font-bold flex-shrink-0 pt-1">•</span>
+                      <span className="min-w-0 break-words">{point}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               {/* Gadget Importation */}
-              <div>
-                <h3 className="text-2xl lg:text-3xl font-bold text-slate-950 mb-8 uppercase tracking-wide">{trainingSections.gadget.title}</h3>
+              <div className="min-w-0">
+                <h3 className="text-2xl lg:text-3xl font-bold text-slate-950 mb-8 uppercase tracking-wide break-words">{trainingSections.gadget.title}</h3>
                 <ul className="space-y-3">
                   {trainingSections.gadget.points.map((point, idx) => (
-                    <li key={idx} className="flex gap-3 text-slate-700 leading-relaxed">
-                      <span className="text-orange-600 font-bold flex-shrink-0">•</span>
-                      <span>{point}</span>
+                    <li key={idx} className="flex items-start gap-3 text-slate-700 leading-relaxed break-words">
+                      <span className="text-orange-600 font-bold flex-shrink-0 pt-1">•</span>
+                      <span className="min-w-0 break-words">{point}</span>
                     </li>
                   ))}
                 </ul>
