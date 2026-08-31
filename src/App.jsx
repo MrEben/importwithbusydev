@@ -221,8 +221,8 @@ export default function App() {
           <span className="text-orange-600">Import</span> with BusyDev
         </div>
         <nav className="flex flex-wrap items-center gap-6 text-sm font-semibold">
-          <a href="#learn" className="text-slate-700 transition hover:text-slate-950">What You'll Learn</a>
-          <a href="#faq" className="text-slate-700 transition hover:text-slate-950">FAQ</a>
+          {/* <a href="#learn" className="text-slate-700 transition hover:text-slate-950">What You'll Learn</a> */}
+          {/* <a href="#faq" className="text-slate-700 transition hover:text-slate-950">FAQ</a> */}
           <button 
             onClick={handleJoinClick}
             className="rounded-sm cursor-pointer bg-orange-600 px-6 py-2 text-white font-semibold hover:bg-orange-700 transition "
