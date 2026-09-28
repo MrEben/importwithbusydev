@@ -591,8 +591,8 @@ export default function App() {
                   className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 focus:border-orange-600 focus:outline-none"
                 >
                   <option value="" disabled>Select a training</option>
-                  <option value="China/Turkey/Dubai Import Training">China/Turkey/Dubai Import Training</option>
-                  <option value="Gadget Import Training">Gadget Import Training</option>
+                  <option value="China Import Training">China Import Training</option>
+                  <option value="Turkey/Dubai/Bangladesh Import Training">Turkey/Dubai/Bangladesh Import Training</option>
                   <option value="Both">Both</option>
                 </select>
               </div>
