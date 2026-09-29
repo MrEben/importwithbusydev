@@ -7,8 +7,8 @@ const pixelId = import.meta.env.VITE_META_PIXEL_ID;
 const inclusions = [
   { number: "01", title: "CORE IMPORT COURSE", text: "20+ guided lessons covering product research, supplier checks, shipping, customs, and selling.", value: "Start-to-finish guidance" },
   { number: "02", title: "SUPPLIER CONTACTS", text: "Find suppliers across popular product categories and learn how to evaluate them before ordering.", value: "200+ supplier contacts" },
-  { number: "03", title: "SHIPPING KNOW-HOW", text: "Understand shipping options, CBM calculations, landed costs, customs, and delivery timelines.", value: "Plan with real costs" },
-  { number: "04", title: "GADGET SOURCING", text: "Compare specifications, check authenticity, and source electronics with more confidence.", value: "Practical product checks" },
+  { number: "03", title: "SHIPPING KNOW-HOW", text: "Understand shipping options, CBM calculations, customs, and delivery timelines.", value: "Plan with real costs" },
+  { number: "04", title: "ACCESS TO RESOURCES", text: "Get practical guides designed to help you understand the key steps involved in starting and running an importation business.", value: "Essential Resources" },
   { number: "05", title: "LEARNING COMMUNITY", text: "Get support from fellow learners and mentors as you put your sourcing plans into action.", value: "Learn with a community" },
   { number: "06", title: "MULTI-COUNTRY SOURCING", text: "Apply the core process to suppliers in China, Turkey, Dubai, and Bangladesh.", value: "More sourcing options" },
 ];
@@ -29,8 +29,8 @@ const faqs = [
   { question: "WHAT SKILL LEVEL DO I NEED BEFORE TAKING THIS COURSE?", answer: "You can start as a complete beginner. The training explains each step, from choosing products to arranging delivery." },
   { question: "WILL THIS COURSE WORK FOR BUSINESSES IN GHANA?", answer: "Yes. The course covers practical sourcing, shipping, cost planning, and selling considerations for learners building a business in Ghana." },
   { question: "DO I NEED A LAPTOP TO TAKE THIS COURSE?", answer: "No. You can follow the training on a smartphone with internet access. A laptop can be useful when comparing suppliers and keeping records." },
-  { question: "WHAT WILL I BE ABLE TO DO AFTER COMPLETING THE COURSE?", answer: "You'll have a clear process for researching products, checking suppliers, estimating landed costs, and planning an import order." },
-  { question: "IS THIS A ONE-TIME PAYMENT OR A SUBSCRIPTION?", answer: "This training is currently free to join. Register to receive the training details and access information." },
+  { question: "WHAT WILL I BE ABLE TO DO AFTER COMPLETING THE COURSE?", answer: "You'll have a clear process for researching products, checking suppliers, estimating shipping fees, and planning an import order." },
+  { question: "IS THIS A ONE-TIME PAYMENT OR A SUBSCRIPTION?", answer: "This training comes by a one-time payment. You pay once and get all the items listed forever." },
 ];
 
 function CourseRegistration({ onClose }) {
@@ -123,7 +123,7 @@ export default function CoursePage() {
           <div className="course-hero__content">
             <p className="course-eyebrow">IMPORT WITH BUSYDEV</p>
             <h1>THE COMPLETE IMPORTATION<br className="course-desktop-break" /> MASTERCLASS</h1>
-            <p className="course-hero__subtitle">Learn how to source, ship, and sell more of your products.</p>
+            <p className="course-hero__subtitle">Learn how to source, ship, and sell products from China, Turkey, Dubai, etc</p>
             <div className="course-video">
               <iframe
                 src="https://www.youtube-nocookie.com/embed/M7lc1UVf-VE"
@@ -140,13 +140,13 @@ export default function CoursePage() {
         </section>
 
         <section className="course-about" aria-labelledby="course-about-title">
-          <img className="course-about__image" src="https://images.unsplash.com/photo-1494412519320-aa613dfb7738?auto=format&fit=crop&w=900&q=85" alt="Shipping containers ready for international transport" loading="lazy" />
+          <img className="course-about__image" src="https://i.postimg.cc/C1gxwwtG/gpt-image-2-5-flare-b-mnake-an-exteneded-i.jpg" alt="about me" loading="lazy" />
           <div className="course-about__copy">
-            <p className="course-eyebrow course-eyebrow--dark">IMPORT WITH BUSYDEV</p>
-            <h2 id="course-about-title">ABOUT THE COURSE</h2>
-            <h3>Make your next import feel more manageable</h3>
-            <p>Supplier messages, shipping terms, and unfamiliar costs can make importing feel complicated. This training brings the process together in one place, with clear lessons to help you make informed decisions at each step.</p>
-            <p>Explore sourcing from China, Turkey, Dubai, and Bangladesh, learn how to check suppliers, and build a realistic plan for bringing products to your customers.</p>
+            {/* <p className="course-eyebrow course-eyebrow--dark">IMPORT WITH BUSYDEV</p> */}
+            <h2 id="course-about-title">ABOUT ME</h2>
+            <h3>Hi, I'm Ebenezer Odame</h3>
+            <p>I've spent the last 5 years importing products and learning the real lessons that come with sourcing, negotiating, shipping, and managing costs across different markets.</p>
+            <p>From China and Turkey to Dubai and Bangladesh, I've worked through the same challenges many new importers face — supplier communication, product quality checks, shipping delays, and profit planning.This training brings those lessons together in a practical way so you can make smarter decisions from the start.</p> <h3>AFTER GOING THROUGH THIS TRAINING, YOU WILL BE ABLE TO IMPORT PRODUCTS BY YOURSELF WITHOUT ANYONE'S HELP</h3>
           </div>
         </section>
 
