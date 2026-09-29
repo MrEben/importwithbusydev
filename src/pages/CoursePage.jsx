@@ -5,9 +5,9 @@ import MetaPixel from "../components/MetaPixel";
 const pixelId = import.meta.env.VITE_META_PIXEL_ID;
 
 const inclusions = [
-  { number: "01", title: "CORE IMPORT COURSE", text: "20+ guided lessons covering product research, supplier checks, shipping, customs, and selling.", value: "Start-to-finish guidance" },
+  { number: "01", title: "CORE IMPORT COURSE", text: "20+ guided lessons covering product research, supplier communication, shipping, and selling.", value: "Start-to-finish guidance" },
   { number: "02", title: "SUPPLIER CONTACTS", text: "Find suppliers across popular product categories and learn how to evaluate them before ordering.", value: "200+ supplier contacts" },
-  { number: "03", title: "SHIPPING KNOW-HOW", text: "Understand shipping options, CBM calculations, customs, and delivery timelines.", value: "Plan with real costs" },
+  { number: "03", title: "SHIPPING KNOW-HOW", text: "Understand shipping methods, CBM calculations, etc.", value: "Plan with real costs in mind" },
   { number: "04", title: "ACCESS TO RESOURCES", text: "Get practical guides designed to help you understand the key steps involved in starting and running an importation business.", value: "Essential Resources" },
   { number: "05", title: "LEARNING COMMUNITY", text: "Get support from fellow learners and mentors as you put your sourcing plans into action.", value: "Learn with a community" },
   { number: "06", title: "MULTI-COUNTRY SOURCING", text: "Apply the core process to suppliers in China, Turkey, Dubai, and Bangladesh.", value: "More sourcing options" },
@@ -126,7 +126,7 @@ export default function CoursePage() {
             <p className="course-hero__subtitle">Learn how to source, ship, and sell products from China, Turkey, Dubai, etc</p>
             <div className="course-video">
               <iframe
-                src="https://www.youtube-nocookie.com/embed/M7lc1UVf-VE"
+                src="https://www.youtube-nocookie.com/embed/WMR2w8ZK-UI"
                 title="Import with BusyDev course preview"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
@@ -135,7 +135,7 @@ export default function CoursePage() {
             </div>
           </div>
           <div className="course-hero__action">
-            <button type="button" className="course-button" onClick={openRegistration}>JOIN NOW</button>
+            <button type="button" className="course-button" onClick={openRegistration}>JOIN THE TRAINING</button>
           </div>
         </section>
 
@@ -145,8 +145,8 @@ export default function CoursePage() {
             {/* <p className="course-eyebrow course-eyebrow--dark">IMPORT WITH BUSYDEV</p> */}
             <h2 id="course-about-title">ABOUT ME</h2>
             <h3>Hi, I'm Ebenezer Odame</h3>
-            <p>I've spent the last 5 years importing products and learning the real lessons that come with sourcing, negotiating, shipping, and managing costs across different markets.</p>
-            <p>From China and Turkey to Dubai and Bangladesh, I've worked through the same challenges many new importers face — supplier communication, product quality checks, shipping delays, and profit planning.This training brings those lessons together in a practical way so you can make smarter decisions from the start.</p> <h3>AFTER GOING THROUGH THIS TRAINING, YOU WILL BE ABLE TO IMPORT PRODUCTS BY YOURSELF WITHOUT ANYONE'S HELP</h3>
+            <p>I've spent the last 5 years in the importation business. I've seen everything when it comes to sourcing, negotiating, shipping, and selling of goods.</p>
+            <p>From China and Turkey to Dubai and Bangladesh, I've worked through the same challenges many new importers face — finding the right suppliers, shipping issues, and many more.This training brings those lessons together in a practical way so you can make smarter decisions from the start.</p> <h3>AFTER GOING THROUGH THIS TRAINING, YOU WILL BE ABLE TO IMPORT PRODUCTS BY YOURSELF WITHOUT ANYONE'S HELP</h3>
           </div>
         </section>
 
@@ -170,7 +170,7 @@ export default function CoursePage() {
 
         <section className="course-benefits" aria-labelledby="course-benefits-title">
           <div className="course-section-heading">
-            <p className="course-eyebrow course-eyebrow--dark">OVER 500 STUDENTS</p>
+            <p className="course-eyebrow course-eyebrow--dark">OVER 150 STUDENTS TRAINED</p>
             <h2 id="course-benefits-title">WHY PEOPLE LOVE THIS TRAINING</h2>
           </div>
           <div className="course-benefits__grid">

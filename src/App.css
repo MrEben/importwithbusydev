@@ -715,7 +715,7 @@
   }
 
   .course-video {
-    width: min(82%, 360px);
+    /* width: min(82%, 360px); */
     border-radius: 9px;
   }
 
