@@ -219,13 +219,15 @@
 }
 
 .course-page {
-  --course-ink: #121821;
+  --course-ink: #111720;
   --course-navy: #111720;
   --course-red: #bf0000;
   --course-purple: #6926e8;
+  --course-white: #ffffff;
+  --course-light: #f5f5f5;
   min-height: 100vh;
   color: var(--course-ink);
-  background: #fff;
+  background: var(--course-white);
   font-family: "Montserrat", "Avenir Next", sans-serif;
 }
 
@@ -246,7 +248,7 @@
   isolation: isolate;
   overflow: hidden;
   padding: 34px 24px 0;
-  background: #fff;
+  background: var(--course-white);
   text-align: center;
 }
 
@@ -468,7 +470,7 @@
 .course-benefit {
   min-height: 220px;
   padding: 16px 24px 26px;
-  background: #f5f5f5;
+  background: var(--course-light);
   text-align: center;
 }
 
@@ -499,7 +501,7 @@
 
 .course-reviews {
   padding: 74px 24px 86px;
-  background: #f2f2f2;
+  background: var(--course-light);
 }
 
 .course-heading-rule {
@@ -799,4 +801,187 @@
     scroll-behavior: auto !important;
     transition-duration: .01ms !important;
   }
+}
+
+.checkout-page {
+  --checkout-ink: #17120d;
+  --checkout-muted: #75695d;
+  --checkout-orange: #e66b17;
+  --checkout-orange-dark: #b84d0b;
+  --checkout-paper: #fffaf1;
+  --checkout-line: rgba(42, 32, 22, 0.14);
+  min-height: 100vh;
+  color: var(--checkout-ink);
+  background: var(--checkout-paper);
+  font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+}
+
+.checkout-page *,
+.checkout-page *::before,
+.checkout-page *::after { box-sizing: border-box; }
+
+.checkout-page button,
+.checkout-page input,
+.checkout-page select { font: inherit; }
+
+.checkout-nav {
+  display: flex;
+  max-width: 1180px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--checkout-line);
+}
+
+.checkout-brand,
+.checkout-back,
+.checkout-footer a { color: inherit; text-decoration: none; }
+.checkout-brand { font-size: 15px; font-weight: 900; letter-spacing: .08em; }
+.checkout-brand span { color: var(--checkout-orange); }
+.checkout-back { color: var(--checkout-muted); font-size: 13px; font-weight: 700; }
+.checkout-back:hover,
+.checkout-footer a:hover { color: var(--checkout-orange-dark); }
+
+.checkout-hero {
+  display: grid;
+  max-width: 1180px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+  gap: 70px;
+  margin: 0 auto;
+  padding: 90px 28px 84px;
+  background: radial-gradient(circle at 8% 15%, rgba(230, 107, 23, .15), transparent 25rem);
+}
+
+.checkout-kicker { margin: 0 0 18px; color: var(--checkout-orange-dark); font-size: 11px; font-weight: 900; letter-spacing: .2em; }
+.checkout-hero h1 { max-width: 700px; margin: 0; font-family: Georgia, serif; font-size: clamp(48px, 7vw, 84px); font-weight: 500; line-height: .98; letter-spacing: -.03em; }
+.checkout-hero__intro { max-width: 620px; margin: 28px 0 30px; color: var(--checkout-muted); font-size: 19px; line-height: 1.65; }
+.checkout-hero__meta { display: flex; flex-wrap: wrap; gap: 10px 25px; color: var(--checkout-ink); font-size: 13px; font-weight: 800; }
+.checkout-hero__meta span::before { margin-right: 8px; color: var(--checkout-orange); content: "•"; }
+
+.checkout-offer { align-self: start; margin-top: 15px; border: 1px solid var(--checkout-line); border-top: 5px solid var(--checkout-orange); padding: 32px; background: #fff; box-shadow: 16px 18px 0 rgba(230, 107, 23, .11); }
+.checkout-offer__price { margin: 2px 0 6px; font-family: Georgia, serif; font-size: 58px; line-height: 1; }
+.checkout-offer > p:not(.checkout-kicker) { margin: 0 0 24px; color: var(--checkout-muted); font-size: 14px; line-height: 1.6; }
+.checkout-button { display: inline-flex; width: 100%; min-height: 52px; align-items: center; justify-content: space-between; border: 0; padding: 0 20px; color: #fff; background: var(--checkout-orange); cursor: pointer; font-size: 12px; font-weight: 900; letter-spacing: .08em; transition: background-color 160ms ease, transform 160ms ease; }
+.checkout-button:hover { background: var(--checkout-orange-dark); transform: translateY(-2px); }
+.checkout-button:disabled { cursor: wait; opacity: .6; transform: none; }
+.checkout-offer ul { display: grid; gap: 14px; margin: 28px 0 0; padding: 0; list-style: none; }
+.checkout-offer li { display: flex; gap: 10px; color: var(--checkout-muted); font-size: 13px; line-height: 1.4; }
+.checkout-offer li span { color: var(--checkout-orange); font-weight: 900; }
+
+.checkout-overview { display: grid; max-width: 1124px; grid-template-columns: 1fr 1fr; gap: 80px; margin: 0 auto; border-top: 1px solid var(--checkout-line); padding: 70px 0; }
+.checkout-overview h2, .checkout-section-heading h2, .checkout-final h2 { max-width: 520px; margin: 0; font-family: Georgia, serif; font-size: clamp(32px, 4vw, 52px); font-weight: 500; line-height: 1.05; }
+.checkout-overview > p { align-self: end; margin: 0; color: var(--checkout-muted); font-size: 16px; line-height: 1.8; }
+
+.checkout-curriculum { padding: 80px max(28px, calc((100% - 1124px) / 2)) 100px; color: #fff9ef; background: #201b16; }
+.checkout-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 34px; }
+.checkout-section-heading .checkout-kicker { color: #f6a56b; }
+.checkout-section-heading h2 { color: #fff9ef; }
+.checkout-section-heading > span { color: #c9b8a7; font-size: 13px; }
+.checkout-modules { border-top: 1px solid rgba(255,255,255,.25); }
+.checkout-module { border-bottom: 1px solid rgba(255,255,255,.25); }
+.checkout-module__trigger { display: grid; width: 100%; grid-template-columns: 70px 1fr 30px; align-items: center; gap: 18px; border: 0; padding: 24px 0; color: inherit; background: transparent; cursor: pointer; text-align: left; }
+.checkout-module__number { color: #f6a56b; font-family: Georgia, serif; font-size: 18px; }
+.checkout-module__title { font-size: 18px; font-weight: 800; }
+.checkout-module__title small { display: block; margin-top: 7px; color: #bcae9e; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.checkout-module__arrow { color: #f6a56b; font-size: 24px; transition: transform 160ms ease; }
+.checkout-module.is-open .checkout-module__arrow { transform: rotate(180deg); }
+.checkout-lessons { display: grid; gap: 0; margin: 0 0 18px 88px; padding: 0; list-style: none; }
+.checkout-lessons li { display: grid; grid-template-columns: 38px 1fr auto; gap: 12px; align-items: center; border-top: 1px solid rgba(255,255,255,.11); padding: 15px 0; color: #ded3c7; font-size: 14px; }
+.checkout-lesson__icon { color: #f6a56b; font-size: 11px; font-weight: 900; }
+.checkout-lesson__duration { color: #948474; font-size: 11px; }
+
+.checkout-final { padding: 100px 28px; text-align: center; background: #f1e4d4; }
+.checkout-final h2 { max-width: 650px; margin: 0 auto 30px; }
+.checkout-final .checkout-button { width: auto; min-width: 260px; }
+.checkout-footer { display: flex; max-width: 1180px; justify-content: space-between; margin: 0 auto; padding: 26px 28px; color: var(--checkout-muted); font-size: 12px; }
+
+.checkout-modal-backdrop { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: 22px; background: rgba(23, 18, 13, .72); }
+.checkout-modal { position: relative; width: min(100%, 460px); padding: 36px; background: #fffaf1; box-shadow: 0 28px 80px rgba(0,0,0,.3); }
+.checkout-modal__close { position: absolute; top: 12px; right: 16px; border: 0; color: var(--checkout-muted); background: transparent; cursor: pointer; font-size: 28px; }
+.checkout-modal h2 { margin: 0; font-family: Georgia, serif; font-size: 34px; font-weight: 500; }
+.checkout-modal > p:not(.checkout-kicker) { margin: 10px 0 24px; color: var(--checkout-muted); font-size: 14px; line-height: 1.6; }
+.checkout-modal form { display: grid; gap: 16px; }
+.checkout-modal label { display: grid; gap: 7px; font-size: 12px; font-weight: 900; }
+.checkout-modal input, .checkout-modal select { width: 100%; min-height: 46px; border: 1px solid var(--checkout-line); border-radius: 0; padding: 10px 12px; color: var(--checkout-ink); background: #fff; }
+.checkout-modal input:focus, .checkout-modal select:focus { outline: 2px solid rgba(230, 107, 23, .35); border-color: var(--checkout-orange); }
+
+@media (max-width: 760px) {
+  .checkout-nav { padding: 18px 20px; }
+  .checkout-hero { grid-template-columns: 1fr; gap: 45px; padding: 64px 20px 60px; }
+  .checkout-hero h1 { font-size: clamp(46px, 15vw, 70px); }
+  .checkout-hero__intro { font-size: 17px; }
+  .checkout-overview { grid-template-columns: 1fr; gap: 24px; margin: 0 20px; padding: 55px 0; }
+  .checkout-curriculum { padding: 60px 20px 70px; }
+  .checkout-section-heading { align-items: start; flex-direction: column; gap: 16px; }
+  .checkout-module__trigger { grid-template-columns: 42px 1fr 20px; gap: 10px; }
+  .checkout-module__title { font-size: 15px; line-height: 1.35; }
+  .checkout-lessons { margin-left: 52px; }
+  .checkout-lessons li { grid-template-columns: 28px 1fr; }
+  .checkout-lesson__duration { display: none; }
+  .checkout-footer { padding: 24px 20px; }
+  .checkout-modal { padding: 32px 22px 24px; }
+}
+
+/* Course-detail presentation for the checkout route */
+.checkout-menu { display: none; border: 0; color: var(--checkout-orange); background: transparent; cursor: pointer; font-size: 22px; }
+.checkout-course-column { min-width: 0; }
+.checkout-rating { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; color: var(--checkout-muted); font-size: 15px; }
+.checkout-rating strong { color: var(--checkout-ink); }
+.checkout-stars { color: #e99000; font-size: 21px; letter-spacing: 2px; line-height: 1; }
+.checkout-stars.is-muted { color: #d7dbe1; }
+.checkout-hero h1 { max-width: 700px; font-size: clamp(36px, 5vw, 58px); line-height: 1.08; }
+.checkout-course-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin: 22px 0 28px; color: var(--checkout-muted); font-size: 14px; }
+.checkout-course-meta button { border: 0; color: inherit; background: transparent; cursor: pointer; font-size: inherit; }
+.checkout-course-meta button:hover { color: var(--checkout-orange-dark); }
+.checkout-video { position: relative; display: flex; height: 292px; align-items: center; justify-content: center; overflow: hidden; background: linear-gradient(135deg, rgba(21, 25, 31, .2), rgba(13, 19, 25, .9)), url("https://i.postimg.cc/C1gxwwtG/gpt-image-2-5-flare-b-mnake-an-exteneded-i.jpg") center / cover; }
+.checkout-video__play { display: grid; width: 66px; height: 66px; place-items: center; border-radius: 50%; padding-left: 4px; color: #fff; background: #149de2; font-size: 26px; box-shadow: 0 8px 22px rgba(0,0,0,.25); }
+.checkout-video__bar { position: absolute; right: 18px; bottom: 14px; left: 18px; display: flex; align-items: center; gap: 10px; color: #fff; font-size: 12px; }
+.checkout-video__bar::before { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.7); content: ""; }
+.checkout-video__bar i { position: absolute; left: 0; width: 34%; height: 4px; background: #18a9df; }
+.checkout-tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--checkout-line); margin-top: 28px; }
+.checkout-tabs button { border: 0; border-bottom: 3px solid transparent; padding: 0 4px 14px; color: var(--checkout-muted); background: transparent; cursor: pointer; font-size: 15px; }
+.checkout-tabs button.is-active { border-color: var(--checkout-orange); color: var(--checkout-orange-dark); font-weight: 800; }
+.checkout-hero { grid-template-columns: minmax(0, 1fr) 330px; gap: 50px; padding-top: 54px; padding-bottom: 52px; }
+.checkout-offer { margin-top: 128px; padding: 28px; box-shadow: none; }
+.checkout-offer__price { font-size: 38px; font-weight: 800; }
+.checkout-about { max-width: 1124px; margin: 0 auto; padding: 48px 0 66px; }
+.checkout-about h2 { max-width: 580px; margin: 0 0 18px; font-family: Georgia, serif; font-size: clamp(34px, 4vw, 52px); font-weight: 500; line-height: 1.08; }
+.checkout-about p:not(.checkout-kicker) { max-width: 690px; margin: 0 0 16px; color: var(--checkout-muted); font-size: 16px; line-height: 1.75; }
+.checkout-about .checkout-about__lead { color: var(--checkout-ink); font-size: 19px; }
+.checkout-reviews { max-width: 1124px; margin: 0 auto; padding: 52px 0 90px; }
+.checkout-reviews h2 { margin: 0 0 26px; font-size: 22px; }
+.checkout-review-summary { display: grid; max-width: 620px; grid-template-columns: 1fr; justify-items: center; border: 1px solid var(--checkout-line); padding: 30px; text-align: center; }
+.checkout-review-summary > strong { font-size: 66px; line-height: 1; }
+.checkout-review-summary > span { margin: 10px 0; color: var(--checkout-muted); font-size: 13px; }
+.checkout-rating-bars { width: 100%; margin-top: 18px; }
+.checkout-rating-bars > div { display: grid; grid-template-columns: 20px 18px 1fr 80px; gap: 8px; align-items: center; margin: 9px 0; color: var(--checkout-muted); font-size: 12px; text-align: left; }
+.checkout-rating-bars > div > span { color: var(--checkout-orange); font-size: 17px; }
+.checkout-rating-bars i { display: block; height: 6px; overflow: hidden; border-radius: 4px; background: #e1e4e8; }
+.checkout-rating-bars em { display: block; height: 100%; background: #e99000; }
+.checkout-rating-bars small { font-size: 11px; }
+.checkout-review-list { display: grid; max-width: 620px; gap: 0; margin-top: 28px; border: 1px solid var(--checkout-line); }
+.checkout-review-list article { display: grid; grid-template-columns: 48px 1fr; gap: 5px 12px; border-bottom: 1px solid var(--checkout-line); padding: 24px 20px; }
+.checkout-review-list article:last-child { border-bottom: 0; }
+.checkout-review-avatar { display: grid; width: 42px; height: 42px; grid-row: span 4; place-items: center; border-radius: 50%; color: #fff; background: var(--checkout-orange); font-size: 12px; font-weight: 800; }
+.checkout-review-list article strong { font-size: 13px; }
+.checkout-review-list article small { color: var(--checkout-muted); font-size: 11px; }
+.checkout-review-list .checkout-stars { font-size: 15px; }
+.checkout-review-list article p { margin: 5px 0 0; color: var(--checkout-muted); font-size: 13px; line-height: 1.6; }
+
+@media (max-width: 760px) {
+  .checkout-nav { padding: 16px 20px; }
+  .checkout-back { display: none; }
+  .checkout-menu { display: block; }
+  .checkout-hero { display: block; padding: 30px 20px 28px; }
+  .checkout-rating { margin-bottom: 20px; }
+  .checkout-rating .checkout-stars { font-size: 18px; }
+  .checkout-hero h1 { font-size: 34px; }
+  .checkout-course-meta { gap: 14px; margin-top: 16px; }
+  .checkout-video { height: 220px; }
+  .checkout-offer { margin-top: 28px; }
+  .checkout-about, .checkout-reviews { padding: 38px 20px 55px; }
+  .checkout-about h2 { font-size: 36px; }
+  .checkout-curriculum { padding: 48px 20px 60px; }
+  .checkout-section-heading h2 { font-size: 36px; }
 }

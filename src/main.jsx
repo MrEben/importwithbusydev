@@ -4,10 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import './App.css'
 import App from './App.jsx'
-import ProjectPage from './pages/ProjectPage.jsx'
+import CheckoutPage from './pages/CheckoutPage.jsx'
 import CoursePage from './pages/CoursePage.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
-import { workProjects } from './data/workProjects'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,8 +14,8 @@ createRoot(document.getElementById('root')).render(
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/course" element={<CoursePage />} />
-        <Route path="/project/:slug" element={<ProjectPage projects={workProjects} />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
