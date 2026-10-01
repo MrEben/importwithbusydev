@@ -7,9 +7,9 @@ const COURSE = {
   category: "Importation Business",
   rating: 5.0,
   price: "GHC420.00 cedis",
-  level: "All Levels",
-  enrolled: 150,
-  updated: "April 5, 2026",
+  level: "Beginner Friendly",
+  enrolled: 220,
+  updated: "Sept 12, 2026",
   author: "Ebenezer Odame",
   videoSrc: "", // put your video URL here
   poster: "",   // put your poster image URL here
@@ -31,12 +31,16 @@ const COURSE = {
 };
 
 const REVIEWS = [
-  { initials: "IO", name: "Ifeanyi Ohanusi", when: "6 months ago", stars: 5,
-    text: "This is actually the best course I've ever taken since I started taking courses. Clear and easy. Promises fullfiled and earned way way more than I paid for." },
-  { initials: "SO", name: "Stellamaris Onyebuchi", when: "6 months ago", stars: 5,
-    text: "Yes. I learnt alot" },
-  { initials: "RA", name: "Rapheal Adeagbo", when: "6 months ago", stars: 5,
-    text: "With less than 150k bank balance and fresh out of school, this course saved my life. I currently make a minimum of 600k monthly wth this skill. I recommend 100 percent if you're ready to put the work in." },
+  { initials: "AA", name: "Ama Agyeman", when: "2 months ago", stars: 5,
+    text: "This course gave me a clear roadmap for importing from China. I understood how to source products, communicate with suppliers, and estimate cost before ordering. I finally feel confident starting my own import business." },
+  { initials: "DW", name: "Daniel Wiafe", when: "4 months ago", stars: 5,
+    text: "I loved how practical the lessons were. It was not just theory. I learned how to find products, understand shipping, and how to handle payments in a way that makes sense for Ghanaian entrepreneurs." },
+  { initials: "EO", name: "Efua Owusu", when: "7 months ago", stars: 5,
+    text: "The training was easy to follow and very useful. I especially liked the part on supplier communication and payment methods. It saved me from making costly mistakes before I even started." },
+  { initials: "KY", name: "Kojo Yeboah", when: "1 month ago", stars: 5,
+    text: "This was exactly what I needed. I now know how to approach sourcing, compare suppliers, and understand the shipping process from China to Ghana. The lessons are beginner-friendly and very actionable." },
+  { initials: "MB", name: "Mabel Boateng", when: "5 months ago", stars: 5,
+    text: "The biggest win for me was learning the import process step by step. I was scared to start, but now I understand how to avoid fake sellers and work smarter with suppliers and shipping agents." },
 ];
 
 /* ---------- ICONS ---------- */
@@ -63,7 +67,8 @@ export default function CourseDetail() {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
 
-  const total = REVIEWS.length;
+  const total = 35;
+  // const total = REVIEWS.length;
   const bars = [5, 4, 3, 2, 1].map((s) => ({ s, c: REVIEWS.filter((r) => r.stars === s).length }));
 
   return (
@@ -188,7 +193,7 @@ export default function CourseDetail() {
               <div className="rev-summary">
                 <div className="big">{COURSE.rating.toFixed(1)}</div>
                 <Stars size={30} />
-                <p className="total">Total {total} Ratings</p>
+                <p className="total">Ratings</p>
                 {bars.map(({ s, c }) => (
                   <div className="bar-row" key={s}>
                     <Star size={24} filled={false} />
@@ -236,7 +241,7 @@ export default function CourseDetail() {
 
       {/* FOOTER */}
       <footer className="foot">
-        <span>Copyright © 2026 Create and Earn</span>
+        <span>Copyright © 2026 ImportWithBusydev</span>
         <button className="top" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 15l7-7 7 7" /></svg>
         </button>
@@ -268,7 +273,7 @@ const CSS = `
 .cep .muted{color:var(--muted)}
 .cep h1{font-size:28px;font-weight:700;margin:26px 0 30px;letter-spacing:-.01em}
 .cep .meta-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:22px}
-.cep .cat{padding-top:22px}
+.cep .cat{padding-top:20px}
 .cep .actions{display:flex;gap:28px;margin-top:22px;color:var(--muted)}
 .cep .actions button{display:flex;align-items:center;gap:10px;font-size:22px;color:var(--muted)}
 
@@ -334,7 +339,7 @@ const CSS = `
 .cep .cart{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--accent);color:#fff;
   font-size:24px;border-radius:6px;height:74px;transition:filter .15s}
 .cep .cart:hover{filter:brightness(1.1)}
-.cep .buy ul{padding:44px 48px 34px;border-top:1px solid var(--line)}
+.cep .buy ul{padding:44px 20px 34px;border-top:1px solid var(--line)}
 .cep .buy li{display:flex;align-items:center;gap:18px;font-size:22px;color:#333;margin-bottom:26px}
 .cep .buy li svg{color:#333;flex:none}
 
@@ -345,7 +350,7 @@ const CSS = `
 .cep .a-row .avatar{width:72px;height:72px}
 
 .cep .foot{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:60px;
-  padding:56px 24px 60px;font-size:23px;color:#333;position:relative}
+  padding:56px 24px 60px;color:#333;position:relative}
 .cep .top{width:54px;height:54px;background:var(--brand);display:grid;place-items:center;border-radius:3px}
 
 @media (min-width:700px){
