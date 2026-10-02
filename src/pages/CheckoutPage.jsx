@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 /* ---------- DATA (edit freely) ---------- */
+const PAYSTACK_CHECKOUT_URL = "https://paystack.shop/pay/jpsodftqus";
+
 const COURSE = {
   title: "The Complete Importation Masterclass",
   category: "Importation Business",
@@ -11,8 +12,8 @@ const COURSE = {
   enrolled: 220,
   updated: "Sept 12, 2026",
   author: "Ebenezer Odame",
-  videoSrc: "", // put your video URL here
-  poster: "",   // put your poster image URL here
+  videoSrc: "https://play.gumlet.io/embed/6abe5dbcd6a6ba7c2cb99d64",
+  poster: "",
   headline: "LEARN HOW TO SOURCE, SHIP, AND SELL PRODUCTS FROM CHINA, TURKEY, DUBAI, AND BANGLADESH.",
   about: [
     "I've spent the last 5 years in the importation business, working through the challenges of sourcing, negotiating, shipping, and selling goods.",
@@ -67,6 +68,10 @@ export default function CourseDetail() {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
 
+  const handleCheckout = () => {
+    window.location.href = PAYSTACK_CHECKOUT_URL;
+  };
+
   const total = 35;
   // const total = REVIEWS.length;
   const bars = [5, 4, 3, 2, 1].map((s) => ({ s, c: REVIEWS.filter((r) => r.stars === s).length }));
@@ -81,9 +86,13 @@ export default function CourseDetail() {
           <span className="text-purple-700">Import</span>withBusyDev
         </div>
         <div className="flex items-center gap-4">
-         <Link to="/course" className="rounded-sm bg-purple-700 px-6 py-2 text-white font-semibold transition hover:bg-orange-700">
+         <button
+            type="button"
+            onClick={handleCheckout}
+            className="rounded-sm bg-purple-700 px-6 py-2 text-white font-semibold transition hover:bg-orange-700"
+          >
             ENROLL
-          </Link>
+          </button>
           </div>
         {/* <div className="logo">Create &amp; <span>Earn</span> <small>PROGRAM</small></div> */}
         {/* <button className="burger" aria-label="Menu">
@@ -112,7 +121,14 @@ export default function CourseDetail() {
         {/* VIDEO */}
         <div className="video">
           {COURSE.videoSrc ? (
-            <video src={COURSE.videoSrc} poster={COURSE.poster} controls muted={muted} playsInline />
+            <iframe
+              src={COURSE.videoSrc}
+              title="Importation course video"
+              loading="lazy"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+              referrerPolicy="origin"
+              style={{ border: "none", width: "100%", height: "100%", display: "block" }}
+            />
           ) : (
             <>
               <div className="video-bg" style={COURSE.poster ? { backgroundImage: `url(${COURSE.poster})` } : {}} />
@@ -220,7 +236,7 @@ export default function CourseDetail() {
         <div className="buy">
           <div className="buy-top">
             <div className="price">{COURSE.price}</div>
-            <button className="cart">
+            <button type="button" className="cart" onClick={handleCheckout}>
               <I size={24}><path d="M2 3h3l2.4 12.2a1 1 0 001 .8h9.3a1 1 0 001-.8L20 7H6" /><circle cx="9" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></I>
               BUY COURSE
             </button>
@@ -277,7 +293,7 @@ const CSS = `
 .cep .actions{display:flex;gap:28px;margin-top:22px;color:var(--muted)}
 .cep .actions button{display:flex;align-items:center;gap:10px;font-size:22px;color:var(--muted)}
 
-.cep .video{position:relative;margin-top:38px;aspect-ratio:16/9;background:#2b2b2b;overflow:hidden}
+.cep .video{position:relative;margin-top:38px;aspect-ratio:509/270;background:#2b2b2b;overflow:hidden}
 .cep .video video{width:100%;height:100%;object-fit:cover;display:block}
 .cep .video-bg{position:absolute;inset:0;background:
   radial-gradient(circle at 30% 25%,#f0a35a 0,#6b5a4e 25%,transparent 45%),
