@@ -7,12 +7,12 @@ const COURSE = {
   title: "The Complete Importation Masterclass",
   category: "Importation Business",
   rating: 5.0,
-  price: "GHC420.00 cedis",
+  price: "GH₵420.00",
   level: "Beginner Friendly",
   enrolled: 220,
   updated: "Sept 12, 2026",
   author: "Ebenezer Odame",
-  videoSrc: "https://play.gumlet.io/embed/6abe5dbcd6a6ba7c2cb99d64",
+  videoSrc: "https://play.gumlet.io/embed/6ac32813d6a6ba7c2cc3baeb",
   poster: "",
   headline: "LEARN HOW TO SOURCE, SHIP, AND SELL PRODUCTS FROM CHINA, TURKEY, DUBAI, AND BANGLADESH.",
   about: [
@@ -20,28 +20,100 @@ const COURSE = {
     "This training brings practical lessons together so you can make smarter decisions, find reliable suppliers, understand shipping and CBM calculations, and import products by yourself.",
   ],
   sections: [
-    { title: "Module 1: Introduction to China Importation in Ghana", lessons: [{ name: "Understand how the China importation business works", time: "02:00", locked: true }, { name: "Discover why importation is one of the fastest ways to build a profitable business with low capital", time: "04:15", locked: true }] },
-    { title: "Module 2: Finding Winning Products (Optional)", lessons: [{ name: "Learn how to identify hot selling products", time: "03:20", locked: true }, { name: "Understand product research techniques and market validation", time: "05:10", locked: true }, { name: "Discover low competition, high demand products that generate consistent profits", time: "04:05", locked: true }] },
-    { title: "Module 3: Essential Apps & Tools for Importation", lessons: [{ name: "Master 1688, Pinduoduo, Alibaba, Taobao, Alipay, WeChat, Google Translate, and Hi Dictionary", time: "06:45", locked: true }, { name: "Learn how to use your smartphone as a complete importation business system", time: "03:55", locked: true }] },
-    { title: "Module 4: How to Buy from 1688, Alibaba & Pinduoduo", lessons: [{ name: "Understand how to search products using images and keywords", time: "02:20", locked: true }, { name: "Learn how to identify trusted suppliers and avoid fake sellers", time: "03:10", locked: true }, { name: "Master supplier communication even without speaking Chinese", time: "04:40", locked: true }, { name: "4.1.1 Intro to 1688 App", time: "02:10", locked: true }, { name: "4.1.2 How to Enter Shipping Mark/Address on 1688", time: "03:05", locked: true }, { name: "4.1.3 How to Buy from 1688", time: "04:25", locked: true }, { name: "4.1.4 Master supplier communication", time: "03:15", locked: true }, { name: "4.1.5 What happens next?", time: "02:50", locked: true }, { name: "4.2.1 Intro to Alibaba App", time: "02:15", locked: true }, { name: "4.2.2 What to do before you buy from Alibaba", time: "02:55", locked: true }, { name: "4.2.3 Buying from Alibaba. Next Steps", time: "03:40", locked: true }, { name: "4.3.1 Intro to Pinduoduo", time: "02:25", locked: true }, { name: "4.3.2 Buying from Pinduoduo. Next Steps", time: "03:35", locked: true }] },
-    { title: "Module 5: Payment Methods & Currency Exchange", lessons: [{ name: "Discover the safest ways to pay Chinese suppliers from Ghana", time: "04:10", locked: true }, { name: "5.1 Learn how to create, verify and fund your Alipay for all your payments", time: "05:20", locked: true }, { name: "5.2 Payment with Virtual Card", time: "03:40", locked: true }] },
-    { title: "Module 6: Shipping & Clearing to Ghana", lessons: [{ name: "Understand air shipping vs sea shipping and when to use each", time: "04:30", locked: true }, { name: "Learn shipping timelines, costs, weight calculations, and cargo procedures", time: "05:15", locked: true }, { name: "Discover how to ship products safely from China without stress", time: "04:05", locked: true }] },
-    { title: "Module 7: Selling & Marketing Your Products", lessons: [{ name: "Learn how to sell imported products online and offline", time: "03:35", locked: true }, { name: "Master WhatsApp marketing, Facebook Ads, TikTok marketing, and Instagram promotion", time: "06:20", locked: true }, { name: "Discover how to create irresistible offers that make customers buy fast", time: "04:15", locked: true }] },
-    { title: "Bonus Module: Secrets, Mistakes & Supplier Contacts", lessons: [{ name: "Common mistakes beginners make and how to avoid them", time: "03:50", locked: true }, { name: "Important importation tips that save money and reduce losses", time: "04:00", locked: true }, { name: "Access to trusted supplier and shipping agent contacts", time: "02:45", locked: true }] },
+    {
+      title: "Module 1: Introduction to China Importation in Ghana",
+      lessons: [
+        { name: "Understand how the China importation business works", time: "02:00", locked: true },
+        { name: "Discover why importation is one of the fastest ways to build a profitable business with low capital", time: "04:15", locked: true },
+      ],
+    },
+    {
+      title: "Module 2: Finding Winning Products (Optional)",
+      lessons: [
+        { name: "Learn how to identify hot selling products", time: "03:20", locked: true },
+        { name: "Understand product research techniques and market validation", time: "05:10", locked: true },
+        { name: "Discover low competition, high demand products that generate consistent profits", time: "04:05", locked: true },
+      ],
+    },
+    {
+      title: "Module 3: Essential Apps & Tools for Importation",
+      lessons: [
+        { name: "Master 1688, Pinduoduo, Alibaba, Taobao, Alipay, WeChat, Google Translate, and Hi Dictionary", time: "06:45", locked: true },
+        { name: "Learn how to use your smartphone as a complete importation business system", time: "03:55", locked: true },
+      ],
+    },
+    {
+      title: "Module 4: How to Buy from 1688, Alibaba & Pinduoduo",
+      lessons: [
+        { name: "Understand how to search products using images and keywords", time: "02:20", locked: true },
+        { name: "Learn how to identify trusted suppliers and avoid fake sellers", time: "03:10", locked: true },
+        { name: "Master supplier communication even without speaking Chinese", time: "04:40", locked: true },
+        { name: "4.1.1 Intro to 1688 App", time: "02:10", locked: true },
+        { name: "4.1.2 How to Enter Shipping Mark/Address on 1688", time: "03:05", locked: true },
+        { name: "4.1.3 How to Buy from 1688", time: "04:25", locked: true },
+        { name: "4.1.4 Master supplier communication", time: "03:15", locked: true },
+        { name: "4.1.5 What happens next?", time: "02:50", locked: true },
+        { name: "4.2.1 Intro to Alibaba App", time: "02:15", locked: true },
+        { name: "4.2.2 What to do before you buy from Alibaba", time: "02:55", locked: true },
+        { name: "4.2.3 Buying from Alibaba. Next Steps", time: "03:40", locked: true },
+        { name: "4.3.1 Intro to Pinduoduo", time: "02:25", locked: true },
+        { name: "4.3.2 Buying from Pinduoduo. Next Steps", time: "03:35", locked: true },
+      ],
+    },
+    {
+      title: "Module 5: Payment Methods & Currency Exchange",
+      lessons: [
+        { name: "Discover the safest ways to pay Chinese suppliers from Ghana", time: "04:10", locked: true },
+        { name: "5.1 Learn how to create, verify and fund your Alipay for all your payments", time: "05:20", locked: true },
+        { name: "5.2 Payment with Virtual Card", time: "03:40", locked: true },
+      ],
+    },
+    {
+      title: "Module 6: Shipping & Clearing to Ghana",
+      lessons: [
+        { name: "Understand air shipping vs sea shipping and when to use each", time: "04:30", locked: true },
+        { name: "Learn shipping timelines, costs, weight calculations, and cargo procedures", time: "05:15", locked: true },
+        { name: "Discover how to ship products safely from China without stress", time: "04:05", locked: true },
+      ],
+    },
+    {
+      title: "Module 7: Selling & Marketing Your Products",
+      lessons: [
+        { name: "Learn how to sell imported products online and offline", time: "03:35", locked: true },
+        { name: "Master WhatsApp marketing, Facebook Ads, TikTok marketing, and Instagram promotion", time: "06:20", locked: true },
+        { name: "Discover how to create irresistible offers that make customers buy fast", time: "04:15", locked: true },
+      ],
+    },
+    {
+      title: "Bonus Module: Secrets, Mistakes & Supplier Contacts",
+      lessons: [
+        { name: "Common mistakes beginners make and how to avoid them", time: "03:50", locked: true },
+        { name: "Important importation tips that save money and reduce losses", time: "04:00", locked: true },
+        { name: "Access to trusted supplier and shipping agent contacts", time: "02:45", locked: true },
+      ],
+    },
   ],
 };
 
+const OFFER_ITEMS = [
+  { title: "Complete Importation Masterclass", value: 500 },
+  { title: "Mentorship", value: 200 },
+  { title: "Supplier & shipping-agent contacts", value: 250 },
+  { title: "Product research, selling & marketing training", value: 250 },
+];
+const OFFER_TOTAL = OFFER_ITEMS.reduce((total, item) => total + item.value, 0);
+
 const REVIEWS = [
   { initials: "AA", name: "Ama Agyeman", when: "2 months ago", stars: 5,
-    text: "This course gave me a clear roadmap for importing from China. I understood how to source products, communicate with suppliers, and estimate cost before ordering. I finally feel confident starting my own import business." },
+    text: "This course helped me to understand how to communicate with suppliers before ordering. I feel confident starting my own import business." },
   { initials: "DW", name: "Daniel Wiafe", when: "4 months ago", stars: 5,
-    text: "I loved how practical the lessons were. It was not just theory. I learned how to find products, understand shipping, and how to handle payments in a way that makes sense for Ghanaian entrepreneurs." },
+    text: "I loved how practical the lessons were. It was not just theory. I learned how to make handle payments to my suppliers" },
   { initials: "EO", name: "Efua Owusu", when: "7 months ago", stars: 5,
-    text: "The training was easy to follow and very useful. I especially liked the part on supplier communication and payment methods. It saved me from making costly mistakes before I even started." },
+    text: "The training was easy to follow and very practical. I especially liked the part on supplier communication and payment methods. It saved me from making costly mistakes before I even started." },
   { initials: "KY", name: "Kojo Yeboah", when: "1 month ago", stars: 5,
-    text: "This was exactly what I needed. I now know how to approach sourcing, compare suppliers, and understand the shipping process from China to Ghana. The lessons are beginner-friendly and very actionable." },
+    text: "I have taken an importation course before but this one was more detailed. I now know how to source for products, communicate with suppliers, and pay my suppliers. The lessons are beginner-friendly and very practical." },
   { initials: "MB", name: "Mabel Boateng", when: "5 months ago", stars: 5,
-    text: "The biggest win for me was learning the import process step by step. I was scared to start, but now I understand how to avoid fake sellers and work smarter with suppliers and shipping agents." },
+    text: "I was scared to start, but now I know how to avoid fake sellers and identify genuine suppliers and shipping agents." },
 ];
 
 /* ---------- ICONS ---------- */
@@ -69,7 +141,7 @@ export default function CourseDetail() {
   const [muted, setMuted] = useState(false);
 
   const handleCheckout = () => {
-    window.location.href = PAYSTACK_CHECKOUT_URL;
+    window.open(PAYSTACK_CHECKOUT_URL, "_blank", "noopener,noreferrer");
   };
 
   const total = 35;
@@ -235,10 +307,24 @@ export default function CourseDetail() {
         {/* PURCHASE CARD */}
         <div className="buy">
           <div className="buy-top">
+            <p className="bundle-intro">Here’s everything included in your package:</p>
+            <div className="breakdown" aria-label="Package value breakdown">
+              {OFFER_ITEMS.map((item) => (
+                <div className="breakdown-row" key={item.title}>
+                  <span>{item.title}</span>
+                  <span>GH₵{item.value.toLocaleString("en-GH")}</span>
+                </div>
+              ))}
+            </div>
+            <div className="value-total">
+              <span>Total value</span>
+              <strong className="original-value">GH₵{OFFER_TOTAL.toLocaleString("en-GH")}</strong>
+            </div>
+            <p className="offer-message">I’m offering you all of this for:</p>
             <div className="price">{COURSE.price}</div>
             <button type="button" className="cart" onClick={handleCheckout}>
               <I size={24}><path d="M2 3h3l2.4 12.2a1 1 0 001 .8h9.3a1 1 0 001-.8L20 7H6" /><circle cx="9" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></I>
-              BUY COURSE
+              ENROLL NOW
             </button>
           </div>
           <ul>
@@ -350,8 +436,16 @@ const CSS = `
 .cep .review p{font-size:19px;line-height:1.75;color:#4b5563}
 
 .cep .buy{margin-top:72px;border:1px solid var(--line);border-radius:6px;background:#fff;overflow:hidden}
-.cep .buy-top{background:var(--soft);padding:60px 48px 48px}
-.cep .price{font-size:36px;font-weight:700;margin-bottom:34px}
+.cep .buy-top{background:var(--soft);padding:44px 48px 48px}
+.cep .bundle-intro{font-size:22px;font-weight:700;margin-bottom:18px}
+.cep .breakdown{display:grid;gap:14px;padding-bottom:20px;border-bottom:1px solid #d9dce2}
+.cep .breakdown-row,.cep .value-total{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;font-size:18px;line-height:1.45}
+.cep .breakdown-row span:last-child{font-weight:600;white-space:nowrap}
+.cep .original-value{text-decoration:line-through}
+.cep .value-total{align-items:center;padding-top:18px;font-size:20px}
+.cep .value-total strong{font-size:32px;color:var(--brand);white-space:nowrap}
+.cep .offer-message{font-size:18px;font-weight:600;margin:28px 0 8px}
+.cep .price{font-size:42px;font-weight:800;color:var(--accent);margin-bottom:26px}
 .cep .cart{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--accent);color:#fff;
   font-size:24px;border-radius:6px;height:74px;transition:filter .15s}
 .cep .cart:hover{filter:brightness(1.1)}
@@ -390,7 +484,12 @@ const CSS = `
   .cep .big{font-size:72px}.cep .total,.cep .bar-row{font-size:15px}.cep .cnt{width:74px}
   .cep .avatar,.cep .a-row .avatar{width:56px;height:56px;font-size:16px}
   .cep .review h4{font-size:16px}.cep .when{font-size:14px}.cep .review p{font-size:14px}
-  .cep .buy-top{padding:44px 36px 36px}.cep .price{font-size:26px}
+  .cep .buy-top{padding:32px 24px 28px}
+  .cep .bundle-intro{font-size:18px}
+  .cep .breakdown-row{font-size:15px}
+  .cep .value-total{font-size:17px}.cep .value-total strong{font-size:26px}
+  .cep .offer-message{font-size:16px;margin-top:22px}
+  .cep .price{font-size:32px;margin-bottom:20px}
   .cep .cart{height:56px;font-size:19px}
   .cep .buy ul{padding:32px 36px 20px}.cep .buy li{font-size:17px}
   .cep .author{padding:34px 36px 40px}.cep .author p,.cep .a-row b{font-size:18px}
