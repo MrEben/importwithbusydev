@@ -207,7 +207,7 @@ export default function App() {
     };
 
     sendRegistrationInBackground();
-    window.open("https://chat.whatsapp.com/CtgFUM4RyxIDFEFIcAHYGA", "_blank", "noopener,noreferrer");
+    window.open("https://chat.whatsapp.com/Kfdh6Yy422y0eR5vaLji4k", "_blank", "noopener,noreferrer");
     setIsRegistrationOpen(false);
     setRegistrationDetails({ name: "", phone: "", training: "" });
     setIsSending(false);
@@ -225,7 +225,7 @@ export default function App() {
           {/* <a href="#learn" className="text-slate-700 transition hover:text-slate-950">What You'll Learn</a> */}
           {/* <a href="#faq" className="text-slate-700 transition hover:text-slate-950">FAQ</a> */}
           <Link to="/course" className="rounded-sm bg-orange-600 px-6 py-2 text-white font-semibold transition hover:bg-orange-700">
-            View course
+            JOIN TRAINING
           </Link>
         </nav>
       </header>
