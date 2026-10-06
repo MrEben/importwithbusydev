@@ -1,5 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { initiateCheckout as trackInitiateCheckout, lead as trackLead } from "./utils/metaPixel";
 import MetaPixel from "./components/MetaPixel";
 
@@ -224,9 +223,13 @@ export default function App() {
         <nav className="flex flex-wrap items-center gap-6 text-sm font-semibold">
           {/* <a href="#learn" className="text-slate-700 transition hover:text-slate-950">What You'll Learn</a> */}
           {/* <a href="#faq" className="text-slate-700 transition hover:text-slate-950">FAQ</a> */}
-          <Link to="/course" className="rounded-sm bg-orange-600 px-6 py-2 text-white font-semibold transition hover:bg-orange-700">
+          <button
+            type="button"
+            onClick={handleJoinClick}
+            className="rounded-sm bg-orange-600 px-6 py-2 text-white font-semibold transition hover:bg-orange-700"
+          >
             JOIN TRAINING
-          </Link>
+          </button>
         </nav>
       </header>
 
