@@ -4,7 +4,7 @@ import { initiateCheckout as trackInitiateCheckout, lead as trackLead } from "./
 import MetaPixel from "./components/MetaPixel";
 
 const GOOGLE_SCRIPT_URL = import.meta.env.VITE_APP_TITLE;
-const PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID;
+const PIXEL_ID = import.meta.env.PIXEL_ID;
 const PIXEL_ENABLED = Boolean(PIXEL_ID);
 
 const trainingSections = {
