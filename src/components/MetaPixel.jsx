@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function MetaPixel({ id = import.meta.env.VITE_META_PIXEL_ID }) {
+export default function MetaPixel({ id = import.meta.env.PIXEL_ID }) {
   useEffect(() => {
     if (!id) return;
 

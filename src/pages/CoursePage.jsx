@@ -2,7 +2,7 @@ import { useState } from "react";
 import { initiateCheckout, lead } from "../utils/metaPixel";
 import MetaPixel from "../components/MetaPixel";
 
-const pixelId = import.meta.env.VITE_META_PIXEL_ID;
+const pixelId = import.meta.env.PIXEL_ID;
 
 const inclusions = [
   { number: "01", title: "CORE IMPORT COURSE", text: "20+ guided lessons covering product research, supplier communication, shipping, and selling.", value: "Start-to-finish guidance" },

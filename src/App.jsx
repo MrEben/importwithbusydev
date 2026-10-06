@@ -78,7 +78,7 @@ export default function App() {
 
   useEffect(() => {
     if (!PIXEL_ENABLED) {
-      console.warn("VITE_META_PIXEL_ID is not configured. Meta Pixel events will be skipped.");
+      console.warn("PIXEL_ID is not configured. Meta Pixel events will be skipped.");
     }
   }, []);
 
