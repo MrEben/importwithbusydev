@@ -11,6 +11,12 @@ Currently, two official plugins are available:
 
 The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
+## Paystack webhook
+
+The Vercel function at `/api/paystack-webhook` validates Paystack webhook signatures using the raw request body. In the Vercel project settings, set `PAYSTACK_SECRET_KEY` to the Paystack secret key (never expose it with a `VITE_` prefix), deploy, then set the Paystack webhook URL to `https://<your-domain>/api/paystack-webhook`.
+
+Successful `charge.success` events are acknowledged and their reference, amount, and currency are written to the Vercel function logs. This project does not currently persist payment records or automatically grant course access; connect a database or fulfillment system before relying on the webhook for those actions.
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
