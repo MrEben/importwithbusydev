@@ -1,7 +1,8 @@
 import { useState } from "react";
+import paystackLinks from "../data/paystack-links.json";
 
 /* ---------- DATA (edit freely) ---------- */
-const PAYSTACK_CHECKOUT_URL = "https://paystack.shop/pay/jpsodftqus";
+const PAYSTACK_CHECKOUT_URL = paystackLinks.test;
 
 const COURSE = {
   title: "The Complete Importation Masterclass",

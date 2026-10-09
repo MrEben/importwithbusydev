@@ -13,6 +13,8 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 ## Paystack webhook
 
+Test and live checkout links are listed in `src/data/paystack-links.json`. The checkout page currently uses the live link; change its `paystackLinks.live` reference to `paystackLinks.test` when you intentionally want to run a test payment.
+
 The Vercel function at `/api/paystack-webhook` validates Paystack webhook signatures using the raw request body. In the Vercel project settings, set `PAYSTACK_SECRET_KEY` to the Paystack secret key (never expose it with a `VITE_` prefix), deploy, then set the Paystack webhook URL to `https://<your-domain>/api/paystack-webhook`.
 
 Successful `charge.success` webhook events are signature-verified and acknowledged. The `/thank-you` page separately verifies the returned Paystack transaction reference using `/api/verify-payment`; only a successful GHS 42,000-pesewa transaction displays the Telegram button. This server-side verification uses the same `PAYSTACK_SECRET_KEY` and does not depend on webhook delivery timing.
