@@ -15,7 +15,9 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 The Vercel function at `/api/paystack-webhook` validates Paystack webhook signatures using the raw request body. In the Vercel project settings, set `PAYSTACK_SECRET_KEY` to the Paystack secret key (never expose it with a `VITE_` prefix), deploy, then set the Paystack webhook URL to `https://<your-domain>/api/paystack-webhook`.
 
-Successful `charge.success` events are acknowledged and their reference, amount, and currency are written to the Vercel function logs. This project does not currently persist payment records or automatically grant course access; connect a database or fulfillment system before relying on the webhook for those actions.
+Successful `charge.success` webhook events are signature-verified and acknowledged. The `/thank-you` page separately verifies the returned Paystack transaction reference using `/api/verify-payment`; only a successful GHS 42,000-pesewa transaction displays the Telegram button. This server-side verification uses the same `PAYSTACK_SECRET_KEY` and does not depend on webhook delivery timing.
+
+Configure the Paystack payment page to redirect to `https://<your-domain>/thank-you` after payment, preserving the transaction reference query parameter (`reference` or `trxref`). Replace the placeholder Telegram URL in `src/pages/ThankYouPage.jsx` with the real course invite or channel link before publishing. The Telegram invite itself is not protected by this site and may be shared; use a private/revocable invite or an account-based course system for stronger access control.
 
 ## Expanding the ESLint configuration
 
