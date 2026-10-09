@@ -2,6 +2,15 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { readApiResponse } from "../utils/readApiResponse.js";
 import telegramCourseLinks from "../data/telegram-course-links.json";
+import coachingContact from "../data/coaching-contact.json";
+import { COACHING_PRICE_GHS } from "../data/course-offers.js";
+
+const formatGhs = (amount) =>
+  new Intl.NumberFormat("en-GH", {
+    style: "currency",
+    currency: "GHS",
+    minimumFractionDigits: 2,
+  }).format(amount);
 
 export default function ThankYouPage() {
   const [searchParams] = useSearchParams();
@@ -61,7 +70,12 @@ export default function ThankYouPage() {
   }, [reference, retry]);
   const selectedCourseLink = telegramCourseLinks[verification.packageId];
   const isConfirmed = verificationState === "confirmed";
+  const isCoachingPayment =
+    isConfirmed && verification.packageId === "one-on-one-coaching";
   const isChecking = verificationState === "checking";
+  const [coachingEmail, setCoachingEmail] = useState("");
+  const [isStartingCoachingPayment, setIsStartingCoachingPayment] = useState(false);
+  const [coachingError, setCoachingError] = useState("");
   const heading =
     isChecking
       ? "Verifying your payment"
@@ -70,6 +84,34 @@ export default function ThankYouPage() {
         : verificationState === "error"
           ? "We couldn’t verify your payment"
           : "Payment not confirmed";
+
+  async function handleCoachingPayment(event) {
+    event.preventDefault();
+    setCoachingError("");
+    setIsStartingCoachingPayment(true);
+
+    try {
+      const response = await fetch("/api/initialize-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: coachingEmail,
+          productId: "one-on-one-coaching",
+        }),
+      });
+      const result = await readApiResponse(response, "Coaching payment setup");
+
+      if (!response.ok || typeof result.authorizationUrl !== "string") {
+        throw new Error(result.message || "Could not start coaching payment. Please try again.");
+      }
+
+      window.location.assign(result.authorizationUrl);
+    } catch (error) {
+      console.error("Unable to start coaching payment", error);
+      setCoachingError(error.message || "Could not start coaching payment. Please try again.");
+      setIsStartingCoachingPayment(false);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[#f0f4f8] font-sans text-slate-800">
@@ -134,10 +176,11 @@ export default function ThankYouPage() {
                   </div>
                 </div>
                 <p className="mb-7 max-w-xl leading-7 text-slate-600">
-                  Thank you for enrolling. Continue to Telegram for the next
-                  steps to access your course package.
+                  {isCoachingPayment
+                    ? "Thank you for investing in one-on-one coaching. Book your consultation session below."
+                    : "Thank you for enrolling. Continue to Telegram for the next steps to access your course package."}
                 </p>
-                {selectedCourseLink?.url ? (
+                {!isCoachingPayment && selectedCourseLink?.url ? (
                   <a
                     href={selectedCourseLink.url}
                     target="_blank"
@@ -146,12 +189,86 @@ export default function ThankYouPage() {
                   >
                     Access your package on Telegram
                   </a>
-                ) : (
+                ) : !isCoachingPayment ? (
                   <p className="rounded border border-amber-200 bg-amber-50 p-4 leading-6 text-amber-900">
                     Your payment is confirmed, but the Telegram link for this
                     package has not been configured yet. Please contact support.
                   </p>
-                )}
+                ) : null}
+
+                {isCoachingPayment ? (
+                  <div className="mt-8 border-t border-slate-200 pt-7">
+                    <h2 className="mb-3 text-xl font-bold text-slate-950">
+                      Your one-on-one coaching is confirmed
+                    </h2>
+                    <p className="mb-5 max-w-xl leading-7 text-slate-600">
+                      Book your consultation session with me on WhatsApp. We’ll
+                      arrange your weekly calls for assistance when you need it.
+                    </p>
+                    <a
+                      href={coachingContact.whatsappBookingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-12 items-center justify-center rounded bg-blue-700 px-6 py-3 font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                      Book your consultation session
+                    </a>
+                  </div>
+                ) : selectedCourseLink?.url ? (
+                  <div className="mt-8 border-t border-slate-200 pt-7">
+                    <h2 className="mb-3 text-xl font-bold text-slate-950">
+                      Get one-on-one support
+                    </h2>
+                    <p className="mb-5 max-w-xl leading-7 text-slate-600">
+                      Get one-on-one coaching with me, including weekly calls
+                      for assistance when you need it.
+                    </p>
+                    <div className="rounded-md border border-slate-200 bg-slate-50 p-5 sm:p-6">
+                      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                        <h3 className="font-bold text-slate-900">One-on-one coaching</h3>
+                        <span className="text-xl font-extrabold text-slate-950">
+                          {formatGhs(COACHING_PRICE_GHS)}
+                        </span>
+                      </div>
+                      <form onSubmit={handleCoachingPayment}>
+                        <label
+                          htmlFor="coaching-email"
+                          className="mb-2 block font-bold text-slate-900"
+                        >
+                          Email for your coaching payment
+                        </label>
+                        <input
+                          id="coaching-email"
+                          type="email"
+                          autoComplete="email"
+                          required
+                          maxLength={254}
+                          value={coachingEmail}
+                          onChange={(event) => setCoachingEmail(event.target.value)}
+                          placeholder="you@example.com"
+                          className="mb-4 w-full rounded border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100"
+                        />
+                        {coachingError && (
+                          <p
+                            className="mb-4 rounded border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+                            role="alert"
+                          >
+                            {coachingError}
+                          </p>
+                        )}
+                        <button
+                          type="submit"
+                          disabled={isStartingCoachingPayment}
+                          className="inline-flex min-h-12 w-full items-center justify-center rounded bg-blue-700 px-6 py-3 font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                        >
+                          {isStartingCoachingPayment
+                            ? "Connecting to Paystack..."
+                            : `Add coaching · ${formatGhs(COACHING_PRICE_GHS)}`}
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                ) : null}
               </>
             )}
 

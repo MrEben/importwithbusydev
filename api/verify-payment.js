@@ -1,6 +1,7 @@
 import {
   getCoursePackage,
   COURSE_PACKAGES,
+  COACHING_PRICE_GHS,
 } from "../src/data/course-offers.js";
 import { env } from "node:process";
 
@@ -56,13 +57,14 @@ export default async function handler(req, res) {
   }
 
   const payment = result?.data;
+  const isCoachingPayment = payment?.amount === COACHING_PRICE_GHS * 100;
   const coursePackage = COURSE_PACKAGES.find(
     (candidate) => candidate.amountPesewas === payment?.amount,
   );
   const checks = {
     successful: result?.status === true && payment?.status === "success",
     referenceMatches: payment?.reference === reference,
-    amountMatches: Boolean(coursePackage),
+    amountMatches: Boolean(coursePackage) || isCoachingPayment,
     currencyMatches: payment?.currency === EXPECTED_CURRENCY,
   };
   const verified = Object.values(checks).every(Boolean);
@@ -78,7 +80,11 @@ export default async function handler(req, res) {
 
   return res.status(200).json({
     verified,
-    packageId: verified ? getCoursePackage(coursePackage.addOnIds)?.id : undefined,
+    packageId: verified
+      ? isCoachingPayment
+        ? "one-on-one-coaching"
+        : getCoursePackage(coursePackage.addOnIds)?.id
+      : undefined,
     reason: verified
       ? undefined
       : !checks.successful

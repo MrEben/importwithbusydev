@@ -1,4 +1,8 @@
-import { getCourseTotalPesewas, COURSE_ADD_ONS } from "../src/data/course-offers.js";
+import {
+  getCourseTotalPesewas,
+  COURSE_ADD_ONS,
+  COACHING_PRICE_GHS,
+} from "../src/data/course-offers.js";
 import { env } from "node:process";
 
 const DEFAULT_SITE_URL = "https://importwithbusydev.vercel.app";
@@ -10,6 +14,7 @@ export default async function handler(req, res) {
   }
 
   const email = req.body?.email;
+  const productId = req.body?.productId ?? "course";
   const addOnIds = req.body?.addOnIds ?? [];
   if (
     typeof email !== "string" ||
@@ -19,11 +24,17 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: "Enter a valid email address" });
   }
 
+  if (productId !== "course" && productId !== "one-on-one-coaching") {
+    return res.status(400).json({ message: "Invalid product selected" });
+  }
+
   if (
     !Array.isArray(addOnIds) ||
     addOnIds.some((id) => typeof id !== "string") ||
     new Set(addOnIds).size !== addOnIds.length ||
-    addOnIds.some((id) => !COURSE_ADD_ONS.some((addOn) => addOn.id === id))
+    (productId === "one-on-one-coaching" && addOnIds.length > 0) ||
+    (productId === "course" &&
+      addOnIds.some((id) => !COURSE_ADD_ONS.some((addOn) => addOn.id === id)))
   ) {
     return res.status(400).json({ message: "Invalid course add-ons selected" });
   }
@@ -44,11 +55,17 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         email,
-        amount: getCourseTotalPesewas(addOnIds),
+        amount:
+          productId === "one-on-one-coaching"
+            ? COACHING_PRICE_GHS * 100
+            : getCourseTotalPesewas(addOnIds),
         currency: "GHS",
         callback_url: new URL("/thank-you", env.SITE_URL || DEFAULT_SITE_URL).toString(),
         metadata: {
-          course_item_ids: ["complete-importation-masterclass", ...addOnIds],
+          course_item_ids:
+            productId === "one-on-one-coaching"
+              ? ["one-on-one-coaching"]
+              : ["complete-importation-masterclass", ...addOnIds],
         },
       }),
       signal: AbortSignal.timeout(10000),

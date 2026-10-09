@@ -1,4 +1,5 @@
 export const COURSE_PRICE_GHS = 420;
+export const COACHING_PRICE_GHS = 950;
 
 export const COURSE_ADD_ONS = [
   { id: "importers-blueprint", name: "Importer's Blueprint Book", priceGhs: 30 },

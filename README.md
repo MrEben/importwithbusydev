@@ -17,6 +17,8 @@ The `/upsell` page offers the GHS 420 masterclass and optional add-ons for GHS 3
 
 The verified package ID selects the matching Telegram destination in `src/data/telegram-course-links.json`. Replace all four `t.me/replace_...` placeholder URLs with the correct private invite links before publishing.
 
+After course payment, the thank-you page also offers optional one-on-one coaching for GHS 950 with weekly assistance calls. The coaching transaction is initialized through Paystack using the configured `PAYSTACK_SECRET_KEY`. After successful payment, the page offers a WhatsApp booking button; replace the dummy URL in `src/data/coaching-contact.json` with the correct WhatsApp link.
+
 The Vercel function at `/api/paystack-webhook` validates Paystack webhook signatures using the raw request body. In the Vercel project settings, set `PAYSTACK_SECRET_KEY` to the Paystack secret key (never expose it with a `VITE_` prefix), deploy, then set the Paystack webhook URL to `https://<your-domain>/api/paystack-webhook`.
 
 Successful `charge.success` webhook events are signature-verified and acknowledged. The `/thank-you` page separately verifies the returned Paystack transaction reference using `/api/verify-payment`; only a successful transaction in GHS matching one of the valid course/add-on totals displays the Telegram button. This server-side verification uses the same `PAYSTACK_SECRET_KEY` and does not depend on webhook delivery timing.
