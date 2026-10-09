@@ -53,12 +53,33 @@ export default async function handler(req, res) {
   }
 
   const payment = result?.data;
-  const verified =
-    result?.status === true &&
-    payment?.status === "success" &&
-    payment?.reference === reference &&
-    payment?.amount === EXPECTED_AMOUNT &&
-    payment?.currency === EXPECTED_CURRENCY;
+  const checks = {
+    successful: result?.status === true && payment?.status === "success",
+    referenceMatches: payment?.reference === reference,
+    amountMatches: payment?.amount === EXPECTED_AMOUNT,
+    currencyMatches: payment?.currency === EXPECTED_CURRENCY,
+  };
+  const verified = Object.values(checks).every(Boolean);
 
-  return res.status(200).json({ verified });
+  if (!verified) {
+    console.warn("Paystack transaction did not meet course payment requirements", {
+      referenceMatches: checks.referenceMatches,
+      transactionStatus: payment?.status,
+      amount: payment?.amount,
+      currency: payment?.currency,
+    });
+  }
+
+  return res.status(200).json({
+    verified,
+    reason: verified
+      ? undefined
+      : !checks.successful
+        ? "not_successful"
+        : !checks.referenceMatches
+          ? "reference_mismatch"
+          : !checks.amountMatches
+            ? "amount_mismatch"
+            : "currency_mismatch",
+  });
 }

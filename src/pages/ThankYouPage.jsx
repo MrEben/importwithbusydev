@@ -6,7 +6,12 @@ const TELEGRAM_COURSE_URL = "https://t.me/your_course_channel";
 export default function ThankYouPage() {
   const [searchParams] = useSearchParams();
   const reference = searchParams.get("reference") || searchParams.get("trxref");
-  const [verification, setVerification] = useState({ reference: null, retry: -1, state: "checking" });
+  const [verification, setVerification] = useState({
+    reference: null,
+    retry: -1,
+    state: "checking",
+    reason: null,
+  });
   const [retry, setRetry] = useState(0);
   const verificationState =
     !reference
@@ -34,12 +39,13 @@ export default function ThankYouPage() {
           reference,
           retry,
           state: result.verified ? "confirmed" : "unconfirmed",
+          reason: result.reason,
         });
       })
       .catch((error) => {
         if (error.name !== "AbortError") {
           console.error("Unable to verify payment", error);
-          setVerification({ reference, retry, state: "error" });
+          setVerification({ reference, retry, state: "error", reason: null });
         }
       });
 
@@ -94,7 +100,13 @@ export default function ThankYouPage() {
             <p className="mx-auto max-w-md leading-7 text-slate-300">
               {verificationState === "missing"
                 ? "We did not receive a Paystack payment reference. Please complete payment using the checkout page."
-                : "Paystack has not confirmed a successful payment for this transaction. If you just paid, wait a moment and try again."}
+                : verification.reason === "amount_mismatch"
+                  ? "Paystack reports a different amount from the course price of GHS 420.00. Please contact us with your payment reference."
+                  : verification.reason === "currency_mismatch"
+                    ? "Paystack reports a different currency from the required GHS. Please contact us with your payment reference."
+                    : verification.reason === "reference_mismatch"
+                      ? "The payment reference did not match the transaction Paystack returned. Please try again or contact us with your payment reference."
+                      : "Paystack has not confirmed a successful payment for this transaction. If you just paid, wait a moment and try again."}
             </p>
             {verificationState === "unconfirmed" && (
               <button
