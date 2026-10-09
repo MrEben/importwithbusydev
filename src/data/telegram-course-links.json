@@ -1,0 +1,18 @@
+{
+  "masterclass": {
+    "name": "Masterclass",
+    "url": "https://t.me/replace_masterclass_invite"
+  },
+  "masterclass-blueprint": {
+    "name": "Masterclass + Importer's Blueprint Book",
+    "url": "https://t.me/replace_masterclass_blueprint_invite"
+  },
+  "masterclass-supplier-guide": {
+    "name": "Masterclass + Supplier Communication Guide",
+    "url": "https://t.me/replace_masterclass_supplier_guide_invite"
+  },
+  "masterclass-both-guides": {
+    "name": "Masterclass + both guides",
+    "url": "https://t.me/replace_masterclass_both_guides_invite"
+  }
+}

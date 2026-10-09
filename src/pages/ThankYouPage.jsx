@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { readApiResponse } from "../utils/readApiResponse.js";
-
-const TELEGRAM_COURSE_URL = "https://t.me/your_course_channel";
+import telegramCourseLinks from "../data/telegram-course-links.json";
 
 export default function ThankYouPage() {
   const [searchParams] = useSearchParams();
@@ -12,6 +11,7 @@ export default function ThankYouPage() {
     retry: -1,
     state: "checking",
     reason: null,
+    packageId: null,
   });
   const [retry, setRetry] = useState(0);
   const verificationState =
@@ -41,111 +41,171 @@ export default function ThankYouPage() {
           retry,
           state: result.verified ? "confirmed" : "unconfirmed",
           reason: result.reason,
+          packageId: result.packageId,
         });
       })
       .catch((error) => {
         if (error.name !== "AbortError") {
           console.error("Unable to verify payment", error);
-          setVerification({ reference, retry, state: "error", reason: null });
+          setVerification({
+            reference,
+            retry,
+            state: "error",
+            reason: null,
+            packageId: null,
+          });
         }
       });
 
     return () => controller.abort();
   }, [reference, retry]);
+  const selectedCourseLink = telegramCourseLinks[verification.packageId];
+  const isConfirmed = verificationState === "confirmed";
+  const isChecking = verificationState === "checking";
+  const heading =
+    isChecking
+      ? "Verifying your payment"
+      : isConfirmed
+        ? "Congratulations!"
+        : verificationState === "error"
+          ? "We couldn’t verify your payment"
+          : "Payment not confirmed";
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-5 py-16 text-slate-100">
-      <section className="w-full max-w-xl rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center shadow-2xl shadow-purple-950/30 sm:p-12">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-purple-300">
-          Import with BusyDev
-        </p>
-
-        {verificationState === "checking" && (
-          <>
-            <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">Verifying your payment</h1>
-            <p className="mx-auto max-w-md leading-7 text-slate-300">
-              Please wait while we confirm your payment securely with Paystack.
-            </p>
-          </>
-        )}
-
-        {verificationState === "confirmed" && (
-          <>
-            <div
-              className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-400/15 text-3xl text-emerald-300"
-              aria-hidden="true"
-            >
-              ✓
-            </div>
-            <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
-              Congratulations!
-            </h1>
-            <p className="mx-auto mb-8 max-w-md leading-7 text-slate-300">
-              Your payment is confirmed. Continue to Telegram for the next steps
-              to access the Complete Importation Masterclass.
-            </p>
-            <a
-              href={TELEGRAM_COURSE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-12 items-center justify-center rounded-lg bg-purple-600 px-7 py-3 font-semibold text-white transition hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 focus:ring-offset-slate-950"
-            >
-              Access the course on Telegram
-            </a>
-          </>
-        )}
-
-        {(verificationState === "missing" || verificationState === "unconfirmed") && (
-          <>
-            <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">Payment not confirmed</h1>
-            <p className="mx-auto max-w-md leading-7 text-slate-300">
-              {verificationState === "missing"
-                ? "We did not receive a Paystack payment reference. Please complete payment using the checkout page."
-                : verification.reason === "amount_mismatch"
-                  ? "The payment amount does not match one of the available course order totals. Please contact us with your payment reference."
-                  : verification.reason === "currency_mismatch"
-                    ? "Paystack reports a different currency from the required GHS. Please contact us with your payment reference."
-                    : verification.reason === "reference_mismatch"
-                      ? "The payment reference did not match the transaction Paystack returned. Please try again or contact us with your payment reference."
-                      : "Paystack has not confirmed a successful payment for this transaction. If you just paid, wait a moment and try again."}
-            </p>
-            {verificationState === "unconfirmed" && (
-              <button
-                type="button"
-                onClick={() => setRetry((count) => count + 1)}
-                className="mt-6 inline-flex min-h-12 items-center justify-center rounded-lg border border-purple-400 px-7 py-3 font-semibold text-purple-200 transition hover:bg-purple-400/10 focus:outline-none focus:ring-2 focus:ring-purple-300"
-              >
-                Check payment again
-              </button>
-            )}
-          </>
-        )}
-
-        {verificationState === "error" && (
-          <>
-            <h1 className="mb-4 text-3xl font-bold text-white sm:text-4xl">We couldn’t verify your payment</h1>
-            <p className="mx-auto max-w-md leading-7 text-slate-300">
-              The payment service could not be reached. Your course access has
-              not been shown. Please try again in a moment.
-            </p>
-            <button
-              type="button"
-              onClick={() => setRetry((count) => count + 1)}
-              className="mt-6 inline-flex min-h-12 items-center justify-center rounded-lg border border-purple-400 px-7 py-3 font-semibold text-purple-200 transition hover:bg-purple-400/10 focus:outline-none focus:ring-2 focus:ring-purple-300"
-            >
-              Retry verification
-            </button>
-          </>
-        )}
-
-        <p className="mt-6 text-sm text-slate-400">
-          Need help? Return to the{" "}
-          <Link className="text-purple-300 underline underline-offset-4 hover:text-purple-200" to="/checkout">
-            course page
+    <main className="min-h-screen bg-[#f0f4f8] font-sans text-slate-800">
+      <header className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex min-h-[62px] max-w-6xl items-center justify-between px-5 sm:px-8">
+          <Link to="/checkout" className="text-lg font-extrabold tracking-tight text-slate-950 sm:text-xl">
+            <span className="text-blue-700">Import</span>withBusyDev
           </Link>
-          .
-        </p>
-      </section>
+          <span className="hidden text-sm font-medium text-slate-500 sm:inline">
+            Secure course enrollment
+          </span>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
+        <div className="mb-7 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+          <Link to="/checkout" className="hover:text-blue-700">Course</Link>
+          <span aria-hidden="true">›</span>
+          <span className="font-medium text-slate-800">Payment status</span>
+        </div>
+
+        <section
+          aria-live="polite"
+          className="mx-auto max-w-3xl overflow-hidden rounded-md border border-slate-200 bg-white"
+        >
+          <div className="border-b border-slate-200 bg-slate-50 px-6 py-7 sm:px-10 sm:py-9">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-700">
+              Import with BusyDev
+            </p>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              {heading}
+            </h1>
+          </div>
+
+          <div className="px-6 py-8 sm:px-10 sm:py-10">
+            {isChecking && (
+              <div className="flex items-start gap-4">
+                <div
+                  className="mt-1 h-6 w-6 shrink-0 animate-spin rounded-full border-2 border-slate-200 border-t-blue-700"
+                  aria-hidden="true"
+                />
+                <p className="max-w-xl leading-7 text-slate-600">
+                  Please wait while we confirm your payment securely with Paystack.
+                </p>
+              </div>
+            )}
+
+            {isConfirmed && (
+              <>
+                <div className="mb-6 flex items-center gap-4">
+                  <div
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-700 text-2xl font-bold text-white"
+                    aria-hidden="true"
+                  >
+                    ✓
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-900">Payment confirmed</p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      {selectedCourseLink?.name || "Your selected course package"}
+                    </p>
+                  </div>
+                </div>
+                <p className="mb-7 max-w-xl leading-7 text-slate-600">
+                  Thank you for enrolling. Continue to Telegram for the next
+                  steps to access your course package.
+                </p>
+                {selectedCourseLink?.url ? (
+                  <a
+                    href={selectedCourseLink.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-12 items-center justify-center rounded bg-blue-700 px-6 py-3 font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  >
+                    Access your package on Telegram
+                  </a>
+                ) : (
+                  <p className="rounded border border-amber-200 bg-amber-50 p-4 leading-6 text-amber-900">
+                    Your payment is confirmed, but the Telegram link for this
+                    package has not been configured yet. Please contact support.
+                  </p>
+                )}
+              </>
+            )}
+
+            {(verificationState === "missing" || verificationState === "unconfirmed") && (
+              <>
+                <p className="max-w-2xl leading-7 text-slate-600">
+                  {verificationState === "missing"
+                    ? "We did not receive a Paystack payment reference. Please complete payment using the checkout page."
+                    : verification.reason === "amount_mismatch"
+                      ? "The payment amount does not match one of the available course order totals. Please contact us with your payment reference."
+                      : verification.reason === "currency_mismatch"
+                        ? "Paystack reports a different currency from the required GHS. Please contact us with your payment reference."
+                        : verification.reason === "reference_mismatch"
+                          ? "The payment reference did not match the transaction Paystack returned. Please try again or contact us with your payment reference."
+                          : "Paystack has not confirmed a successful payment for this transaction. If you just paid, wait a moment and try again."}
+                </p>
+                {verificationState === "unconfirmed" && (
+                  <button
+                    type="button"
+                    onClick={() => setRetry((count) => count + 1)}
+                    className="mt-6 inline-flex min-h-12 items-center justify-center rounded border border-blue-700 px-6 py-3 font-bold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  >
+                    Check payment again
+                  </button>
+                )}
+              </>
+            )}
+
+            {verificationState === "error" && (
+              <>
+                <p className="max-w-2xl leading-7 text-slate-600">
+                  The payment service could not be reached. Your course access
+                  has not been shown. Please try again in a moment.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setRetry((count) => count + 1)}
+                  className="mt-6 inline-flex min-h-12 items-center justify-center rounded border border-blue-700 px-6 py-3 font-bold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  Retry verification
+                </button>
+              </>
+            )}
+          </div>
+
+          <footer className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
+            Need help? Return to the{" "}
+            <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="/checkout">
+              course page
+            </Link>
+            .
+          </footer>
+        </section>
+      </div>
     </main>
   );
 }

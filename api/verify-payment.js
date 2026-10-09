@@ -1,17 +1,10 @@
 import {
-  COURSE_ADD_ONS,
-  getCourseTotalPesewas,
+  getCoursePackage,
+  COURSE_PACKAGES,
 } from "../src/data/course-offers.js";
 import { env } from "node:process";
 
 const EXPECTED_CURRENCY = "GHS";
-const VALID_TOTALS = new Set(
-  Array.from({ length: 2 ** COURSE_ADD_ONS.length }, (_, mask) =>
-    getCourseTotalPesewas(
-      COURSE_ADD_ONS.filter((_, index) => mask & (1 << index)).map((addOn) => addOn.id),
-    ),
-  ),
-);
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -63,10 +56,13 @@ export default async function handler(req, res) {
   }
 
   const payment = result?.data;
+  const coursePackage = COURSE_PACKAGES.find(
+    (candidate) => candidate.amountPesewas === payment?.amount,
+  );
   const checks = {
     successful: result?.status === true && payment?.status === "success",
     referenceMatches: payment?.reference === reference,
-    amountMatches: VALID_TOTALS.has(payment?.amount),
+    amountMatches: Boolean(coursePackage),
     currencyMatches: payment?.currency === EXPECTED_CURRENCY,
   };
   const verified = Object.values(checks).every(Boolean);
@@ -82,6 +78,7 @@ export default async function handler(req, res) {
 
   return res.status(200).json({
     verified,
+    packageId: verified ? getCoursePackage(coursePackage.addOnIds)?.id : undefined,
     reason: verified
       ? undefined
       : !checks.successful
