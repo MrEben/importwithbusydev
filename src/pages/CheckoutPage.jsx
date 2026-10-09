@@ -1,8 +1,7 @@
 import { useState } from "react";
-import paystackLinks from "../data/paystack-links.json";
+import { useNavigate } from "react-router-dom";
 
 /* ---------- DATA (edit freely) ---------- */
-const PAYSTACK_CHECKOUT_URL = paystackLinks.test;
 
 const COURSE = {
   title: "The Complete Importation Masterclass",
@@ -136,13 +135,14 @@ const Stars = ({ n = 5, size = 24 }) => (
 
 /* ---------- COMPONENT ---------- */
 export default function CourseDetail() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("info");
   const [open, setOpen] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
 
   const handleCheckout = () => {
-    window.open(PAYSTACK_CHECKOUT_URL, "_blank", "noopener,noreferrer");
+    navigate("/upsell");
   };
 
   const total = 35;

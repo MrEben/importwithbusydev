@@ -1,7 +1,17 @@
+import {
+  COURSE_ADD_ONS,
+  getCourseTotalPesewas,
+} from "../src/data/course-offers.js";
 import { env } from "node:process";
 
-const EXPECTED_AMOUNT = 42000;
 const EXPECTED_CURRENCY = "GHS";
+const VALID_TOTALS = new Set(
+  Array.from({ length: 2 ** COURSE_ADD_ONS.length }, (_, mask) =>
+    getCourseTotalPesewas(
+      COURSE_ADD_ONS.filter((_, index) => mask & (1 << index)).map((addOn) => addOn.id),
+    ),
+  ),
+);
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -56,7 +66,7 @@ export default async function handler(req, res) {
   const checks = {
     successful: result?.status === true && payment?.status === "success",
     referenceMatches: payment?.reference === reference,
-    amountMatches: payment?.amount === EXPECTED_AMOUNT,
+    amountMatches: VALID_TOTALS.has(payment?.amount),
     currencyMatches: payment?.currency === EXPECTED_CURRENCY,
   };
   const verified = Object.values(checks).every(Boolean);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { readApiResponse } from "../utils/readApiResponse.js";
 
 const TELEGRAM_COURSE_URL = "https://t.me/your_course_channel";
 
@@ -31,7 +32,7 @@ export default function ThankYouPage() {
       signal: controller.signal,
     })
       .then(async (response) => {
-        const result = await response.json();
+        const result = await readApiResponse(response, "Payment verification");
         if (!response.ok) {
           throw new Error(result.message || "Payment verification failed");
         }
@@ -101,7 +102,7 @@ export default function ThankYouPage() {
               {verificationState === "missing"
                 ? "We did not receive a Paystack payment reference. Please complete payment using the checkout page."
                 : verification.reason === "amount_mismatch"
-                  ? "Paystack reports a different amount from the course price of GHS 420.00. Please contact us with your payment reference."
+                  ? "The payment amount does not match one of the available course order totals. Please contact us with your payment reference."
                   : verification.reason === "currency_mismatch"
                     ? "Paystack reports a different currency from the required GHS. Please contact us with your payment reference."
                     : verification.reason === "reference_mismatch"
