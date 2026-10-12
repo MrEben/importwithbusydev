@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import courseCurriculum from "../data/courseCurriculum.json";
 
 /* ---------- DATA (edit freely) ---------- */
 
@@ -19,80 +20,7 @@ const COURSE = {
     "I've spent the last 5 years in the importation business, working through the challenges of sourcing, negotiating, shipping, and selling goods.",
     "This training brings practical lessons together so you can make smarter decisions, find reliable suppliers, understand shipping and CBM calculations, and import products by yourself.",
   ],
-  sections: [
-    {
-      title: "Module 1: Introduction to China Importation in Ghana",
-      lessons: [
-        { name: "Understand how the China importation business works", time: "02:00", locked: true },
-        { name: "Discover why importation is one of the fastest ways to build a profitable business with low capital", time: "04:15", locked: true },
-      ],
-    },
-    {
-      title: "Module 2: Finding Winning Products (Optional)",
-      lessons: [
-        { name: "Learn how to identify hot selling products", time: "03:20", locked: true },
-        { name: "Understand product research techniques and market validation", time: "05:10", locked: true },
-        { name: "Discover low competition, high demand products that generate consistent profits", time: "04:05", locked: true },
-      ],
-    },
-    {
-      title: "Module 3: Essential Apps & Tools for Importation",
-      lessons: [
-        { name: "Master 1688, Pinduoduo, Alibaba, Taobao, Alipay, WeChat, Google Translate, and Hi Dictionary", time: "06:45", locked: true },
-        { name: "Learn how to use your smartphone as a complete importation business system", time: "03:55", locked: true },
-      ],
-    },
-    {
-      title: "Module 4: How to Buy from 1688, Alibaba & Pinduoduo",
-      lessons: [
-        { name: "Understand how to search products using images and keywords", time: "02:20", locked: true },
-        { name: "Learn how to identify trusted suppliers and avoid fake sellers", time: "03:10", locked: true },
-        { name: "Master supplier communication even without speaking Chinese", time: "04:40", locked: true },
-        { name: "4.1.1 Intro to 1688 App", time: "02:10", locked: true },
-        { name: "4.1.2 How to Enter Shipping Mark/Address on 1688", time: "03:05", locked: true },
-        { name: "4.1.3 How to Buy from 1688", time: "04:25", locked: true },
-        { name: "4.1.4 Master supplier communication", time: "03:15", locked: true },
-        { name: "4.1.5 What happens next?", time: "02:50", locked: true },
-        { name: "4.2.1 Intro to Alibaba App", time: "02:15", locked: true },
-        { name: "4.2.2 What to do before you buy from Alibaba", time: "02:55", locked: true },
-        { name: "4.2.3 Buying from Alibaba. Next Steps", time: "03:40", locked: true },
-        { name: "4.3.1 Intro to Pinduoduo", time: "02:25", locked: true },
-        { name: "4.3.2 Buying from Pinduoduo. Next Steps", time: "03:35", locked: true },
-      ],
-    },
-    {
-      title: "Module 5: Payment Methods & Currency Exchange",
-      lessons: [
-        { name: "Discover the safest ways to pay Chinese suppliers from Ghana", time: "04:10", locked: true },
-        { name: "5.1 Learn how to create, verify and fund your Alipay for all your payments", time: "05:20", locked: true },
-        { name: "5.2 Payment with Virtual Card", time: "03:40", locked: true },
-      ],
-    },
-    {
-      title: "Module 6: Shipping & Clearing to Ghana",
-      lessons: [
-        { name: "Understand air shipping vs sea shipping and when to use each", time: "04:30", locked: true },
-        { name: "Learn shipping timelines, costs, weight calculations, and cargo procedures", time: "05:15", locked: true },
-        { name: "Discover how to ship products safely from China without stress", time: "04:05", locked: true },
-      ],
-    },
-    {
-      title: "Module 7: Selling & Marketing Your Products",
-      lessons: [
-        { name: "Learn how to sell imported products online and offline", time: "03:35", locked: true },
-        { name: "Master WhatsApp marketing, Facebook Ads, TikTok marketing, and Instagram promotion", time: "06:20", locked: true },
-        { name: "Discover how to create irresistible offers that make customers buy fast", time: "04:15", locked: true },
-      ],
-    },
-    {
-      title: "Bonus Module: Secrets, Mistakes & Supplier Contacts",
-      lessons: [
-        { name: "Common mistakes beginners make and how to avoid them", time: "03:50", locked: true },
-        { name: "Important importation tips that save money and reduce losses", time: "04:00", locked: true },
-        { name: "Access to trusted supplier and shipping agent contacts", time: "02:45", locked: true },
-      ],
-    },
-  ],
+  sections: courseCurriculum.sections,
 };
 
 const OFFER_ITEMS = [
@@ -143,6 +71,7 @@ export default function CourseDetail() {
 
   const handleCheckout = () => {
     navigate("/upsell");
+    // navigate("/upsell");
   };
 
   const total = 35;

@@ -8,6 +8,7 @@ import CheckoutPage from './pages/CheckoutPage.jsx'
 import CoursePage from './pages/CoursePage.jsx'
 import ThankYouPage from './pages/ThankYouPage.jsx'
 import UpsellPage from './pages/UpsellPage.jsx'
+import LMSDashboard from './lms/LMSDashboard.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
 
 createRoot(document.getElementById('root')).render(
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/upsell" element={<UpsellPage />} />
         <Route path="/course" element={<CoursePage />} />
+        <Route path="/lms" element={<LMSDashboard />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
         <Route path="/thank-you." element={<ThankYouPage />} />
       </Routes>
