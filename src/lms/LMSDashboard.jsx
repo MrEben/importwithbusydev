@@ -407,9 +407,9 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             </p>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#0645ff]">
+                {/* <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#0645ff]">
                   Your learning dashboard
-                </p>
+                </p> */}
                 <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-[40px]">
                   Welcome to your classroom.
                 </h2>
@@ -457,7 +457,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               </div>
             </section>
 
-            <section
+            {/* <section
               aria-labelledby="continue-title"
               className="relative mt-8 overflow-hidden rounded-lg bg-[#0645ff] p-6 text-[#fffaf1] shadow-sm sm:p-9"
             >
@@ -470,9 +470,9 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 className="absolute -right-5 -top-12 h-52 w-52 rounded-full border-[1px] border-[#ffffff]/20"
               />
               <div className="relative max-w-xl">
-                {/* <span className="inline-flex rounded-full border border-[#ffffff]/30 bg-[#ffffff]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ffffff]">
+                <span className="inline-flex rounded-full border border-[#ffffff]/30 bg-[#ffffff]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ffffff]">
                   {completedLessons.length === 0 ? "Start learning" : "Continue learning"}
-                </span> */}
+                </span>
                 <h3
                   id="continue-title"
                   className="mt-5 text-2xl font-extrabold tracking-tight sm:text-3xl"
@@ -498,7 +498,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   <span aria-hidden="true">→</span>
                 </button>
               </div>
-            </section>
+            </section> */}
 
             <section
               id="lesson-workspace"
@@ -522,7 +522,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 </span>
               </div>
 
-              <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-lg bg-[#0645ff] text-center text-[#fffaf1]">
+              <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-lg bg-[#000] text-center text-[#fffaf1]">
                 {videoSource?.type === "embed" && (
                   <iframe
                     className="absolute inset-0 h-full w-full"
