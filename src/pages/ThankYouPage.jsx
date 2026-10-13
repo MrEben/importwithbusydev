@@ -198,13 +198,19 @@ export default function ThankYouPage() {
           aria-live="polite"
           className="mx-auto max-w-3xl overflow-hidden rounded-md border border-slate-200 bg-white"
         >
-          <div className="border-b border-slate-200 bg-slate-50 px-6 py-7 sm:px-10 sm:py-9">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-blue-700">
+          <div className="border-b border-slate-200 bg-slate-950 px-6 py-7 text-white sm:px-10 sm:py-9">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-amber-400">
               Import with BusyDev
             </p>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {heading}
             </h1>
+            {isConfirmed && !isCoachingPayment && (
+              <p className="mt-4 text-xl font-extrabold leading-snug sm:text-2xl">
+                But I have{" "}
+                <span className="text-amber-400">something extra</span> for you.
+              </p>
+            )}
           </div>
 
           <div className="px-6 py-8 sm:px-10 sm:py-10">
@@ -241,7 +247,7 @@ export default function ThankYouPage() {
                 <p className="mb-7 max-w-xl leading-7 text-slate-600">
                   {isCoachingPayment
                     ? "Thank you for investing in one-on-one coaching. Book your consultation session below."
-                    : "Congratulations, and thank you for enrolling! Your course is ready in the Import with BusyDev Learning Management System (LMS). Sign in with the same email address you used at checkout."}
+                    : "Congratulations, and thank you for enrolling! Your course login details are displayed right here on this page. Sign in to the Import with BusyDev Learning Management System (LMS) with the email you used at checkout and the password below. We will not send your login details by email."}
                 </p>
                 {!isCoachingPayment && (
                   <div className="max-w-xl rounded-md border border-blue-200 bg-blue-50 p-5 sm:p-6">
@@ -323,17 +329,20 @@ export default function ThankYouPage() {
                   </div>
                 ) : isConfirmed && !isCoachingPayment ? (
                   <div className="mt-8 border-t border-slate-200 pt-7">
-                    <h2 className="mb-3 text-xl font-bold text-slate-950">
-                      Get one-on-one support
-                    </h2>
-                    <p className="mb-5 max-w-xl leading-7 text-slate-600">
-                      Get one-on-one coaching with me, including weekly calls
-                      for assistance when you need it.
+                    <p className="mb-2 text-center text-sm font-bold italic text-amber-700">
+                      Introducing...
                     </p>
-                    <div className="rounded-md border border-slate-200 bg-slate-50 p-5 sm:p-6">
+                    <h2 className="mb-3 text-center text-2xl font-extrabold text-slate-950 sm:text-3xl">
+                      One-on-one coaching
+                    </h2>
+                    <p className="mx-auto mb-5 max-w-xl text-center leading-7 text-slate-600">
+                      Get direct one-on-one guidance from me, with weekly calls
+                      and support when you need help putting the course into action.
+                    </p>
+                    <div className="rounded-md border border-amber-300 bg-amber-50 p-5 sm:p-6">
                       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                         <h3 className="font-bold text-slate-900">One-on-one coaching</h3>
-                        <span className="text-xl font-extrabold text-slate-950">
+                        <span className="text-xl font-extrabold text-amber-800">
                           {formatGhs(COACHING_PRICE_GHS)}
                         </span>
                       </div>
@@ -366,11 +375,11 @@ export default function ThankYouPage() {
                         <button
                           type="submit"
                           disabled={isStartingCoachingPayment}
-                          className="inline-flex min-h-12 w-full items-center justify-center rounded bg-blue-700 px-6 py-3 font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
+                          className="inline-flex min-h-12 w-full items-center justify-center rounded bg-slate-950 px-6 py-3 font-bold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:cursor-wait disabled:opacity-60"
                         >
                           {isStartingCoachingPayment
                             ? "Connecting to Paystack..."
-                            : `Add coaching · ${formatGhs(COACHING_PRICE_GHS)}`}
+                            : `Get one-on-one coaching · ${formatGhs(COACHING_PRICE_GHS)}`}
                         </button>
                       </form>
                     </div>
