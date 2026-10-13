@@ -1,23 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import courseCurriculum from "../data/courseCurriculum.json";
+import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
 
-const courseModules = courseCurriculum.sections.map((section, moduleIndex) => ({
-  id: `module-${moduleIndex + 1}`,
-  title: section.title,
-  lessons: section.lessons.map((lesson, lessonIndex) => ({
-    id: `module-${moduleIndex + 1}-lesson-${lessonIndex + 1}`,
-    title: lesson.name,
-    duration: lesson.time,
-    videoUrl: lesson.videoUrl,
-    resources: lesson.resources,
-  })),
-}));
-
-const allLessons = courseModules.flatMap((module) =>
-  module.lessons.map((lesson) => ({ ...lesson, moduleId: module.id })),
-);
-const lessonIds = new Set(allLessons.map((lesson) => lesson.id));
 const progressStorageKey = "busydev-lms-completed-lessons";
 const themeStorageKey = "busydev-lms-theme";
 
@@ -99,7 +83,7 @@ function getVideoSource(videoUrl) {
   return { type: "unsupported" };
 }
 
-function readCompletedLessons() {
+function readCompletedLessons(lessonIds) {
   try {
     const saved = window.localStorage.getItem(progressStorageKey);
     const parsed = saved ? JSON.parse(saved) : [];
@@ -127,8 +111,36 @@ function LessonIcon({ completed = false }) {
   );
 }
 
-function LMSDashboardContent({ email, packages, onLogout }) {
-  const [completedLessons, setCompletedLessons] = useState(readCompletedLessons);
+function LMSDashboardContent({ curriculum, email, packages, onLogout }) {
+  const courseModules = useMemo(
+    () =>
+      curriculum.sections.map((section, moduleIndex) => ({
+        id: `module-${moduleIndex + 1}`,
+        title: section.title,
+        lessons: section.lessons.map((lesson, lessonIndex) => ({
+          id: `module-${moduleIndex + 1}-lesson-${lessonIndex + 1}`,
+          title: lesson.name,
+          duration: lesson.time,
+          videoUrl: lesson.videoUrl,
+          resources: lesson.resources,
+        })),
+      })),
+    [curriculum],
+  );
+  const allLessons = useMemo(
+    () =>
+      courseModules.flatMap((module) =>
+        module.lessons.map((lesson) => ({ ...lesson, moduleId: module.id })),
+      ),
+    [courseModules],
+  );
+  const lessonIds = useMemo(
+    () => new Set(allLessons.map((lesson) => lesson.id)),
+    [allLessons],
+  );
+  const [completedLessons, setCompletedLessons] = useState(() =>
+    readCompletedLessons(lessonIds),
+  );
   const [isDarkMode, setIsDarkMode] = useState(readSavedTheme);
   const [selectedLessonId, setSelectedLessonId] = useState(allLessons[0].id);
   const [expandedModuleId, setExpandedModuleId] = useState(null);
@@ -221,7 +233,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
         ),
       }))
       .filter((module) => module.lessons.length > 0);
-  }, [search]);
+  }, [courseModules, search]);
 
   function toggleLessonComplete() {
     setCompletedLessons((current) =>
@@ -1025,6 +1037,30 @@ export default function LMSDashboard() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sessionCheck, setSessionCheck] = useState(0);
+  const [curriculum, setCurriculum] = useState(null);
+  const [curriculumError, setCurriculumError] = useState("");
+  const [curriculumCheck, setCurriculumCheck] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCurriculum() {
+      setCurriculumError("");
+      try {
+        setCurriculum(
+          await fetchCourseCurriculum({ signal: controller.signal }),
+        );
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Unable to load LMS course curriculum", error);
+          setCurriculumError(error.message || "Could not load course content.");
+        }
+      }
+    }
+
+    loadCurriculum();
+    return () => controller.abort();
+  }, [curriculumCheck]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -1114,8 +1150,37 @@ export default function LMSDashboard() {
   }
 
   if (authState === "authenticated") {
+    if (!curriculum) {
+      return (
+        <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-9 font-[Inter,sans-serif] text-[#202124]">
+          <section className="w-full max-w-md rounded-lg border border-[#e2e5eb] bg-white p-6 shadow-sm sm:p-9">
+            {curriculumError ? (
+              <div role="alert">
+                <h1 className="text-2xl font-extrabold">Course content unavailable</h1>
+                <p className="mt-3 text-sm leading-relaxed text-[#737985]">
+                  {curriculumError}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setCurriculumCheck((current) => current + 1)}
+                  className="mt-5 rounded-lg bg-[#0645ff] px-5 py-3 text-sm font-extrabold text-white"
+                >
+                  Try again
+                </button>
+              </div>
+            ) : (
+              <p role="status" className="text-sm text-[#737985]">
+                Loading course content…
+              </p>
+            )}
+          </section>
+        </main>
+      );
+    }
+
     return (
       <LMSDashboardContent
+        curriculum={curriculum}
         email={email}
         packages={packages}
         onLogout={handleLogout}

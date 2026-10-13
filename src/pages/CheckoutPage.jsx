@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import courseCurriculum from "../data/courseCurriculum.json";
+import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 
 /* ---------- DATA (edit freely) ---------- */
 
@@ -20,7 +20,6 @@ const COURSE = {
     "I've spent the last 5 years in the importation business, working through the challenges of sourcing, negotiating, shipping, and selling goods.",
     "This training brings practical lessons together so you can make smarter decisions, find reliable suppliers, understand shipping and CBM calculations, and import products by yourself.",
   ],
-  sections: courseCurriculum.sections,
 };
 
 const OFFER_ITEMS = [
@@ -68,6 +67,31 @@ export default function CourseDetail() {
   const [open, setOpen] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [courseSections, setCourseSections] = useState([]);
+  const [curriculumError, setCurriculumError] = useState("");
+  const [curriculumReload, setCurriculumReload] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCurriculum() {
+      setCurriculumError("");
+      try {
+        const curriculum = await fetchCourseCurriculum({
+          signal: controller.signal,
+        });
+        setCourseSections(curriculum.sections);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Unable to load course curriculum", error);
+          setCurriculumError(error.message || "Could not load course content.");
+        }
+      }
+    }
+
+    loadCurriculum();
+    return () => controller.abort();
+  }, [curriculumReload]);
 
   const handleCheckout = () => {
     navigate("/upsell");
@@ -177,7 +201,16 @@ export default function CourseDetail() {
             {COURSE.about.map((t, i) => <p className="body" key={i}>{t}</p>)}
 
             <h2 className="content-h">Course Content</h2>
-            {COURSE.sections.map((sec, i) => {
+            {curriculumError ? (
+              <div className="curriculum-error" role="alert">
+                <p>{curriculumError}</p>
+                <button type="button" onClick={() => setCurriculumReload((value) => value + 1)}>
+                  Try again
+                </button>
+              </div>
+            ) : courseSections.length === 0 ? (
+              <p className="curriculum-status" role="status">Loading course content…</p>
+            ) : courseSections.map((sec, i) => {
               const isOpen = open === i;
               return (
                 <div className={"acc" + (isOpen ? " open" : "")} key={sec.title}>
@@ -341,6 +374,9 @@ const CSS = `
 .cep .acc.open .acc-head{background:var(--light);color:var(--brand);font-weight:500;padding:26px 30px}
 .cep .chev{color:var(--brand);transition:transform .2s}
 .cep .acc.open .chev{transform:rotate(-90deg)}
+.cep .curriculum-error{padding:18px 24px;color:#9b1c1c;background:#fef2f2}
+.cep .curriculum-error button{margin-top:8px;color:var(--brand);font-weight:700;text-decoration:underline}
+.cep .curriculum-status{padding:18px 24px;color:var(--muted)}
 .cep .lesson{display:flex;align-items:center;gap:16px;padding:16px 24px;font-size:22px;border-top:1px solid var(--line)}
 .cep .l-name{flex:1;line-height:1.45}
 .cep .l-time{display:inline-flex;align-items:center;justify-content:center;min-width:68px;color:var(--muted);font-size:17px;margin-right:12px;padding:6px 8px;border-radius:999px;background:var(--light);font-weight:600}

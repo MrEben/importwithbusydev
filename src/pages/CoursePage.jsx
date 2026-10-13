@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { initiateCheckout, lead } from "../utils/metaPixel";
 import MetaPixel from "../components/MetaPixel";
+import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 
 const pixelId = import.meta.env.PIXEL_ID;
 
 const inclusions = [
-  { number: "01", title: "CORE IMPORT COURSE", text: "20+ guided lessons covering product research, supplier communication, shipping, and selling.", value: "Start-to-finish guidance" },
+  { number: "01", title: "CORE IMPORT COURSE", text: "guided lessons covering product research, supplier communication, shipping, and selling.", value: "Start-to-finish guidance" },
   { number: "02", title: "SUPPLIER CONTACTS", text: "Find suppliers across popular product categories and learn how to evaluate them before ordering.", value: "200+ supplier contacts" },
   { number: "03", title: "SHIPPING KNOW-HOW", text: "Understand shipping methods, CBM calculations, etc.", value: "Plan with real costs in mind" },
   { number: "04", title: "ACCESS TO RESOURCES", text: "Get practical guides designed to help you understand the key steps involved in starting and running an importation business.", value: "Essential Resources" },
@@ -103,6 +104,36 @@ function CourseRegistration({ onClose }) {
 
 export default function CoursePage() {
   const [registrationOpen, setRegistrationOpen] = useState(false);
+  const [courseLessonCount, setCourseLessonCount] = useState(null);
+  const [curriculumError, setCurriculumError] = useState("");
+  const [curriculumReload, setCurriculumReload] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadCurriculum() {
+      setCurriculumError("");
+      try {
+        const curriculum = await fetchCourseCurriculum({
+          signal: controller.signal,
+        });
+        setCourseLessonCount(
+          curriculum.sections.reduce(
+            (total, section) => total + section.lessons.length,
+            0,
+          ),
+        );
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Unable to load course lesson count", error);
+          setCurriculumError(error.message || "Could not load course content.");
+        }
+      }
+    }
+
+    loadCurriculum();
+    return () => controller.abort();
+  }, [curriculumReload]);
 
   function openRegistration() {
     if (pixelId) {
@@ -160,7 +191,28 @@ export default function CoursePage() {
               <article className="course-inclusion" key={item.number}>
                 <span className="course-inclusion__icon" aria-hidden="true">{item.number}</span>
                 <h3>{item.title}</h3>
-                <p>{item.text}</p>
+                {item.number === "01" ? (
+                  curriculumError ? (
+                    <div role="alert">
+                      <p>{curriculumError}</p>
+                      <button
+                        type="button"
+                        className="course-button"
+                        onClick={() => setCurriculumReload((value) => value + 1)}
+                      >
+                        RETRY
+                      </button>
+                    </div>
+                  ) : courseLessonCount === null ? (
+                    <p role="status">Loading course lessons…</p>
+                  ) : (
+                    <p>
+                      {courseLessonCount} {item.text}
+                    </p>
+                  )
+                ) : (
+                  <p>{item.text}</p>
+                )}
                 <p className="course-inclusion__value">{item.value}</p>
               </article>
             ))}
