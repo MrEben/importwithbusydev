@@ -96,6 +96,7 @@ export default async function handler(req, res) {
         reference,
         packageId: selectedPackage.id,
         packageName: includedItems.join(" + "),
+        addOnIds: coursePackage.addOnIds,
         includedItems,
         amountPesewas: payment.amount,
         purchasedAt: payment.paid_at,
@@ -115,6 +116,8 @@ export default async function handler(req, res) {
         ? "one-on-one-coaching"
         : getCoursePackage(coursePackage.addOnIds)?.id
       : undefined,
+    coursePassword:
+      verified && coursePackage ? env.LMS_SHARED_PASSWORD || undefined : undefined,
     reason: verified
       ? undefined
       : !checks.successful

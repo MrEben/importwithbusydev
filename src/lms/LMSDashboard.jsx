@@ -117,7 +117,7 @@ function LessonIcon({ completed = false }) {
   );
 }
 
-function LMSDashboardContent({ email, onLogout }) {
+function LMSDashboardContent({ email, packages, onLogout }) {
   const [completedLessons, setCompletedLessons] = useState(readCompletedLessons);
   const [selectedLessonId, setSelectedLessonId] = useState(allLessons[0].id);
   const [expandedModuleId, setExpandedModuleId] = useState(null);
@@ -422,6 +422,40 @@ function LMSDashboardContent({ email, onLogout }) {
                 {allLessons.length} lessons · Self-paced
               </span>
             </div>
+
+            <section
+              aria-labelledby="purchases-title"
+              className="mt-6 rounded-2xl border border-[#eae5dc] bg-white p-5 sm:p-6"
+            >
+              <h3
+                id="purchases-title"
+                className="text-sm font-extrabold text-[#201d18]"
+              >
+                Your purchased package{packages.length === 1 ? "" : "s"}
+              </h3>
+              <div className="mt-4 space-y-4">
+                {packages.map((coursePackage, index) => (
+                  <article
+                    key={`${coursePackage.packageId}-${coursePackage.purchasedAt ?? index}`}
+                    className="rounded-xl bg-[#f8f6f1] p-4"
+                  >
+                    <h4 className="font-bold text-[#40382e]">
+                      {coursePackage.packageName}
+                    </h4>
+                    <ul className="mt-2 space-y-1 text-sm text-[#777064]">
+                      {coursePackage.includedItems.map((item) => (
+                        <li key={item} className="flex gap-2">
+                          <span aria-hidden="true" className="text-emerald-700">
+                            ✓
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+            </section>
 
             <section
               aria-labelledby="continue-title"
@@ -763,6 +797,7 @@ function LMSDashboardContent({ email, onLogout }) {
 export default function LMSDashboard() {
   const [authState, setAuthState] = useState("checking");
   const [email, setEmail] = useState("");
+  const [packages, setPackages] = useState([]);
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -786,8 +821,10 @@ export default function LMSDashboard() {
 
         if (result.authenticated && typeof result.email === "string") {
           setEmail(result.email);
+          setPackages(Array.isArray(result.packages) ? result.packages : []);
           setAuthState("authenticated");
         } else {
+          setPackages([]);
           setAuthState("unauthenticated");
         }
       } catch (error) {
@@ -821,6 +858,7 @@ export default function LMSDashboard() {
       }
 
       setEmail(result.email);
+      setPackages(Array.isArray(result.packages) ? result.packages : []);
       setPassword("");
       setAuthState("authenticated");
     } catch (error) {
@@ -844,6 +882,7 @@ export default function LMSDashboard() {
       }
 
       setPassword("");
+      setPackages([]);
       setAuthState("unauthenticated");
     } catch (error) {
       console.error("Unable to log out of LMS", error);
@@ -852,7 +891,13 @@ export default function LMSDashboard() {
   }
 
   if (authState === "authenticated") {
-    return <LMSDashboardContent email={email} onLogout={handleLogout} />;
+    return (
+      <LMSDashboardContent
+        email={email}
+        packages={packages}
+        onLogout={handleLogout}
+      />
+    );
   }
 
   return (

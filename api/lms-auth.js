@@ -5,10 +5,42 @@ import {
   getCoursePurchases,
   incrementLoginAttempts,
 } from "../lib/server/lmsPurchases.js";
+import { COURSE_ADD_ONS, COURSE_PACKAGES } from "../src/data/course-offers.js";
 
 const SESSION_COOKIE = "busydev_lms_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function formatPurchases(purchases) {
+  return purchases.map((purchase) => {
+    const coursePackage = COURSE_PACKAGES.find(
+      (candidate) => candidate.id === purchase.packageId,
+    );
+    const addOnIds = Array.isArray(purchase.addOnIds)
+      ? purchase.addOnIds
+      : coursePackage?.addOnIds ?? [];
+    const includedItems =
+      Array.isArray(purchase.includedItems) && purchase.includedItems.length > 0
+        ? purchase.includedItems
+        : [
+            "Complete Importation Masterclass",
+            ...addOnIds.map(
+              (addOnId) =>
+                COURSE_ADD_ONS.find((addOn) => addOn.id === addOnId)?.name ??
+                addOnId,
+            ),
+          ];
+
+    return {
+      packageId: purchase.packageId,
+      packageName: purchase.packageName || includedItems.join(" + "),
+      addOnIds,
+      includedItems,
+      amountPesewas: purchase.amountPesewas,
+      purchasedAt: purchase.purchasedAt,
+    };
+  });
+}
 
 function setNoStoreHeaders(res) {
   res.setHeader("Cache-Control", "no-store, private");
@@ -112,10 +144,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         authenticated: true,
         email,
-        packages: purchases.map(({ packageId, packageName }) => ({
-          packageId,
-          packageName,
-        })),
+        packages: formatPurchases(purchases),
       });
     } catch (error) {
       console.error("Unable to validate LMS session", error);
@@ -192,9 +221,6 @@ export default async function handler(req, res) {
   return res.status(200).json({
     authenticated: true,
     email,
-    packages: purchases.map(({ packageId, packageName }) => ({
-      packageId,
-      packageName,
-    })),
+    packages: formatPurchases(purchases),
   });
 }

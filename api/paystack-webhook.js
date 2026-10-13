@@ -95,6 +95,7 @@ export default async function handler(req, res) {
           reference,
           packageId: selectedPackage.id,
           packageName: includedItems.join(" + "),
+          addOnIds: coursePackage.addOnIds,
           includedItems,
           amountPesewas: amount,
           purchasedAt: payment.paid_at,

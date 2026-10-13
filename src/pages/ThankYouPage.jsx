@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { readApiResponse } from "../utils/readApiResponse.js";
-import telegramCourseLinks from "../data/telegram-course-links.json";
 import coachingContact from "../data/coaching-contact.json";
 import { COACHING_PRICE_GHS } from "../data/course-offers.js";
+
+const LMS_URL = "https://importwithbusydev.vercel.app/lms";
 
 const formatGhs = (amount) =>
   new Intl.NumberFormat("en-GH", {
@@ -15,12 +16,15 @@ const formatGhs = (amount) =>
 export default function ThankYouPage() {
   const [searchParams] = useSearchParams();
   const reference = searchParams.get("reference") || searchParams.get("trxref");
+  const [passwordCopied, setPasswordCopied] = useState(false);
+  const [copyError, setCopyError] = useState("");
   const [verification, setVerification] = useState({
     reference: null,
     retry: -1,
     state: "checking",
     reason: null,
     packageId: null,
+    coursePassword: null,
   });
   const [retry, setRetry] = useState(0);
   const verificationState =
@@ -51,6 +55,7 @@ export default function ThankYouPage() {
           state: result.verified ? "confirmed" : "unconfirmed",
           reason: result.reason,
           packageId: result.packageId,
+          coursePassword: result.coursePassword,
         });
       })
       .catch((error) => {
@@ -62,13 +67,13 @@ export default function ThankYouPage() {
             state: "error",
             reason: null,
             packageId: null,
+            coursePassword: null,
           });
         }
       });
 
     return () => controller.abort();
   }, [reference, retry]);
-  const selectedCourseLink = telegramCourseLinks[verification.packageId];
   const isConfirmed = verificationState === "confirmed";
   const isCoachingPayment =
     isConfirmed && verification.packageId === "one-on-one-coaching";
@@ -84,6 +89,23 @@ export default function ThankYouPage() {
         : verificationState === "error"
           ? "We couldn’t verify your payment"
           : "Payment not confirmed";
+
+  async function copyCoursePassword() {
+    setCopyError("");
+    if (typeof verification.coursePassword !== "string" || !verification.coursePassword) {
+      setCopyError("The course password is not configured yet. Please contact support.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(verification.coursePassword);
+      setPasswordCopied(true);
+      window.setTimeout(() => setPasswordCopied(false), 2000);
+    } catch (error) {
+      console.error("Unable to copy the LMS password", error);
+      setCopyError("Copy failed. Please select and copy the password above.");
+    }
+  }
 
   async function handleCoachingPayment(event) {
     event.preventDefault();
@@ -171,30 +193,76 @@ export default function ThankYouPage() {
                   <div>
                     <p className="font-bold text-slate-900">Payment confirmed</p>
                     <p className="mt-1 text-sm text-slate-600">
-                      {selectedCourseLink?.name || "Your selected course package"}
+                      {isCoachingPayment
+                        ? "One-on-one coaching"
+                        : "Your course package"}
                     </p>
                   </div>
                 </div>
                 <p className="mb-7 max-w-xl leading-7 text-slate-600">
                   {isCoachingPayment
                     ? "Thank you for investing in one-on-one coaching. Book your consultation session below."
-                    : "Thank you for enrolling. Continue to Telegram for the next steps to access your course package."}
+                    : "Congratulations, and thank you for enrolling! Your course is ready in the Import with BusyDev Learning Management System (LMS). Sign in with the same email address you used at checkout."}
                 </p>
-                {!isCoachingPayment && selectedCourseLink?.url ? (
-                  <a
-                    href={selectedCourseLink.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-12 items-center justify-center rounded bg-blue-700 px-6 py-3 font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  >
-                    Access your package on Telegram
-                  </a>
-                ) : !isCoachingPayment ? (
-                  <p className="rounded border border-amber-200 bg-amber-50 p-4 leading-6 text-amber-900">
-                    Your payment is confirmed, but the Telegram link for this
-                    package has not been configured yet. Please contact support.
-                  </p>
-                ) : null}
+                {!isCoachingPayment && (
+                  <div className="max-w-xl rounded-md border border-blue-200 bg-blue-50 p-5 sm:p-6">
+                    <h2 className="text-lg font-bold text-slate-950">
+                      Access your course in the LMS
+                    </h2>
+                    <p className="mt-2 leading-7 text-slate-700">
+                      Go to the LMS and sign in using your purchase email and
+                      the course password below. Keep this password for future
+                      sign-ins.
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center gap-3">
+                      <code className="rounded border border-blue-200 bg-white px-3 py-2 font-mono font-bold text-slate-900">
+                        {verification.coursePassword || "Contact support for your password"}
+                      </code>
+                      {verification.coursePassword && (
+                        <button
+                          type="button"
+                          onClick={copyCoursePassword}
+                          aria-label="Copy course password"
+                          className="inline-flex min-h-10 items-center gap-2 rounded border border-blue-700 px-3 py-2 text-sm font-bold text-blue-800 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            className="h-4 w-4"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                          >
+                            <rect
+                              x="7"
+                              y="6"
+                              width="9"
+                              height="11"
+                              rx="1.5"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                            <path
+                              d="M13 6V4.5A1.5 1.5 0 0 0 11.5 3h-7A1.5 1.5 0 0 0 3 4.5v9A1.5 1.5 0 0 0 4.5 15H7"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                          </svg>
+                          {passwordCopied ? "Copied" : "Copy password"}
+                        </button>
+                      )}
+                    </div>
+                    {copyError && (
+                      <p className="mt-3 text-sm text-red-700" role="alert">
+                        {copyError}
+                      </p>
+                    )}
+                    <a
+                      href={LMS_URL}
+                      className="mt-5 inline-flex min-h-12 items-center justify-center rounded bg-blue-700 px-6 py-3 font-bold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                      Go to the LMS
+                    </a>
+                  </div>
+                )}
 
                 {isCoachingPayment ? (
                   <div className="mt-8 border-t border-slate-200 pt-7">
@@ -214,7 +282,7 @@ export default function ThankYouPage() {
                       Book your consultation session
                     </a>
                   </div>
-                ) : selectedCourseLink?.url ? (
+                ) : isConfirmed && !isCoachingPayment ? (
                   <div className="mt-8 border-t border-slate-200 pt-7">
                     <h2 className="mb-3 text-xl font-bold text-slate-950">
                       Get one-on-one support
