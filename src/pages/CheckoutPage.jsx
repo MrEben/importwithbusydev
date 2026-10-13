@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { COURSE_PRICE_GHS } from "../data/course-offers.js";
 import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
+import { addToCart, viewContent } from "../utils/metaPixel.js";
+import MetaPixel from "../components/MetaPixel.jsx";
 
 /* ---------- DATA (edit freely) ---------- */
 
@@ -72,6 +75,14 @@ export default function CourseDetail() {
   const [curriculumReload, setCurriculumReload] = useState(0);
 
   useEffect(() => {
+    viewContent({
+      id: "complete-importation-masterclass",
+      name: COURSE.title,
+      price: COURSE_PRICE_GHS,
+    });
+  }, []);
+
+  useEffect(() => {
     const controller = new AbortController();
 
     async function loadCurriculum() {
@@ -94,6 +105,11 @@ export default function CourseDetail() {
   }, [curriculumReload]);
 
   const handleCheckout = () => {
+    addToCart({
+      id: "complete-importation-masterclass",
+      name: COURSE.title,
+      price: COURSE_PRICE_GHS,
+    });
     navigate("/upsell");
     // navigate("/upsell");
   };
@@ -104,6 +120,7 @@ export default function CourseDetail() {
 
   return (
     <div className="cep">
+      <MetaPixel />
       <style>{CSS}</style>
 
       {/* NAVBAR */}

@@ -1,19 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function MetaPixel({ id = import.meta.env.PIXEL_ID }) {
+  const pageViewTrackedForId = useRef(null);
+
   useEffect(() => {
     if (!id) return;
 
     const initializedIds = (window.__busydevMetaPixelInitializedIds ||= new Set());
+    const trackPageView = () => {
+      if (pageViewTrackedForId.current === id) return;
+      window.fbq?.("track", "PageView");
+      pageViewTrackedForId.current = id;
+    };
 
     if (initializedIds.has(id)) {
-      window.fbq?.("track", "PageView");
+      trackPageView();
       return;
     }
 
     if (window.fbq) {
       window.fbq("init", id);
-      window.fbq("track", "PageView");
+      trackPageView();
       initializedIds.add(id);
       return;
     }
@@ -39,10 +46,10 @@ export default function MetaPixel({ id = import.meta.env.PIXEL_ID }) {
     window.fbq = window.fbq || function () { (window.fbq.q = window.fbq.q || []).push(arguments); };
     try {
       window.fbq("init", id);
-      window.fbq("track", "PageView");
+      trackPageView();
       initializedIds.add(id);
-    } catch {
-      // ignore
+    } catch (error) {
+      console.error("Meta Pixel initialization failed:", error);
     }
   }, [id]);
 

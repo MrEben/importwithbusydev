@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { COURSE_ADD_ONS, COURSE_PRICE_GHS } from "../data/course-offers.js";
+import { initiateCheckout, lead } from "../utils/metaPixel.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
+import MetaPixel from "../components/MetaPixel.jsx";
 
 const formatGhs = (amount) =>
   new Intl.NumberFormat("en-GH", {
@@ -22,6 +24,14 @@ export default function UpsellPage() {
       (sum, addOn) => sum + (selectedAddOns.includes(addOn.id) ? addOn.priceGhs : 0),
       0,
     );
+
+  useEffect(() => {
+    initiateCheckout({
+      id: "complete-importation-masterclass",
+      name: "The Complete Importation Masterclass",
+      price: COURSE_PRICE_GHS,
+    });
+  }, []);
 
   function toggleAddOn(id) {
     setSelectedAddOns((selected) =>
@@ -48,6 +58,10 @@ export default function UpsellPage() {
         throw new Error(result.message || "Could not start payment. Please try again.");
       }
 
+      lead({
+        name: "The Complete Importation Masterclass",
+        price: total,
+      });
       window.location.assign(result.authorizationUrl);
     } catch (paymentError) {
       console.error("Unable to start payment", paymentError);
@@ -58,6 +72,7 @@ export default function UpsellPage() {
 
   return (
     <main className="min-h-screen bg-[#f0f4f8] font-sans text-slate-800">
+      <MetaPixel />
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex min-h-[62px] max-w-6xl items-center justify-between px-5 sm:px-8">
           <Link to="/checkout" className="text-lg font-extrabold tracking-tight text-slate-950 sm:text-xl">

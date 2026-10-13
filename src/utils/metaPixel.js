@@ -8,6 +8,8 @@ export const viewContent = (product) => {
   if (window.fbq) {
     window.fbq("track", "ViewContent", {
       content_name: product.name,
+      content_type: "product",
+      content_ids: product.id ? [product.id] : undefined,
       value: product.price,
       currency: "GHS",
     });
@@ -24,10 +26,36 @@ export const initiateCheckout = (product) => {
   }
 };
 
+export const addToCart = (product) => {
+  if (window.fbq) {
+    window.fbq("track", "AddToCart", {
+      content_name: product.name,
+      content_type: "product",
+      content_ids: product.id ? [product.id] : undefined,
+      value: product.price,
+      currency: "GHS",
+    });
+  }
+};
+
+export const addPaymentInfo = (product) => {
+  if (window.fbq) {
+    window.fbq("track", "AddPaymentInfo", {
+      content_name: product.name,
+      content_type: "product",
+      content_ids: product.id ? [product.id] : undefined,
+      value: product.price,
+      currency: "GHS",
+    });
+  }
+};
+
 export const purchase = (product = {}) => {
   if (window.fbq) {
     window.fbq("track", "Purchase", {
       content_name: product.name,
+      content_type: "product",
+      content_ids: product.id ? [product.id] : undefined,
       value: product.price,
       currency: "GHS",
     });

@@ -23,6 +23,12 @@ Successful `charge.success` webhook events are signature-verified and acknowledg
 
 Configure the Paystack callback URL to `https://<your-domain>/thank-you`.
 
+## Meta checkout funnel
+
+Configure `PIXEL_ID` for the browser Pixel.
+
+The browser Pixel tracks `PageView` and `ViewContent` on the course checkout page, `AddToCart` on its enrollment buttons, `InitiateCheckout` when the order checkout opens, and `Lead` after Paystack successfully initializes a transaction. After Paystack confirms payment, the thank-you page tracks `AddPaymentInfo` and `Purchase`. Since Paystack hosts the payment-method screen, `AddPaymentInfo` is tracked after successful payment confirmation when the browser can verify the completed payment. No Conversions API access token or server-side Meta events are used.
+
 ## LMS purchaser access
 
 The LMS login checks the checkout email against course purchases recorded by the verified Paystack webhook and `/api/verify-payment`. Purchases are stored server-side in Upstash Redis, keyed by a SHA-256 hash of the normalized email; each record includes the purchased package, add-on IDs, included items, amount, currency, and Paystack reference. The LMS displays the buyer's package and included items after sign-in. Webhook and payment-verification writes are idempotent by payment reference.

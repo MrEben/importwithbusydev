@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { readApiResponse } from "../utils/readApiResponse.js";
+import { COACHING_PRICE_GHS, COURSE_PACKAGES } from "../data/course-offers.js";
 import coachingContact from "../data/coaching-contact.json";
-import { COACHING_PRICE_GHS } from "../data/course-offers.js";
+import { addPaymentInfo, purchase } from "../utils/metaPixel.js";
+import MetaPixel from "../components/MetaPixel.jsx";
 
 const LMS_URL = "https://importwithbusydev.vercel.app/lms";
 
@@ -16,6 +18,7 @@ const formatGhs = (amount) =>
 export default function ThankYouPage() {
   const [searchParams] = useSearchParams();
   const reference = searchParams.get("reference") || searchParams.get("trxref");
+  const trackedPurchaseReferences = useRef(new Set());
   const [passwordCopied, setPasswordCopied] = useState(false);
   const [copyError, setCopyError] = useState("");
   const [verification, setVerification] = useState({
@@ -90,6 +93,41 @@ export default function ThankYouPage() {
           ? "We couldn’t verify your payment"
           : "Payment not confirmed";
 
+  useEffect(() => {
+    if (!isConfirmed || !reference || trackedPurchaseReferences.current.has(reference)) {
+      return;
+    }
+
+    const coursePackage = COURSE_PACKAGES.find(
+      (candidate) => candidate.id === verification.packageId,
+    );
+    const product = isCoachingPayment
+      ? {
+          id: "one-on-one-coaching",
+          name: "One-on-one coaching",
+          price: COACHING_PRICE_GHS,
+        }
+      : coursePackage
+        ? {
+            id: "complete-importation-masterclass",
+            name: "The Complete Importation Masterclass",
+            price: coursePackage.amountPesewas / 100,
+          }
+        : null;
+
+    if (!product) {
+      console.error("Could not determine the verified Meta Purchase product", {
+        packageId: verification.packageId,
+        reference,
+      });
+      return;
+    }
+
+    addPaymentInfo(product);
+    purchase(product);
+    trackedPurchaseReferences.current.add(reference);
+  }, [isConfirmed, isCoachingPayment, reference, verification.packageId]);
+
   async function copyCoursePassword() {
     setCopyError("");
     if (typeof verification.coursePassword !== "string" || !verification.coursePassword) {
@@ -137,6 +175,7 @@ export default function ThankYouPage() {
 
   return (
     <main className="min-h-screen bg-[#f0f4f8] font-sans text-slate-800">
+      <MetaPixel />
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex min-h-[62px] max-w-6xl items-center justify-between px-5 sm:px-8">
           <Link to="/checkout" className="text-lg font-extrabold tracking-tight text-slate-950 sm:text-xl">

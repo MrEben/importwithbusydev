@@ -104,6 +104,7 @@ export default async function handler(req, res) {
         console.error("Unable to store verified course purchaser", error);
         return res.status(503).json({ message: "Could not record course purchase" });
       }
+
     }
   }
 
