@@ -901,7 +901,7 @@ export default function LMSDashboard() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-10 font-[Inter,sans-serif] text-[#202124]">
+    <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-7 font-[Inter,sans-serif] text-[#202124]">
       <section className="w-full max-w-md rounded-lg border border-[#e2e5eb] bg-[#ffffff] p-6 shadow-sm sm:p-9">
         <a href="/" className="inline-flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0645ff] text-sm font-black tracking-tight text-[#ffffff]">
@@ -912,9 +912,9 @@ export default function LMSDashboard() {
           </span>
         </a>
 
-        <p className="mt-8 text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#0645ff]">
+        {/* <p className="mt-8 text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#0645ff]">
           Student learning portal
-        </p>
+        </p> */}
         <h1 className="mt-2 text-3xl font-extrabold tracking-tight">
           Sign in to your course
         </h1>
