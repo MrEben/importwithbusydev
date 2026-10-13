@@ -42,6 +42,8 @@ Create an Upstash Redis database and configure these Vercel environment variable
 
 The login API allows up to 10 attempts per IP address in a 15-minute window. After login, the server issues a signed, `HttpOnly`, `Secure`, `SameSite=Lax` cookie for seven days and checks the purchaser record on session validation. The browser does not store the password or authentication token in local storage. Deploy the Vercel functions after configuring the variables.
 
+Optional add-on download URLs are stored in the Upstash Redis hash `lms:course:addon-downloads`. Set the `importers-blueprint` field to the HTTPS download URL for the Importer's Blueprint Book, and the `supplier-communication` field to the HTTPS download URL for the Supplier Communication Guide. The authenticated LMS shows a download action only for add-ons included in the purchaser's package. Add-ons they did not buy are crossed out and link to the upsell page with that item selected. If a purchased add-on has no URL configured yet, the LMS displays “Download unavailable.”
+
 Purchases made before purchaser recording was enabled are not automatically imported into Redis. Those buyers will need their payment verified and recorded or be added through a controlled server-side backfill before LMS login will accept them. The LMS login gates the application UI, but frontend lesson data is still delivered as part of the public JavaScript bundle and Wistia media must be separately restricted if it should not be publicly accessible.
 
 ## Expanding the ESLint configuration

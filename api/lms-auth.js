@@ -2,6 +2,7 @@ import { Buffer } from "node:buffer";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env } from "node:process";
 import {
+  getCourseAddonDownloads,
   getCoursePurchases,
   incrementLoginAttempts,
 } from "../lib/server/lmsPurchases.js";
@@ -141,10 +142,15 @@ export default async function handler(req, res) {
         return res.status(200).json({ authenticated: false });
       }
 
+      const packages = formatPurchases(purchases);
+      const addOnDownloads = await getCourseAddonDownloads(
+        packages.flatMap((coursePackage) => coursePackage.addOnIds),
+      );
       return res.status(200).json({
         authenticated: true,
         email,
-        packages: formatPurchases(purchases),
+        packages,
+        addOnDownloads,
       });
     } catch (error) {
       console.error("Unable to validate LMS session", error);
@@ -217,10 +223,22 @@ export default async function handler(req, res) {
     });
   }
 
+  let addOnDownloads;
+  const packages = formatPurchases(purchases);
+  try {
+    addOnDownloads = await getCourseAddonDownloads(
+      packages.flatMap((coursePackage) => coursePackage.addOnIds),
+    );
+  } catch (error) {
+    console.error("Unable to load LMS add-on download links", error);
+    return res.status(503).json({ message: "Could not load your course downloads" });
+  }
+
   setSessionCookie(res, createSessionToken(email, sessionSecret));
   return res.status(200).json({
     authenticated: true,
     email,
-    packages: formatPurchases(purchases),
+    packages,
+    addOnDownloads,
   });
 }

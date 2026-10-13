@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { COURSE_ADD_ONS } from "../data/course-offers.js";
 import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
 
@@ -111,7 +113,13 @@ function LessonIcon({ completed = false }) {
   );
 }
 
-function LMSDashboardContent({ curriculum, email, packages, onLogout }) {
+function LMSDashboardContent({
+  curriculum,
+  email,
+  packages,
+  addOnDownloads,
+  onLogout,
+}) {
   const courseModules = useMemo(
     () =>
       curriculum.sections.map((section, moduleIndex) => ({
@@ -678,14 +686,56 @@ function LMSDashboardContent({ curriculum, email, packages, onLogout }) {
                       {coursePackage.packageName}
                     </h4>
                     <ul className="mt-2 space-y-1 text-sm text-[var(--lms-muted)]">
-                      {coursePackage.includedItems.map((item) => (
-                        <li key={item} className="flex gap-2">
-                          <span aria-hidden="true" className="text-emerald-700">
-                            ✓
-                          </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
+                      <li className="flex flex-wrap items-center gap-2">
+                        <span aria-hidden="true" className="text-emerald-700">
+                          ✓
+                        </span>
+                        <span>Complete Importation Masterclass</span>
+                      </li>
+                      {COURSE_ADD_ONS.map((addOn) => {
+                        const purchased = coursePackage.addOnIds.includes(addOn.id);
+                        const downloadUrl = addOnDownloads[addOn.id];
+
+                        return (
+                          <li
+                            key={addOn.id}
+                            className="flex flex-wrap items-center gap-2"
+                          >
+                            <span
+                              aria-hidden="true"
+                              className={purchased ? "text-emerald-700" : "text-[var(--lms-muted)]"}
+                            >
+                              {purchased ? "✓" : "–"}
+                            </span>
+                            <span className={purchased ? "" : "line-through"}>
+                              {addOn.name}
+                            </span>
+                            {purchased ? (
+                              downloadUrl ? (
+                                <a
+                                  href={downloadUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="rounded bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800 underline decoration-emerald-700 underline-offset-2 hover:bg-emerald-200"
+                                >
+                                  Download
+                                </a>
+                              ) : (
+                                <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">
+                                  Download unavailable
+                                </span>
+                              )
+                            ) : (
+                              <Link
+                                to={`/upsell?addOn=${encodeURIComponent(addOn.id)}`}
+                                className="rounded bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 underline decoration-amber-700 underline-offset-2 hover:bg-amber-200"
+                              >
+                                Get it
+                              </Link>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </article>
                 ))}
@@ -1033,6 +1083,7 @@ export default function LMSDashboard() {
   const [authState, setAuthState] = useState("checking");
   const [email, setEmail] = useState("");
   const [packages, setPackages] = useState([]);
+  const [addOnDownloads, setAddOnDownloads] = useState({});
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -1081,9 +1132,15 @@ export default function LMSDashboard() {
         if (result.authenticated && typeof result.email === "string") {
           setEmail(result.email);
           setPackages(Array.isArray(result.packages) ? result.packages : []);
+          setAddOnDownloads(
+            result.addOnDownloads && typeof result.addOnDownloads === "object"
+              ? result.addOnDownloads
+              : {},
+          );
           setAuthState("authenticated");
         } else {
           setPackages([]);
+          setAddOnDownloads({});
           setAuthState("unauthenticated");
         }
       } catch (error) {
@@ -1118,6 +1175,11 @@ export default function LMSDashboard() {
 
       setEmail(result.email);
       setPackages(Array.isArray(result.packages) ? result.packages : []);
+      setAddOnDownloads(
+        result.addOnDownloads && typeof result.addOnDownloads === "object"
+          ? result.addOnDownloads
+          : {},
+      );
       setPassword("");
       setAuthState("authenticated");
     } catch (error) {
@@ -1142,6 +1204,7 @@ export default function LMSDashboard() {
 
       setPassword("");
       setPackages([]);
+      setAddOnDownloads({});
       setAuthState("unauthenticated");
     } catch (error) {
       console.error("Unable to log out of LMS", error);
@@ -1183,6 +1246,7 @@ export default function LMSDashboard() {
         curriculum={curriculum}
         email={email}
         packages={packages}
+        addOnDownloads={addOnDownloads}
         onLogout={handleLogout}
       />
     );

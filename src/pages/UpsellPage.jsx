@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { COURSE_ADD_ONS, COURSE_PRICE_GHS } from "../data/course-offers.js";
 import { initiateCheckout, lead } from "../utils/metaPixel.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
@@ -13,8 +13,14 @@ const formatGhs = (amount) =>
   }).format(amount);
 
 export default function UpsellPage() {
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
-  const [selectedAddOns, setSelectedAddOns] = useState([]);
+  const [selectedAddOns, setSelectedAddOns] = useState(() => {
+    const requestedAddOn = searchParams.get("addOn");
+    return COURSE_ADD_ONS.some((addOn) => addOn.id === requestedAddOn)
+      ? [requestedAddOn]
+      : [];
+  });
   const [isStartingPayment, setIsStartingPayment] = useState(false);
   const [error, setError] = useState("");
 
