@@ -270,7 +270,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 <span className="block truncate text-sm font-extrabold leading-tight tracking-tight">
                   Import with BusyDev
                 </span>
-                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--lms-muted)]">
+                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-[0.05em] text-[var(--lms-muted)]">
                   Student learning portal
                 </span>
               </span>
