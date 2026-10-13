@@ -2,8 +2,18 @@ export const COURSE_PRICE_GHS = 420;
 export const COACHING_PRICE_GHS = 950;
 
 export const COURSE_ADD_ONS = [
-  { id: "importers-blueprint", name: "Importer's Blueprint Book", priceGhs: 30 },
-  { id: "supplier-communication", name: "Supplier Communication Guide", priceGhs: 20 },
+  {
+    id: "importers-blueprint",
+    name: "Importer's Blueprint Book",
+    description: "A step-by-step guide to sourcing and importing products.",
+    priceGhs: 30,
+  },
+  {
+    id: "supplier-communication",
+    name: "Supplier Communication Guide",
+    description: "Tips and templates for clear supplier conversations.",
+    priceGhs: 20,
+  },
 ];
 
 export const COURSE_PACKAGES = [
