@@ -5,13 +5,13 @@ export const COURSE_ADD_ONS = [
   {
     id: "importers-blueprint",
     name: "Importer's Blueprint Book",
-    description: "A step-by-step guide to sourcing and importing products.",
+    description: "You'll find lessons I shared from my 4 years experience of doing Importation",
     priceGhs: 30,
   },
   {
     id: "supplier-communication",
     name: "Supplier Communication Guide",
-    description: "Tips and templates for clear supplier conversations.",
+    description: "Before you chat any supplier and buy from them, you need to read this. It'll guide you on what and what-not to say",
     priceGhs: 20,
   },
 ];

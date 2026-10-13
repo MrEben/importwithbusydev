@@ -76,7 +76,7 @@ export default function UpsellPage() {
       <section className="mx-auto max-w-2xl">
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-extrabold uppercase leading-tight tracking-tight text-[var(--text)] sm:text-4xl">
-            Add more. Get results <span className="text-[#6926E8]">faster.</span>
+           There's a lot more. You might be <span className="text-[#6926E8]">interested😀.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-lg text-sm leading-6 text-[var(--text-muted)] sm:text-base">
             Your course is ready. Choose any extras to add to your order.
@@ -169,7 +169,7 @@ export default function UpsellPage() {
             disabled={isStartingPayment}
             className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-purple-700 px-6 py-3 font-bold text-white transition hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-[var(--page-bg)] disabled:cursor-wait disabled:opacity-60"
           >
-            {isStartingPayment ? "Connecting to Paystack..." : "Continue to Paystack"}
+            {isStartingPayment ? "Connecting to Paystack..." : "Make Payment"}
           </button>
           <p className="text-center text-xs text-[var(--text-muted)]">Secure payment via Paystack</p>
         </form>

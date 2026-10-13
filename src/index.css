@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+button:not(:disabled):not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
 .lms-dashboard {
   --lms-page: #f3f6fb;
   --lms-surface: #ffffff;
