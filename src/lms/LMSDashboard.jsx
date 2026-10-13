@@ -109,7 +109,7 @@ function LessonIcon({ completed = false }) {
       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${
         completed
           ? "bg-emerald-100 text-emerald-700"
-          : "bg-[#f4efe6] text-[#857866]"
+          : "bg-[#f0f2f7] text-[#737985]"
       }`}
     >
       {completed ? "✓" : "▶"}
@@ -198,8 +198,8 @@ function LMSDashboardContent({ email, packages, onLogout }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f6f1] text-[#201d18]">
-      <header className="sticky top-0 z-20 border-b border-[#e9e4da] bg-[#fffefa]/95 backdrop-blur">
+    <div className="min-h-screen bg-[#f3f6fb] font-[Inter,sans-serif] text-[#202124]">
+      <header className="sticky top-0 z-20 border-b border-[#e2e5eb] bg-[#ffffff]/95 backdrop-blur">
         <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
           <div className="flex min-w-0 items-center gap-3">
             <button
@@ -208,7 +208,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               aria-expanded={isMobileMenuOpen}
               aria-controls="lms-course-sidebar"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#e9e4da] text-[#60594f] transition hover:bg-[#f5f1e9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 md:hidden"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#e2e5eb] text-[#737985] transition hover:bg-[#f0f2f7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] md:hidden"
             >
               <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none">
                 <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -216,16 +216,16 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             </button>
             <a
               href="/"
-              className="flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-600"
+              className="flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0645ff]"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#202821] text-sm font-black tracking-tight text-[#e7b75e]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0645ff] text-sm font-black tracking-tight text-[#ffffff]">
                 BD
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-extrabold leading-tight tracking-tight">
                   Import with BusyDev
                 </span>
-                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-[#887f72]">
+                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-[#737985]">
                   Student learning portal
                 </span>
               </span>
@@ -238,13 +238,13 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             <button
               type="button"
               onClick={onLogout}
-              className="rounded-full border border-[#e9e4da] px-4 py-2 text-xs font-bold text-[#60594f] transition hover:border-[#cfc5b4] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+              className="rounded-full border border-[#e2e5eb] px-4 py-2 text-xs font-bold text-[#737985] transition hover:border-[#0645ff] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
             >
               Sign out
             </button>
             <a
               href="/"
-              className="hidden rounded-full border border-[#e9e4da] px-4 py-2 text-xs font-bold text-[#60594f] transition hover:border-[#cfc5b4] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 sm:inline-flex"
+              className="hidden rounded-full border border-[#e2e5eb] px-4 py-2 text-xs font-bold text-[#737985] transition hover:border-[#0645ff] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] sm:inline-flex"
             >
               Back to site
             </a>
@@ -258,7 +258,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             type="button"
             aria-label="Close course menu"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="fixed inset-x-0 bottom-0 top-[72px] z-30 bg-[#201d18]/40 md:hidden"
+            className="fixed inset-x-0 bottom-0 top-[72px] z-30 bg-[#202124]/40 md:hidden"
           />
         )}
         <aside
@@ -268,44 +268,44 @@ function LMSDashboardContent({ email, packages, onLogout }) {
           aria-label={isMobileMenuOpen ? "Course menu" : undefined}
           aria-hidden={isMobileViewport && !isMobileMenuOpen}
           inert={isMobileViewport && !isMobileMenuOpen}
-          className={`fixed bottom-0 left-0 top-[72px] z-40 w-[min(88vw,320px)] overflow-y-auto border-r border-[#e9e4da] bg-[#fffefa] px-5 py-6 shadow-[12px_0_40px_rgba(32,29,24,0.12)] transition-[transform,visibility] duration-300 md:sticky md:top-[72px] md:z-auto md:h-[calc(100vh-72px)] md:w-auto md:shadow-none md:px-6 ${
+          className={`fixed bottom-0 left-0 top-[72px] z-40 w-[min(88vw,320px)] overflow-y-auto border-r border-[#e2e5eb] bg-[#ffffff] px-5 py-6 shadow-sm transition-[transform,visibility] duration-300 md:sticky md:top-[72px] md:z-auto md:h-[calc(100vh-72px)] md:shadow-none md:px-6 ${
             isMobileMenuOpen
               ? "visible translate-x-0"
               : "invisible -translate-x-full"
           } md:visible md:translate-x-0`}
         >
           <div className="mb-5 flex items-center justify-between md:hidden">
-            <span className="text-xs font-extrabold uppercase tracking-[0.15em] text-[#887f72]">
+            <span className="text-xs font-extrabold uppercase tracking-[0.15em] text-[#737985]">
               Course menu
             </span>
             <button
               type="button"
               aria-label="Close course menu"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e9e4da] text-lg text-[#60594f] hover:bg-[#f5f1e9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e2e5eb] text-lg text-[#737985] hover:bg-[#f0f2f7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
             >
               ×
             </button>
           </div>
           <div className="mb-6">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#a08c6a]">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#0645ff]">
               Your course
             </p>
             <h1 className="mt-2 text-lg font-extrabold leading-snug tracking-tight">
               Importation Masterclass
             </h1>
-            <p className="mt-1.5 text-xs leading-relaxed text-[#81796e]">
+            <p className="mt-1.5 text-xs leading-relaxed text-[#737985]">
               Your start-to-finish guide to sourcing, shipping, and selling.
             </p>
           </div>
 
-          <div className="mb-6 rounded-2xl bg-[#f5f1e9] p-4">
+          <div className="mb-6 rounded-lg bg-[#f0f2f7] p-4">
             <div className="mb-2 flex items-center justify-between text-xs">
               <span className="font-bold">Course progress</span>
-              <span className="font-extrabold text-[#8b6426]">{progress}%</span>
+              <span className="font-extrabold text-[#0645ff]">{progress}%</span>
             </div>
             <div
-              className="h-2 overflow-hidden rounded-full bg-[#e4ded2]"
+              className="h-2 overflow-hidden rounded-full bg-[#e4e8f0]"
               role="progressbar"
               aria-label="Course progress"
               aria-valuemin={0}
@@ -313,21 +313,21 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               aria-valuenow={progress}
             >
               <div
-                className="h-full rounded-full bg-[#c38d3b] transition-[width]"
+                className="h-full rounded-full bg-[#0645ff] transition-[width]"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="mt-2 text-[11px] text-[#81796e]">
+            <p className="mt-2 text-[11px] text-[#737985]">
               {completedLessons.length} of {allLessons.length} lessons complete
             </p>
           </div>
 
           <label className="mb-4 block">
             <span className="sr-only">Search lessons</span>
-            <span className="flex items-center gap-2 rounded-xl border border-[#e9e4da] bg-white px-3">
+            <span className="flex items-center gap-2 rounded-lg border border-[#e2e5eb] bg-white px-3">
               <svg
                 aria-hidden="true"
-                className="h-4 w-4 shrink-0 text-[#928879]"
+                className="h-4 w-4 shrink-0 text-[#737985]"
                 viewBox="0 0 20 20"
                 fill="none"
               >
@@ -335,7 +335,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 <path d="m13.2 13.2 4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
               </svg>
               <input
-                className="h-10 min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[#a39a8d]"
+                className="h-10 min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[#737985]"
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
@@ -349,7 +349,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               <section key={module.id} aria-labelledby={`module-${module.id}`}>
                 <h2
                   id={`module-${module.id}`}
-                  className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#9a907f]"
+                  className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#737985]"
                 >
                   {module.title}
                 </h2>
@@ -366,10 +366,10 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                             setSelectedLessonId(lesson.id);
                             setIsMobileMenuOpen(false);
                           }}
-                          className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-600 ${
+                          className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0645ff] ${
                             isSelected
-                              ? "bg-[#f4ecdc] text-[#72511f]"
-                              : "text-[#686157] hover:bg-[#f7f4ee]"
+                              ? "bg-[#edf2ff] text-[#0645ff]"
+                              : "text-[#737985] hover:bg-[#f0f2f7]"
                           }`}
                         >
                           <LessonIcon completed={isComplete} />
@@ -377,7 +377,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                             <span className="block text-xs font-bold leading-snug">
                               {lesson.title}
                             </span>
-                            <span className="mt-1 block text-[10px] text-[#9a907f]">
+                            <span className="mt-1 block text-[10px] text-[#737985]">
                               {lesson.duration}
                             </span>
                           </span>
@@ -389,47 +389,47 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               </section>
             ))}
             {filteredModules.length === 0 && (
-              <p className="rounded-xl bg-[#f5f1e9] p-3 text-xs leading-relaxed text-[#81796e]">
+              <p className="rounded-lg bg-[#f0f2f7] p-3 text-xs leading-relaxed text-[#737985]">
                 No lessons match “{search}”. Try another search.
               </p>
             )}
           </nav>
-          <p className="mt-8 border-t border-[#eee9e0] pt-4 text-[11px] leading-relaxed text-[#918879]">
+          <p className="mt-8 border-t border-[#e2e5eb] pt-4 text-[11px] leading-relaxed text-[#737985]">
             Need help with your course? Contact the BusyDev support team.
           </p>
         </aside>
 
-        <main className="min-w-0 px-5 py-8 sm:px-8 sm:py-10 lg:px-12">
+        <main className="min-w-0 px-5 pt-6 pb-8 sm:px-8 sm:py-10 lg:px-12">
           <div className="mx-auto max-w-[960px]">
-            <p className="text-xs font-semibold text-[#8a8174]">
-              My learning <span className="px-1.5 text-[#c5b9a7]">/</span>{" "}
+            <p className="text-xs font-semibold text-[#737985]">
+              My learning <span className="px-1.5 text-[#737985]">/</span>{" "}
               {selectedModule.title}
             </p>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#a07a3e]">
+                <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#0645ff]">
                   Your learning dashboard
                 </p>
                 <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-[40px]">
                   Welcome to your classroom.
                 </h2>
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#777064]">
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#737985]">
                   Pick up where you left off and build your import business one
                   practical step at a time.
                 </p>
               </div>
-              <span className="rounded-full bg-[#eee8dc] px-3 py-1.5 text-[11px] font-bold text-[#75664f]">
+              <span className="rounded-full bg-[#edf2ff] px-3 py-1.5 text-[11px] font-bold text-[#737985]">
                 {allLessons.length} lessons · Self-paced
               </span>
             </div>
 
             <section
               aria-labelledby="purchases-title"
-              className="mt-6 rounded-2xl border border-[#eae5dc] bg-white p-5 sm:p-6"
+              className="mt-6 rounded-lg border border-[#e2e5eb] bg-white p-5 sm:p-6"
             >
               <h3
                 id="purchases-title"
-                className="text-sm font-extrabold text-[#201d18]"
+                className="text-sm font-extrabold text-[#202124]"
               >
                 Your purchased package{packages.length === 1 ? "" : "s"}
               </h3>
@@ -437,12 +437,12 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 {packages.map((coursePackage, index) => (
                   <article
                     key={`${coursePackage.packageId}-${coursePackage.purchasedAt ?? index}`}
-                    className="rounded-xl bg-[#f8f6f1] p-4"
+                    className="rounded-lg bg-[#f3f6fb] p-4"
                   >
-                    <h4 className="font-bold text-[#40382e]">
+                    <h4 className="font-bold text-[#202124]">
                       {coursePackage.packageName}
                     </h4>
-                    <ul className="mt-2 space-y-1 text-sm text-[#777064]">
+                    <ul className="mt-2 space-y-1 text-sm text-[#737985]">
                       {coursePackage.includedItems.map((item) => (
                         <li key={item} className="flex gap-2">
                           <span aria-hidden="true" className="text-emerald-700">
@@ -459,18 +459,18 @@ function LMSDashboardContent({ email, packages, onLogout }) {
 
             <section
               aria-labelledby="continue-title"
-              className="relative mt-8 overflow-hidden rounded-[26px] bg-[#202821] p-6 text-[#fffaf1] shadow-[0_20px_50px_rgba(40,43,34,0.12)] sm:p-9"
+              className="relative mt-8 overflow-hidden rounded-lg bg-[#0645ff] p-6 text-[#fffaf1] shadow-sm sm:p-9"
             >
               <div
                 aria-hidden="true"
-                className="absolute -right-16 -top-24 h-72 w-72 rounded-full border-[1px] border-[#dfbb77]/20"
+                className="absolute -right-16 -top-24 h-72 w-72 rounded-full border-[1px] border-[#ffffff]/20"
               />
               <div
                 aria-hidden="true"
-                className="absolute -right-5 -top-12 h-52 w-52 rounded-full border-[1px] border-[#dfbb77]/20"
+                className="absolute -right-5 -top-12 h-52 w-52 rounded-full border-[1px] border-[#ffffff]/20"
               />
               <div className="relative max-w-xl">
-                {/* <span className="inline-flex rounded-full border border-[#dfbb77]/30 bg-[#dfbb77]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#e7c98f]">
+                {/* <span className="inline-flex rounded-full border border-[#ffffff]/30 bg-[#ffffff]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ffffff]">
                   {completedLessons.length === 0 ? "Start learning" : "Continue learning"}
                 </span> */}
                 <h3
@@ -479,7 +479,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 >
                   {selectedLesson.title}
                 </h3>
-                <p className="mt-2 text-sm text-[#d0cfc5]">
+                <p className="mt-2 text-sm text-[#e2e5eb]">
                   {selectedModule.title} <span className="px-1.5">·</span>{" "}
                   {selectedLesson.duration}
                 </p>
@@ -490,7 +490,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                       .getElementById("lesson-workspace")
                       ?.scrollIntoView({ behavior: "smooth", block: "start" })
                   }
-                  className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#e5b75f] px-5 py-3 text-sm font-extrabold text-[#29251d] transition hover:bg-[#f0c979] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0c979]"
+                  className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#0645ff] px-5 py-3 text-sm font-extrabold text-[#ffffff] transition hover:bg-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0038d9]"
                 >
                   {completedLessons.includes(selectedLesson.id)
                     ? "Review lesson"
@@ -503,11 +503,11 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             <section
               id="lesson-workspace"
               aria-labelledby="lesson-title"
-              className="mt-8 scroll-mt-24 rounded-[24px] border border-[#eae5dc] bg-white p-6 shadow-[0_10px_35px_rgba(71,53,34,0.04)] sm:p-8"
+              className="mt-8 scroll-mt-24 rounded-lg border border-[#e2e5eb] bg-white p-6 shadow-sm sm:p-8"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="max-w-2xl">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#a07a3e]">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#0645ff]">
                     Lesson workspace
                   </p>
                   <h3
@@ -517,12 +517,12 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                     {selectedLesson.title}
                   </h3>
                 </div>
-                <span className="rounded-full bg-[#f5f1e9] px-3 py-1.5 text-xs font-bold text-[#716858]">
+                <span className="rounded-full bg-[#f0f2f7] px-3 py-1.5 text-xs font-bold text-[#737985]">
                   {selectedLesson.duration}
                 </span>
               </div>
 
-              <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-2xl bg-[#202821] text-center text-[#fffaf1]">
+              <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-lg bg-[#0645ff] text-center text-[#fffaf1]">
                 {videoSource?.type === "embed" && (
                   <iframe
                     className="absolute inset-0 h-full w-full"
@@ -552,7 +552,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   >
                     <span
                       aria-hidden="true"
-                      className="flex h-16 w-16 items-center justify-center rounded-full border border-[#e5b75f]/50 bg-[#e5b75f]/10 text-[#e5b75f]"
+                      className="flex h-16 w-16 items-center justify-center rounded-full border border-[#0645ff]/50 bg-[#0645ff]/10 text-[#0645ff]"
                     >
                       <svg className="ml-1 h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M7 4.8c0-.8.9-1.3 1.6-.9l11 6.7a1.6 1.6 0 0 1 0 2.8l-11 6.7c-.7.4-1.6-.1-1.6-.9V4.8Z" />
@@ -561,7 +561,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                     <p className="mt-5 text-sm font-extrabold sm:text-base">
                       Lesson video
                     </p>
-                    <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-[#d0cfc5]">
+                    <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-[#e2e5eb]">
                       Video content for this lesson will appear here.
                     </p>
                   </div>
@@ -572,20 +572,20 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                     className="absolute inset-0 flex flex-col items-center justify-center px-6"
                   >
                     <p className="text-sm font-bold">Unsupported video link</p>
-                    <p className="mt-2 max-w-md text-xs leading-relaxed text-[#d0cfc5]">
+                    <p className="mt-2 max-w-md text-xs leading-relaxed text-[#e2e5eb]">
                       Use a YouTube, Gumlet, or Vimeo link, or a direct MP4, WebM, or Ogg video URL.
                     </p>
                   </div>
                 )}
               </div>
 
-              <div className="mt-6 border-t border-[#eee9e0] pt-5">
+              <div className="mt-6 border-t border-[#e2e5eb] pt-5">
                 <section
                   aria-labelledby="lesson-resources-title"
-                  className="rounded-2xl border border-[#eae5dc] bg-[#fcfaf6] p-5 sm:p-6"
+                  className="rounded-lg border border-[#e2e5eb] bg-[#ffffff] p-5 sm:p-6"
                 >
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#a07a3e]">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#0645ff]">
                       Lesson materials
                     </p>
                     <h4
@@ -597,7 +597,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   </div>
                   <div className="mt-5 grid gap-5 sm:grid-cols-2">
                     <div>
-                      <h5 className="text-xs font-extrabold text-[#39342c]">
+                      <h5 className="text-xs font-extrabold text-[#202124]">
                         PowerPoint slides
                       </h5>
                       {selectedLesson.resources?.powerpointUrl ? (
@@ -605,19 +605,19 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                           href={selectedLesson.resources.powerpointUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-[#8b6426] underline decoration-[#c9ad7b] underline-offset-4 hover:text-[#684914] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                          className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-[#0645ff] underline decoration-[#0645ff] underline-offset-4 hover:text-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
                         >
                           Download PowerPoint slides
                           <span aria-hidden="true">↗</span>
                         </a>
                       ) : (
-                        <p className="mt-2 text-xs leading-relaxed text-[#81796e]">
+                        <p className="mt-2 text-xs leading-relaxed text-[#737985]">
                           No PowerPoint slides have been added yet.
                         </p>
                       )}
                     </div>
                     <div>
-                      <h5 className="text-xs font-extrabold text-[#39342c]">
+                      <h5 className="text-xs font-extrabold text-[#202124]">
                         Related YouTube videos
                       </h5>
                       {selectedLesson.resources?.youtubeLinks?.length ? (
@@ -629,7 +629,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                                   href={youtubeLink.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-start gap-2 text-xs font-semibold leading-relaxed text-[#8b6426] underline decoration-[#c9ad7b] underline-offset-4 hover:text-[#684914] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+                                  className="inline-flex items-start gap-2 text-xs font-semibold leading-relaxed text-[#0645ff] underline decoration-[#0645ff] underline-offset-4 hover:text-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
                                 >
                                   <span aria-hidden="true">▶</span>
                                   {youtubeLink.title || `YouTube resource ${index + 1}`}
@@ -639,7 +639,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                           )}
                         </ul>
                       ) : (
-                        <p className="mt-2 text-xs leading-relaxed text-[#81796e]">
+                        <p className="mt-2 text-xs leading-relaxed text-[#737985]">
                           No related YouTube videos have been added yet.
                         </p>
                       )}
@@ -650,10 +650,10 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   <button
                     type="button"
                     onClick={toggleLessonComplete}
-                    className={`rounded-full border px-4 py-2.5 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 ${
+                    className={`rounded-full border px-4 py-2.5 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] ${
                       completedLessons.includes(selectedLesson.id)
                         ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
-                        : "border-[#ded5c6] bg-white text-[#61594e] hover:bg-[#faf7f1]"
+                        : "border-[#e2e5eb] bg-white text-[#737985] hover:bg-[#f0f2f7]"
                     }`}
                   >
                     {completedLessons.includes(selectedLesson.id)
@@ -666,7 +666,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                     disabled={
                       selectedLesson.id === allLessons[allLessons.length - 1].id
                     }
-                    className="rounded-full bg-[#202821] px-5 py-2.5 text-xs font-bold text-[#fffaf1] transition hover:bg-[#354136] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="rounded-full bg-[#0645ff] px-5 py-2.5 text-xs font-bold text-[#fffaf1] transition hover:bg-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Next lesson <span aria-hidden="true">→</span>
                   </button>
@@ -677,7 +677,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             <section className="mt-8" aria-labelledby="modules-title">
               <div className="mb-4 flex items-end justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#a07a3e]">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#0645ff]">
                     The roadmap
                   </p>
                   <h3
@@ -701,7 +701,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   return (
                     <article
                       key={module.id}
-                      className="overflow-hidden rounded-2xl border border-[#eae5dc] bg-white transition hover:border-[#d8c9ad] hover:shadow-[0_12px_30px_rgba(71,53,34,0.07)]"
+                      className="overflow-hidden rounded-lg border border-[#e2e5eb] bg-white transition hover:border-[#0645ff] hover:shadow-sm"
                     >
                       <button
                         type="button"
@@ -710,13 +710,13 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                         onClick={() =>
                           setExpandedModuleId(isExpanded ? null : module.id)
                         }
-                        className="w-full p-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-amber-600"
+                        className="w-full p-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0645ff]"
                       >
                         <div className="flex items-center justify-between gap-3">
-                          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f5f1e9] text-xs font-extrabold text-[#96703a]">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#f0f2f7] text-xs font-extrabold text-[#0645ff]">
                             {String(index + 1).padStart(2, "0")}
                           </span>
-                          <span className="text-[10px] font-bold text-[#898173]">
+                          <span className="text-[10px] font-bold text-[#737985]">
                             {completedCount}/{module.lessons.length} lessons
                           </span>
                         </div>
@@ -724,14 +724,14 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                           {module.title}
                           <span
                             aria-hidden="true"
-                            className="shrink-0 text-base text-[#96703a]"
+                            className="shrink-0 text-base text-[#0645ff]"
                           >
                             {isExpanded ? "−" : "+"}
                           </span>
                         </span>
-                        <span className="mt-3 block h-1.5 overflow-hidden rounded-full bg-[#eee9e0]">
+                        <span className="mt-3 block h-1.5 overflow-hidden rounded-full bg-[#e2e5eb]">
                           <span
-                            className="block h-full rounded-full bg-[#c38d3b]"
+                            className="block h-full rounded-full bg-[#0645ff]"
                             style={{ width: `${moduleProgress}%` }}
                           />
                         </span>
@@ -739,7 +739,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                       {isExpanded && (
                         <ul
                           id={moduleLessonsId}
-                          className="space-y-1 border-t border-[#eee9e0] px-3 py-3"
+                          className="space-y-1 border-t border-[#e2e5eb] px-3 py-3"
                         >
                           {module.lessons.map((lesson) => {
                             const isComplete = completedLessons.includes(lesson.id);
@@ -758,10 +758,10 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                                         block: "start",
                                       });
                                   }}
-                                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-600 ${
+                                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0645ff] ${
                                     isSelected
-                                      ? "bg-[#f4ecdc] text-[#72511f]"
-                                      : "text-[#686157] hover:bg-[#f7f4ee]"
+                                      ? "bg-[#edf2ff] text-[#0645ff]"
+                                      : "text-[#737985] hover:bg-[#f0f2f7]"
                                   }`}
                                 >
                                   <LessonIcon completed={isComplete} />
@@ -769,7 +769,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                                     <span className="block text-xs font-bold leading-relaxed">
                                       {lesson.title}
                                     </span>
-                                    <span className="mt-1 block text-[10px] text-[#9a907f]">
+                                    <span className="mt-1 block text-[10px] text-[#737985]">
                                       {lesson.duration}
                                     </span>
                                   </span>
@@ -784,7 +784,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 })}
               </div>
             </section>
-            <footer className="py-8 text-center text-[11px] text-[#968d7f]">
+            <footer className="py-8 text-center text-[11px] text-[#737985]">
               Keep going — every lesson brings your first order closer.
             </footer>
           </div>
@@ -901,10 +901,10 @@ export default function LMSDashboard() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f8f6f1] px-5 py-10 text-[#201d18]">
-      <section className="w-full max-w-md rounded-[26px] border border-[#eae5dc] bg-[#fffefa] p-6 shadow-[0_20px_60px_rgba(71,53,34,0.1)] sm:p-9">
+    <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-10 font-[Inter,sans-serif] text-[#202124]">
+      <section className="w-full max-w-md rounded-lg border border-[#e2e5eb] bg-[#ffffff] p-6 shadow-sm sm:p-9">
         <a href="/" className="inline-flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#202821] text-sm font-black tracking-tight text-[#e7b75e]">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0645ff] text-sm font-black tracking-tight text-[#ffffff]">
             BD
           </span>
           <span className="text-sm font-extrabold tracking-tight">
@@ -912,32 +912,32 @@ export default function LMSDashboard() {
           </span>
         </a>
 
-        <p className="mt-8 text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#a07a3e]">
+        <p className="mt-8 text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#0645ff]">
           Student learning portal
         </p>
         <h1 className="mt-2 text-3xl font-extrabold tracking-tight">
           Sign in to your course
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-[#777064]">
+        <p className="mt-2 text-sm leading-relaxed text-[#737985]">
           Use the email address from your course purchase and the course password
           to continue learning.
         </p>
 
         {authState === "checking" && (
-          <p role="status" className="mt-6 rounded-xl bg-[#f5f1e9] p-4 text-sm text-[#716858]">
+          <p role="status" className="mt-6 rounded-lg bg-[#f0f2f7] p-4 text-sm text-[#737985]">
             Checking your secure course session…
           </p>
         )}
 
         {authState === "error" && (
           <div className="mt-6" role="alert">
-            <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-800">
+            <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-800">
               {errorMessage}
             </p>
             <button
               type="button"
               onClick={() => setSessionCheck((current) => current + 1)}
-              className="mt-3 text-sm font-bold text-[#8b6426] underline underline-offset-4"
+              className="mt-3 text-sm font-bold text-[#0645ff] underline underline-offset-4"
             >
               Try again
             </button>
@@ -946,7 +946,7 @@ export default function LMSDashboard() {
 
         {authState === "unauthenticated" && (
           <form className="mt-6 space-y-4" onSubmit={handleLogin}>
-            <label className="block text-xs font-bold text-[#39342c]">
+            <label className="block text-xs font-bold text-[#202124]">
               Purchase email
               <input
                 type="email"
@@ -957,11 +957,11 @@ export default function LMSDashboard() {
                 required
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="mt-2 h-12 w-full rounded-xl border border-[#ded5c6] bg-white px-4 text-sm font-normal text-[#201d18] outline-none transition focus:border-[#c38d3b] focus:ring-2 focus:ring-[#c38d3b]/20"
+                className="mt-2 h-12 w-full rounded-lg border border-[#e2e5eb] bg-white px-4 text-sm font-normal text-[#202124] outline-none transition focus:border-[#0645ff] focus:ring-2 focus:ring-[#0645ff]/20"
                 placeholder="you@example.com"
               />
             </label>
-            <label className="block text-xs font-bold text-[#39342c]">
+            <label className="block text-xs font-bold text-[#202124]">
               Course password
               <input
                 type="password"
@@ -970,7 +970,7 @@ export default function LMSDashboard() {
                 required
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                className="mt-2 h-12 w-full rounded-xl border border-[#ded5c6] bg-white px-4 text-sm font-normal text-[#201d18] outline-none transition focus:border-[#c38d3b] focus:ring-2 focus:ring-[#c38d3b]/20"
+                className="mt-2 h-12 w-full rounded-lg border border-[#e2e5eb] bg-white px-4 text-sm font-normal text-[#202124] outline-none transition focus:border-[#0645ff] focus:ring-2 focus:ring-[#0645ff]/20"
                 placeholder="Enter the course password"
               />
             </label>
@@ -978,7 +978,7 @@ export default function LMSDashboard() {
             {errorMessage && (
               <p
                 role="alert"
-                className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-relaxed text-red-800"
+                className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm leading-relaxed text-red-800"
               >
                 {errorMessage}
               </p>
@@ -987,14 +987,14 @@ export default function LMSDashboard() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex min-h-12 w-full items-center justify-center rounded-xl bg-[#202821] px-5 py-3 text-sm font-extrabold text-[#fffaf1] transition hover:bg-[#354136] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:cursor-wait disabled:opacity-60"
+              className="flex min-h-12 w-full items-center justify-center rounded-lg bg-[#0645ff] px-5 py-3 text-sm font-extrabold text-[#fffaf1] transition hover:bg-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] disabled:cursor-wait disabled:opacity-60"
             >
               {isSubmitting ? "Checking access…" : "Sign in"}
             </button>
           </form>
         )}
 
-        <p className="mt-6 border-t border-[#eee9e0] pt-5 text-xs leading-relaxed text-[#81796e]">
+        <p className="mt-6 border-t border-[#e2e5eb] pt-5 text-xs leading-relaxed text-[#737985]">
           Access is available to course purchasers. Use the same email address
           entered during checkout.
         </p>
