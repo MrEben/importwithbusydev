@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import courseCurriculum from "../data/courseCurriculum.json";
+import { readApiResponse } from "../utils/readApiResponse.js";
 
 const courseModules = courseCurriculum.sections.map((section, moduleIndex) => ({
   id: `module-${moduleIndex + 1}`,
@@ -116,7 +117,7 @@ function LessonIcon({ completed = false }) {
   );
 }
 
-export default function LMSDashboard() {
+function LMSDashboardContent({ email, onLogout }) {
   const [completedLessons, setCompletedLessons] = useState(readCompletedLessons);
   const [selectedLessonId, setSelectedLessonId] = useState(allLessons[0].id);
   const [expandedModuleId, setExpandedModuleId] = useState(null);
@@ -231,12 +232,19 @@ export default function LMSDashboard() {
             </a>
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.13em] text-emerald-800 sm:inline-flex">
-              Paid student access
+            <span className="hidden max-w-[220px] truncate rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-bold text-emerald-800 sm:inline-flex">
+              {email}
             </span>
+            <button
+              type="button"
+              onClick={onLogout}
+              className="rounded-full border border-[#e9e4da] px-4 py-2 text-xs font-bold text-[#60594f] transition hover:border-[#cfc5b4] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+            >
+              Sign out
+            </button>
             <a
               href="/"
-              className="rounded-full border border-[#e9e4da] px-4 py-2 text-xs font-bold text-[#60594f] transition hover:border-[#cfc5b4] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
+              className="hidden rounded-full border border-[#e9e4da] px-4 py-2 text-xs font-bold text-[#60594f] transition hover:border-[#cfc5b4] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 sm:inline-flex"
             >
               Back to site
             </a>
@@ -749,5 +757,203 @@ export default function LMSDashboard() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function LMSDashboard() {
+  const [authState, setAuthState] = useState("checking");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sessionCheck, setSessionCheck] = useState(0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function checkSession() {
+      setAuthState("checking");
+      setErrorMessage("");
+      try {
+        const response = await fetch("/api/lms-auth", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        const result = await readApiResponse(response, "LMS session check");
+        if (!response.ok) {
+          throw new Error(result.message || "Could not check your LMS session.");
+        }
+
+        if (result.authenticated && typeof result.email === "string") {
+          setEmail(result.email);
+          setAuthState("authenticated");
+        } else {
+          setAuthState("unauthenticated");
+        }
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Unable to check LMS session", error);
+          setErrorMessage(error.message || "Could not check your LMS session.");
+          setAuthState("error");
+        }
+      }
+    }
+
+    checkSession();
+    return () => controller.abort();
+  }, [sessionCheck]);
+
+  async function handleLogin(event) {
+    event.preventDefault();
+    setErrorMessage("");
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/lms-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        cache: "no-store",
+      });
+      const result = await readApiResponse(response, "LMS login");
+      if (!response.ok || !result.authenticated) {
+        throw new Error(result.message || "Could not verify your course access.");
+      }
+
+      setEmail(result.email);
+      setPassword("");
+      setAuthState("authenticated");
+    } catch (error) {
+      console.error("Unable to log in to LMS", error);
+      setErrorMessage(error.message || "Could not verify your course access.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleLogout() {
+    setErrorMessage("");
+    try {
+      const response = await fetch("/api/lms-auth", {
+        method: "DELETE",
+        cache: "no-store",
+      });
+      const result = await readApiResponse(response, "LMS logout");
+      if (!response.ok || result.authenticated) {
+        throw new Error(result.message || "Could not sign out.");
+      }
+
+      setPassword("");
+      setAuthState("unauthenticated");
+    } catch (error) {
+      console.error("Unable to log out of LMS", error);
+      setErrorMessage(error.message || "Could not sign out.");
+    }
+  }
+
+  if (authState === "authenticated") {
+    return <LMSDashboardContent email={email} onLogout={handleLogout} />;
+  }
+
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#f8f6f1] px-5 py-10 text-[#201d18]">
+      <section className="w-full max-w-md rounded-[26px] border border-[#eae5dc] bg-[#fffefa] p-6 shadow-[0_20px_60px_rgba(71,53,34,0.1)] sm:p-9">
+        <a href="/" className="inline-flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#202821] text-sm font-black tracking-tight text-[#e7b75e]">
+            BD
+          </span>
+          <span className="text-sm font-extrabold tracking-tight">
+            Import with BusyDev
+          </span>
+        </a>
+
+        <p className="mt-8 text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#a07a3e]">
+          Student learning portal
+        </p>
+        <h1 className="mt-2 text-3xl font-extrabold tracking-tight">
+          Sign in to your course
+        </h1>
+        <p className="mt-2 text-sm leading-relaxed text-[#777064]">
+          Use the email address from your course purchase and the course password
+          to continue learning.
+        </p>
+
+        {authState === "checking" && (
+          <p role="status" className="mt-6 rounded-xl bg-[#f5f1e9] p-4 text-sm text-[#716858]">
+            Checking your secure course session…
+          </p>
+        )}
+
+        {authState === "error" && (
+          <div className="mt-6" role="alert">
+            <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-relaxed text-red-800">
+              {errorMessage}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSessionCheck((current) => current + 1)}
+              className="mt-3 text-sm font-bold text-[#8b6426] underline underline-offset-4"
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
+        {authState === "unauthenticated" && (
+          <form className="mt-6 space-y-4" onSubmit={handleLogin}>
+            <label className="block text-xs font-bold text-[#39342c]">
+              Purchase email
+              <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                inputMode="email"
+                maxLength={254}
+                required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="mt-2 h-12 w-full rounded-xl border border-[#ded5c6] bg-white px-4 text-sm font-normal text-[#201d18] outline-none transition focus:border-[#c38d3b] focus:ring-2 focus:ring-[#c38d3b]/20"
+                placeholder="you@example.com"
+              />
+            </label>
+            <label className="block text-xs font-bold text-[#39342c]">
+              Course password
+              <input
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="mt-2 h-12 w-full rounded-xl border border-[#ded5c6] bg-white px-4 text-sm font-normal text-[#201d18] outline-none transition focus:border-[#c38d3b] focus:ring-2 focus:ring-[#c38d3b]/20"
+                placeholder="Enter the course password"
+              />
+            </label>
+
+            {errorMessage && (
+              <p
+                role="alert"
+                className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-relaxed text-red-800"
+              >
+                {errorMessage}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex min-h-12 w-full items-center justify-center rounded-xl bg-[#202821] px-5 py-3 text-sm font-extrabold text-[#fffaf1] transition hover:bg-[#354136] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:cursor-wait disabled:opacity-60"
+            >
+              {isSubmitting ? "Checking access…" : "Sign in"}
+            </button>
+          </form>
+        )}
+
+        <p className="mt-6 border-t border-[#eee9e0] pt-5 text-xs leading-relaxed text-[#81796e]">
+          Access is available to course purchasers. Use the same email address
+          entered during checkout.
+        </p>
+      </section>
+    </main>
   );
 }

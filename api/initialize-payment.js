@@ -23,6 +23,7 @@ export default async function handler(req, res) {
   ) {
     return res.status(400).json({ message: "Enter a valid email address" });
   }
+  const normalizedEmail = email.trim().toLowerCase();
 
   if (productId !== "course" && productId !== "one-on-one-coaching") {
     return res.status(400).json({ message: "Invalid product selected" });
@@ -54,7 +55,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email,
+        email: normalizedEmail,
         amount:
           productId === "one-on-one-coaching"
             ? COACHING_PRICE_GHS * 100

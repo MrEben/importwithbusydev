@@ -1,6 +1,8 @@
 import { Buffer } from "node:buffer";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env } from "node:process";
+import { COURSE_ADD_ONS, COURSE_PACKAGES, getCoursePackage } from "../src/data/course-offers.js";
+import { storeCoursePurchase } from "../lib/server/lmsPurchases.js";
 
 export const config = {
   api: {
@@ -65,8 +67,43 @@ export default async function handler(req, res) {
   }
 
   if (event.event === "charge.success") {
-    const { reference, amount, currency } = event.data ?? {};
+    const payment = event.data ?? {};
+    const { reference, amount, currency } = payment;
     console.info("Paystack charge succeeded", { reference, amount, currency });
+
+    const coursePackage = COURSE_PACKAGES.find(
+      (candidate) => candidate.amountPesewas === amount,
+    );
+    if (
+      payment.status === "success" &&
+      currency === "GHS" &&
+      typeof reference === "string" &&
+      coursePackage
+    ) {
+      const selectedPackage = getCoursePackage(coursePackage.addOnIds);
+      const includedItems = [
+        "Complete Importation Masterclass",
+        ...coursePackage.addOnIds.map(
+          (addOnId) =>
+            COURSE_ADD_ONS.find((addOn) => addOn.id === addOnId)?.name ?? addOnId,
+        ),
+      ];
+
+      try {
+        await storeCoursePurchase({
+          email: payment.customer?.email,
+          reference,
+          packageId: selectedPackage.id,
+          packageName: includedItems.join(" + "),
+          includedItems,
+          amountPesewas: amount,
+          purchasedAt: payment.paid_at,
+        });
+      } catch (error) {
+        console.error("Unable to store verified course purchaser", error);
+        return res.status(503).json({ message: "Could not record course purchase" });
+      }
+    }
   }
 
   return res.status(200).json({ status: "success" });

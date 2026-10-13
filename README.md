@@ -25,6 +25,21 @@ Successful `charge.success` webhook events are signature-verified and acknowledg
 
 Configure the Paystack callback URL to `https://<your-domain>/thank-you`. The Telegram invite itself is not protected by this site and may be shared; use a private/revocable invite or an account-based course system for stronger access control.
 
+## LMS purchaser access
+
+The LMS login checks the checkout email against course purchases recorded by the verified Paystack webhook and `/api/verify-payment`. Purchases are stored server-side in Upstash Redis, keyed by a SHA-256 hash of the normalized email; each record includes the purchased package, included items, amount, currency, and Paystack reference. Webhook and payment-verification writes are idempotent by payment reference.
+
+Create an Upstash Redis database and configure these Vercel environment variables for Preview and Production:
+
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+- `LMS_SHARED_PASSWORD` — the shared course password; set it only as a server environment variable.
+- `LMS_SESSION_SECRET` — a unique random secret of at least 32 characters, used to sign sessions.
+
+The login API allows up to 10 attempts per IP address in a 15-minute window. After login, the server issues a signed, `HttpOnly`, `Secure`, `SameSite=Lax` cookie for seven days and checks the purchaser record on session validation. The browser does not store the password or authentication token in local storage. Deploy the Vercel functions after configuring the variables.
+
+Purchases made before purchaser recording was enabled are not automatically imported into Redis. Those buyers will need their payment verified and recorded or be added through a controlled server-side backfill before LMS login will accept them. The LMS login gates the application UI, but frontend lesson data is still delivered as part of the public JavaScript bundle and Wistia media must be separately restricted if it should not be publicly accessible.
+
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

@@ -1,9 +1,11 @@
 import {
   getCoursePackage,
   COURSE_PACKAGES,
+  COURSE_ADD_ONS,
   COACHING_PRICE_GHS,
 } from "../src/data/course-offers.js";
 import { env } from "node:process";
+import { storeCoursePurchase } from "../lib/server/lmsPurchases.js";
 
 const EXPECTED_CURRENCY = "GHS";
 
@@ -76,6 +78,34 @@ export default async function handler(req, res) {
       amount: payment?.amount,
       currency: payment?.currency,
     });
+  }
+
+  if (verified && coursePackage) {
+    const selectedPackage = getCoursePackage(coursePackage.addOnIds);
+    const includedItems = [
+      "Complete Importation Masterclass",
+      ...coursePackage.addOnIds.map(
+        (addOnId) =>
+          COURSE_ADD_ONS.find((addOn) => addOn.id === addOnId)?.name ?? addOnId,
+      ),
+    ];
+
+    try {
+      await storeCoursePurchase({
+        email: payment?.customer?.email,
+        reference,
+        packageId: selectedPackage.id,
+        packageName: includedItems.join(" + "),
+        includedItems,
+        amountPesewas: payment.amount,
+        purchasedAt: payment.paid_at,
+      });
+    } catch (error) {
+      console.error("Unable to store verified course purchaser", error);
+      return res.status(503).json({
+        message: "Payment was confirmed, but course access setup failed. Please retry shortly.",
+      });
+    }
   }
 
   return res.status(200).json({
