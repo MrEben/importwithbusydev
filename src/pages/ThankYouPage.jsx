@@ -188,27 +188,27 @@ export default function ThankYouPage() {
       </header>
 
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12">
-        <div className="mb-7 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+        {/* <div className="mb-7 flex flex-wrap items-center gap-2 text-sm text-slate-500">
           <Link to="/checkout" className="hover:text-blue-700">Course</Link>
           <span aria-hidden="true">›</span>
           <span className="font-medium text-slate-800">Payment status</span>
-        </div>
+        </div> */}
 
         <section
           aria-live="polite"
           className="mx-auto max-w-3xl overflow-hidden rounded-md border border-slate-200 bg-white"
         >
           <div className="border-b border-slate-200 bg-slate-950 px-6 py-7 text-white sm:px-10 sm:py-9">
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-amber-400">
+            {/* <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-amber-400">
               Import with BusyDev
-            </p>
+            </p> */}
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {heading}
             </h1>
             {isConfirmed && !isCoachingPayment && (
               <p className="mt-4 text-xl font-extrabold leading-snug sm:text-2xl">
                 But I have{" "}
-                <span className="text-amber-400">something extra</span> for you.
+                <span className="text-amber-400">something extra</span> for you. Sroll down a bit to see it.
               </p>
             )}
           </div>
@@ -247,7 +247,7 @@ export default function ThankYouPage() {
                 <p className="mb-7 max-w-xl leading-7 text-slate-600">
                   {isCoachingPayment
                     ? "Thank you for investing in one-on-one coaching. Book your consultation session below."
-                    : "Congratulations, and thank you for enrolling! Your course login details are displayed right here on this page. Sign in to the Import with BusyDev Learning Management System (LMS) with the email you used at checkout and the password below. We will not send your login details by email."}
+                    : "Congratulations, and thank you for enrolling! Your course login details are displayed right here on this page. Sign in to the Import with BusyDev Learning Management System (LMS) with the email you used at checkout and the password below."}
                 </p>
                 {!isCoachingPayment && (
                   <div className="max-w-xl rounded-md border border-blue-200 bg-blue-50 p-5 sm:p-6">
