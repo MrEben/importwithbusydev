@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import courseCurriculum from "../data/courseCurriculum.json";
 import { readApiResponse } from "../utils/readApiResponse.js";
 
@@ -19,6 +19,16 @@ const allLessons = courseModules.flatMap((module) =>
 );
 const lessonIds = new Set(allLessons.map((lesson) => lesson.id));
 const progressStorageKey = "busydev-lms-completed-lessons";
+const themeStorageKey = "busydev-lms-theme";
+
+function readSavedTheme() {
+  try {
+    return window.localStorage.getItem(themeStorageKey) === "dark";
+  } catch (error) {
+    console.error("Unable to load LMS appearance preference:", error);
+    return false;
+  }
+}
 
 function getVideoSource(videoUrl) {
   if (!videoUrl?.trim()) return null;
@@ -119,10 +129,14 @@ function LessonIcon({ completed = false }) {
 
 function LMSDashboardContent({ email, packages, onLogout }) {
   const [completedLessons, setCompletedLessons] = useState(readCompletedLessons);
+  const [isDarkMode, setIsDarkMode] = useState(readSavedTheme);
   const [selectedLessonId, setSelectedLessonId] = useState(allLessons[0].id);
   const [expandedModuleId, setExpandedModuleId] = useState(null);
   const [search, setSearch] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const profileMenuRef = useRef(null);
   const [isMobileViewport, setIsMobileViewport] = useState(() =>
     window.matchMedia("(max-width: 767px)").matches,
   );
@@ -139,6 +153,14 @@ function LMSDashboardContent({ email, packages, onLogout }) {
   }, [completedLessons]);
 
   useEffect(() => {
+    try {
+      window.localStorage.setItem(themeStorageKey, isDarkMode ? "dark" : "light");
+    } catch (error) {
+      console.error("Unable to save LMS appearance preference:", error);
+    }
+  }, [isDarkMode]);
+
+  useEffect(() => {
     const mobileViewport = window.matchMedia("(max-width: 767px)");
     function updateViewport() {
       setIsMobileViewport(mobileViewport.matches);
@@ -150,15 +172,35 @@ function LMSDashboardContent({ email, packages, onLogout }) {
   }, []);
 
   useEffect(() => {
-    if (!isMobileMenuOpen) return undefined;
+    if (!isProfileMenuOpen) return undefined;
+
+    function closeProfileMenuOnOutsideClick(event) {
+      if (!profileMenuRef.current?.contains(event.target)) {
+        setIsProfileMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", closeProfileMenuOnOutsideClick);
+    return () =>
+      document.removeEventListener("pointerdown", closeProfileMenuOnOutsideClick);
+  }, [isProfileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen && !isProfileMenuOpen && !isSettingsOpen) {
+      return undefined;
+    }
 
     function closeOnEscape(event) {
-      if (event.key === "Escape") setIsMobileMenuOpen(false);
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+        setIsProfileMenuOpen(false);
+        setIsSettingsOpen(false);
+      }
     }
 
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, isProfileMenuOpen, isSettingsOpen]);
 
   const selectedLesson =
     allLessons.find((lesson) => lesson.id === selectedLessonId) ?? allLessons[0];
@@ -198,8 +240,11 @@ function LMSDashboardContent({ email, packages, onLogout }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f3f6fb] font-[Inter,sans-serif] text-[#202124]">
-      <header className="sticky top-0 z-20 border-b border-[#e2e5eb] bg-[#ffffff]/95 backdrop-blur">
+    <div
+      data-theme={isDarkMode ? "dark" : "light"}
+      className="lms-dashboard min-h-screen bg-[var(--lms-page)] font-[Inter,sans-serif] text-[var(--lms-ink)]"
+    >
+      <header className="sticky top-0 z-20 border-b border-[var(--lms-border)] bg-[var(--lms-surface)]/95 backdrop-blur">
         <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
           <div className="flex min-w-0 items-center gap-3">
             <button
@@ -208,7 +253,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               aria-expanded={isMobileMenuOpen}
               aria-controls="lms-course-sidebar"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#e2e5eb] text-[#737985] transition hover:bg-[#f0f2f7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] md:hidden"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[var(--lms-border)] text-[var(--lms-muted)] transition hover:bg-[var(--lms-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] md:hidden"
             >
               <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none">
                 <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -216,41 +261,219 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             </button>
             <a
               href="/"
-              className="flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0645ff]"
+              className="flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--lms-blue)]"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0645ff] text-sm font-black tracking-tight text-[#ffffff]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--lms-blue)] text-sm font-black tracking-tight text-[var(--lms-on-blue)]">
                 BD
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-extrabold leading-tight tracking-tight">
                   Import with BusyDev
                 </span>
-                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-[#737985]">
+                <span className="mt-0.5 block text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--lms-muted)]">
                   Student learning portal
                 </span>
               </span>
             </a>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden max-w-[220px] truncate rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[11px] font-bold text-emerald-800 sm:inline-flex">
-              {email}
-            </span>
+          <div
+            ref={profileMenuRef}
+            className="relative"
+            onBlur={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) {
+                setIsProfileMenuOpen(false);
+              }
+            }}
+          >
             <button
               type="button"
-              onClick={onLogout}
-              className="rounded-full border border-[#e2e5eb] px-4 py-2 text-xs font-bold text-[#737985] transition hover:border-[#0645ff] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
+              aria-label="Open profile menu"
+              aria-expanded={isProfileMenuOpen}
+              aria-controls="lms-profile-menu"
+              onClick={() => setIsProfileMenuOpen((isOpen) => !isOpen)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--lms-border)] bg-[var(--lms-surface)] text-[var(--lms-muted)] transition hover:border-[var(--lms-blue)] hover:text-[var(--lms-blue)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
             >
-              Sign out
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="12"
+                  cy="8"
+                  r="3.5"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                />
+                <path
+                  d="M5 20c.5-3.4 3.2-5.5 7-5.5s6.5 2.1 7 5.5"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                />
+              </svg>
             </button>
-            <a
-              href="/"
-              className="hidden rounded-full border border-[#e2e5eb] px-4 py-2 text-xs font-bold text-[#737985] transition hover:border-[#0645ff] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] sm:inline-flex"
-            >
-              Back to site
-            </a>
+            {isProfileMenuOpen && (
+              <div
+                id="lms-profile-menu"
+                className="absolute right-0 top-12 z-40 w-64 rounded-lg border border-[var(--lms-border)] bg-[var(--lms-surface)] p-2 shadow-lg"
+              >
+                <p className="truncate px-3 py-2 text-xs font-semibold text-[var(--lms-muted)]">
+                  {email}
+                </p>
+                <div className="my-1 border-t border-[var(--lms-border)]" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsProfileMenuOpen(false);
+                    setIsSettingsOpen(true);
+                  }}
+                  className="flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-left text-sm font-semibold text-[var(--lms-ink)] hover:bg-[var(--lms-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--lms-blue)]"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="h-4 w-4 text-[var(--lms-muted)]"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M8.4 2.8h3.2l.5 2a7 7 0 0 1 1.4.8l1.9-.7 1.6 2.8-1.4 1.5v1.6l1.4 1.5-1.6 2.8-1.9-.7a7 7 0 0 1-1.4.8l-.5 2H8.4l-.5-2a7 7 0 0 1-1.4-.8l-1.9.7L3 12.3l1.4-1.5V9.2L3 7.7l1.6-2.8 1.9.7a7 7 0 0 1 1.4-.8l.5-2Z"
+                      stroke="currentColor"
+                      strokeWidth="1.3"
+                      strokeLinejoin="round"
+                    />
+                    <circle
+                      cx="10"
+                      cy="10"
+                      r="2.2"
+                      stroke="currentColor"
+                      strokeWidth="1.3"
+                    />
+                  </svg>
+                  Settings
+                </button>
+                <a
+                  href="/"
+                  className="flex min-h-10 items-center gap-3 rounded-md px-3 text-sm font-semibold text-[var(--lms-ink)] hover:bg-[var(--lms-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--lms-blue)]"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="h-4 w-4 text-[var(--lms-muted)]"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M8 4H4.5A1.5 1.5 0 0 0 3 5.5v10A1.5 1.5 0 0 0 4.5 17h10a1.5 1.5 0 0 0 1.5-1.5V12"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M10 3h7v7m0-7-8 8"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Back to site
+                </a>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-left text-sm font-semibold text-red-700 hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="h-4 w-4"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M8 3H4.5A1.5 1.5 0 0 0 3 4.5v11A1.5 1.5 0 0 0 4.5 17H8m4-3 4-4-4-4m4 4H7"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
+
+      {isSettingsOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <button
+            type="button"
+            aria-label="Close settings"
+            onClick={() => setIsSettingsOpen(false)}
+            className="absolute inset-0 bg-black/50"
+          />
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="lms-settings-title"
+            className="relative z-10 w-full max-w-md rounded-lg border border-[var(--lms-border)] bg-[var(--lms-surface)] p-6 text-[var(--lms-ink)] shadow-xl"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 id="lms-settings-title" className="text-xl font-extrabold">
+                  Settings
+                </h2>
+                <p className="mt-1 text-sm text-[var(--lms-muted)]">
+                  Customize your learning portal.
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Close settings"
+                onClick={() => setIsSettingsOpen(false)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-xl text-[var(--lms-muted)] hover:bg-[var(--lms-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--lms-blue)]"
+              >
+                ×
+              </button>
+            </div>
+            <div className="mt-6 flex items-center justify-between gap-4 rounded-lg border border-[var(--lms-border)] p-4">
+              <div>
+                <p className="font-bold">Dark mode</p>
+                <p className="mt-1 text-sm text-[var(--lms-muted)]">
+                  {isDarkMode ? "Dark appearance is on" : "Light appearance is on"}
+                </p>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isDarkMode}
+                aria-label="Dark mode"
+                onClick={() => setIsDarkMode((enabled) => !enabled)}
+                className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] ${
+                  isDarkMode ? "bg-[var(--lms-blue)]" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                    isDarkMode ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsSettingsOpen(false)}
+                className="min-h-10 rounded-md bg-[var(--lms-blue)] px-4 text-sm font-bold text-white transition hover:bg-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
+              >
+                Done
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
 
       <div className="mx-auto grid max-w-[1440px] md:grid-cols-[272px_minmax(0,1fr)]">
         {isMobileMenuOpen && (
@@ -268,44 +491,44 @@ function LMSDashboardContent({ email, packages, onLogout }) {
           aria-label={isMobileMenuOpen ? "Course menu" : undefined}
           aria-hidden={isMobileViewport && !isMobileMenuOpen}
           inert={isMobileViewport && !isMobileMenuOpen}
-          className={`fixed bottom-0 left-0 top-[72px] z-40 w-[min(88vw,320px)] overflow-y-auto border-r border-[#e2e5eb] bg-[#ffffff] px-5 py-6 shadow-sm transition-[transform,visibility] duration-300 md:sticky md:top-[72px] md:z-auto md:h-[calc(100vh-72px)] md:shadow-none md:px-6 ${
+          className={`fixed bottom-0 left-0 top-[72px] z-40 w-[min(88vw,320px)] overflow-y-auto border-r border-[var(--lms-border)] bg-[var(--lms-surface)] px-5 py-6 shadow-sm transition-[transform,visibility] duration-300 md:sticky md:top-[72px] md:z-auto md:h-[calc(100vh-72px)] md:shadow-none md:px-6 ${
             isMobileMenuOpen
               ? "visible translate-x-0"
               : "invisible -translate-x-full"
           } md:visible md:translate-x-0`}
         >
           <div className="mb-5 flex items-center justify-between md:hidden">
-            <span className="text-xs font-extrabold uppercase tracking-[0.15em] text-[#737985]">
+            <span className="text-xs font-extrabold uppercase tracking-[0.15em] text-[var(--lms-muted)]">
               Course menu
             </span>
             <button
               type="button"
               aria-label="Close course menu"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[#e2e5eb] text-lg text-[#737985] hover:bg-[#f0f2f7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--lms-border)] text-lg text-[var(--lms-muted)] hover:bg-[var(--lms-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
             >
               ×
             </button>
           </div>
           <div className="mb-6">
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.19em] text-[#0645ff]">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.19em] text-[var(--lms-blue)]">
               Your course
             </p>
             <h1 className="mt-2 text-lg font-extrabold leading-snug tracking-tight">
               Importation Masterclass
             </h1>
-            <p className="mt-1.5 text-xs leading-relaxed text-[#737985]">
+            <p className="mt-1.5 text-xs leading-relaxed text-[var(--lms-muted)]">
               Your start-to-finish guide to sourcing, shipping, and selling.
             </p>
           </div>
 
-          <div className="mb-6 rounded-lg bg-[#f0f2f7] p-4">
+          <div className="mb-6 rounded-lg bg-[var(--lms-soft)] p-4">
             <div className="mb-2 flex items-center justify-between text-xs">
               <span className="font-bold">Course progress</span>
-              <span className="font-extrabold text-[#0645ff]">{progress}%</span>
+              <span className="font-extrabold text-[var(--lms-blue)]">{progress}%</span>
             </div>
             <div
-              className="h-2 overflow-hidden rounded-full bg-[#e4e8f0]"
+              className="h-2 overflow-hidden rounded-full bg-[var(--lms-track)]"
               role="progressbar"
               aria-label="Course progress"
               aria-valuemin={0}
@@ -313,21 +536,21 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               aria-valuenow={progress}
             >
               <div
-                className="h-full rounded-full bg-[#0645ff] transition-[width]"
+                className="h-full rounded-full bg-[var(--lms-blue)] transition-[width]"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="mt-2 text-[11px] text-[#737985]">
+            <p className="mt-2 text-[11px] text-[var(--lms-muted)]">
               {completedLessons.length} of {allLessons.length} lessons complete
             </p>
           </div>
 
           <label className="mb-4 block">
             <span className="sr-only">Search lessons</span>
-            <span className="flex items-center gap-2 rounded-lg border border-[#e2e5eb] bg-white px-3">
+            <span className="flex items-center gap-2 rounded-lg border border-[var(--lms-border)] bg-white px-3">
               <svg
                 aria-hidden="true"
-                className="h-4 w-4 shrink-0 text-[#737985]"
+                className="h-4 w-4 shrink-0 text-[var(--lms-muted)]"
                 viewBox="0 0 20 20"
                 fill="none"
               >
@@ -335,7 +558,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 <path d="m13.2 13.2 4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
               </svg>
               <input
-                className="h-10 min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[#737985]"
+                className="h-10 min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[var(--lms-muted)]"
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
@@ -349,7 +572,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               <section key={module.id} aria-labelledby={`module-${module.id}`}>
                 <h2
                   id={`module-${module.id}`}
-                  className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#737985]"
+                  className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.15em] text-[var(--lms-muted)]"
                 >
                   {module.title}
                 </h2>
@@ -366,10 +589,10 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                             setSelectedLessonId(lesson.id);
                             setIsMobileMenuOpen(false);
                           }}
-                          className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0645ff] ${
+                          className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${
                             isSelected
-                              ? "bg-[#edf2ff] text-[#0645ff]"
-                              : "text-[#737985] hover:bg-[#f0f2f7]"
+                              ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
+                              : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
                           }`}
                         >
                           <LessonIcon completed={isComplete} />
@@ -377,7 +600,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                             <span className="block text-xs font-bold leading-snug">
                               {lesson.title}
                             </span>
-                            <span className="mt-1 block text-[10px] text-[#737985]">
+                            <span className="mt-1 block text-[10px] text-[var(--lms-muted)]">
                               {lesson.duration}
                             </span>
                           </span>
@@ -389,47 +612,47 @@ function LMSDashboardContent({ email, packages, onLogout }) {
               </section>
             ))}
             {filteredModules.length === 0 && (
-              <p className="rounded-lg bg-[#f0f2f7] p-3 text-xs leading-relaxed text-[#737985]">
+              <p className="rounded-lg bg-[var(--lms-soft)] p-3 text-xs leading-relaxed text-[var(--lms-muted)]">
                 No lessons match “{search}”. Try another search.
               </p>
             )}
           </nav>
-          <p className="mt-8 border-t border-[#e2e5eb] pt-4 text-[11px] leading-relaxed text-[#737985]">
+          <p className="mt-8 border-t border-[var(--lms-border)] pt-4 text-[11px] leading-relaxed text-[var(--lms-muted)]">
             Need help with your course? Contact the BusyDev support team.
           </p>
         </aside>
 
         <main className="min-w-0 px-5 pt-6 pb-8 sm:px-8 sm:py-10 lg:px-12">
           <div className="mx-auto max-w-[960px]">
-            <p className="text-xs font-semibold text-[#737985]">
-              My learning <span className="px-1.5 text-[#737985]">/</span>{" "}
+            <p className="text-xs font-semibold text-[var(--lms-muted)]">
+              My learning <span className="px-1.5 text-[var(--lms-muted)]">/</span>{" "}
               {selectedModule.title}
             </p>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
               <div>
-                {/* <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#0645ff]">
+                {/* <p className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[var(--lms-blue)]">
                   Your learning dashboard
                 </p> */}
                 <h2 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-[40px]">
                   Welcome to your classroom.
                 </h2>
-                <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#737985]">
+                <p className="mt-2 max-w-xl text-sm leading-relaxed text-[var(--lms-muted)]">
                   Pick up where you left off and build your import business one
                   practical step at a time.
                 </p>
               </div>
-              <span className="rounded-full bg-[#edf2ff] px-3 py-1.5 text-[11px] font-bold text-[#737985]">
+              <span className="rounded-full bg-[var(--lms-soft-blue)] px-3 py-1.5 text-[11px] font-bold text-[var(--lms-muted)]">
                 {allLessons.length} lessons · Self-paced
               </span>
             </div>
 
             <section
               aria-labelledby="purchases-title"
-              className="mt-6 rounded-lg border border-[#e2e5eb] bg-white p-5 sm:p-6"
+              className="mt-6 rounded-lg border border-[var(--lms-border)] bg-white p-5 sm:p-6"
             >
               <h3
                 id="purchases-title"
-                className="text-sm font-extrabold text-[#202124]"
+                className="text-sm font-extrabold text-[var(--lms-ink)]"
               >
                 Your purchased package{packages.length === 1 ? "" : "s"}
               </h3>
@@ -437,12 +660,12 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 {packages.map((coursePackage, index) => (
                   <article
                     key={`${coursePackage.packageId}-${coursePackage.purchasedAt ?? index}`}
-                    className="rounded-lg bg-[#f3f6fb] p-4"
+                    className="rounded-lg bg-[var(--lms-page)] p-4"
                   >
-                    <h4 className="font-bold text-[#202124]">
+                    <h4 className="font-bold text-[var(--lms-ink)]">
                       {coursePackage.packageName}
                     </h4>
-                    <ul className="mt-2 space-y-1 text-sm text-[#737985]">
+                    <ul className="mt-2 space-y-1 text-sm text-[var(--lms-muted)]">
                       {coursePackage.includedItems.map((item) => (
                         <li key={item} className="flex gap-2">
                           <span aria-hidden="true" className="text-emerald-700">
@@ -459,7 +682,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
 
             {/* <section
               aria-labelledby="continue-title"
-              className="relative mt-8 overflow-hidden rounded-lg bg-[#0645ff] p-6 text-[#fffaf1] shadow-sm sm:p-9"
+              className="relative mt-8 overflow-hidden rounded-lg bg-[var(--lms-blue)] p-6 text-[var(--lms-on-blue)] shadow-sm sm:p-9"
             >
               <div
                 aria-hidden="true"
@@ -470,7 +693,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 className="absolute -right-5 -top-12 h-52 w-52 rounded-full border-[1px] border-[#ffffff]/20"
               />
               <div className="relative max-w-xl">
-                <span className="inline-flex rounded-full border border-[#ffffff]/30 bg-[#ffffff]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[#ffffff]">
+                <span className="inline-flex rounded-full border border-[#ffffff]/30 bg-[var(--lms-surface)]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--lms-on-blue)]">
                   {completedLessons.length === 0 ? "Start learning" : "Continue learning"}
                 </span>
                 <h3
@@ -490,7 +713,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                       .getElementById("lesson-workspace")
                       ?.scrollIntoView({ behavior: "smooth", block: "start" })
                   }
-                  className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#0645ff] px-5 py-3 text-sm font-extrabold text-[#ffffff] transition hover:bg-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0038d9]"
+                  className="mt-7 inline-flex items-center gap-2 rounded-full bg-[var(--lms-blue)] px-5 py-3 text-sm font-extrabold text-[var(--lms-on-blue)] transition hover:bg-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0038d9]"
                 >
                   {completedLessons.includes(selectedLesson.id)
                     ? "Review lesson"
@@ -503,11 +726,11 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             <section
               id="lesson-workspace"
               aria-labelledby="lesson-title"
-              className="mt-8 scroll-mt-24 rounded-lg border border-[#e2e5eb] bg-white p-6 shadow-sm sm:p-8"
+              className="mt-8 scroll-mt-24 rounded-lg border border-[var(--lms-border)] bg-white p-6 shadow-sm sm:p-8"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="max-w-2xl">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#0645ff]">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--lms-blue)]">
                     Lesson workspace
                   </p>
                   <h3
@@ -517,12 +740,12 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                     {selectedLesson.title}
                   </h3>
                 </div>
-                <span className="rounded-full bg-[#f0f2f7] px-3 py-1.5 text-xs font-bold text-[#737985]">
+                <span className="rounded-full bg-[var(--lms-soft)] px-3 py-1.5 text-xs font-bold text-[var(--lms-muted)]">
                   {selectedLesson.duration}
                 </span>
               </div>
 
-              <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-lg bg-[#000] text-center text-[#fffaf1]">
+              <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-lg bg-[#000] text-center text-[var(--lms-on-blue)]">
                 {videoSource?.type === "embed" && (
                   <iframe
                     className="absolute inset-0 h-full w-full"
@@ -552,7 +775,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   >
                     <span
                       aria-hidden="true"
-                      className="flex h-16 w-16 items-center justify-center rounded-full border border-[#0645ff]/50 bg-[#0645ff]/10 text-[#0645ff]"
+                      className="flex h-16 w-16 items-center justify-center rounded-full border border-[#0645ff]/50 bg-[var(--lms-blue)]/10 text-[var(--lms-blue)]"
                     >
                       <svg className="ml-1 h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M7 4.8c0-.8.9-1.3 1.6-.9l11 6.7a1.6 1.6 0 0 1 0 2.8l-11 6.7c-.7.4-1.6-.1-1.6-.9V4.8Z" />
@@ -579,13 +802,13 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 )}
               </div>
 
-              <div className="mt-6 border-t border-[#e2e5eb] pt-5">
+              <div className="mt-6 border-t border-[var(--lms-border)] pt-5">
                 <section
                   aria-labelledby="lesson-resources-title"
-                  className="rounded-lg border border-[#e2e5eb] bg-[#ffffff] p-5 sm:p-6"
+                  className="rounded-lg border border-[var(--lms-border)] bg-[var(--lms-surface)] p-5 sm:p-6"
                 >
                   <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#0645ff]">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[var(--lms-blue)]">
                       Lesson materials
                     </p>
                     <h4
@@ -597,7 +820,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   </div>
                   <div className="mt-5 grid gap-5 sm:grid-cols-2">
                     <div>
-                      <h5 className="text-xs font-extrabold text-[#202124]">
+                      <h5 className="text-xs font-extrabold text-[var(--lms-ink)]">
                         PowerPoint slides
                       </h5>
                       {selectedLesson.resources?.powerpointUrl ? (
@@ -605,19 +828,19 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                           href={selectedLesson.resources.powerpointUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-[#0645ff] underline decoration-[#0645ff] underline-offset-4 hover:text-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
+                          className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
                         >
                           Download PowerPoint slides
                           <span aria-hidden="true">↗</span>
                         </a>
                       ) : (
-                        <p className="mt-2 text-xs leading-relaxed text-[#737985]">
+                        <p className="mt-2 text-xs leading-relaxed text-[var(--lms-muted)]">
                           No PowerPoint slides have been added yet.
                         </p>
                       )}
                     </div>
                     <div>
-                      <h5 className="text-xs font-extrabold text-[#202124]">
+                      <h5 className="text-xs font-extrabold text-[var(--lms-ink)]">
                         Related YouTube videos
                       </h5>
                       {selectedLesson.resources?.youtubeLinks?.length ? (
@@ -629,7 +852,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                                   href={youtubeLink.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-start gap-2 text-xs font-semibold leading-relaxed text-[#0645ff] underline decoration-[#0645ff] underline-offset-4 hover:text-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
+                                  className="inline-flex items-start gap-2 text-xs font-semibold leading-relaxed text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
                                 >
                                   <span aria-hidden="true">▶</span>
                                   {youtubeLink.title || `YouTube resource ${index + 1}`}
@@ -639,7 +862,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                           )}
                         </ul>
                       ) : (
-                        <p className="mt-2 text-xs leading-relaxed text-[#737985]">
+                        <p className="mt-2 text-xs leading-relaxed text-[var(--lms-muted)]">
                           No related YouTube videos have been added yet.
                         </p>
                       )}
@@ -650,10 +873,10 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   <button
                     type="button"
                     onClick={toggleLessonComplete}
-                    className={`rounded-full border px-4 py-2.5 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] ${
+                    className={`rounded-full border px-4 py-2.5 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] ${
                       completedLessons.includes(selectedLesson.id)
                         ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
-                        : "border-[#e2e5eb] bg-white text-[#737985] hover:bg-[#f0f2f7]"
+                        : "border-[var(--lms-border)] bg-white text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
                     }`}
                   >
                     {completedLessons.includes(selectedLesson.id)
@@ -666,7 +889,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                     disabled={
                       selectedLesson.id === allLessons[allLessons.length - 1].id
                     }
-                    className="rounded-full bg-[#0645ff] px-5 py-2.5 text-xs font-bold text-[#fffaf1] transition hover:bg-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="rounded-full bg-[var(--lms-blue)] px-5 py-2.5 text-xs font-bold text-[var(--lms-on-blue)] transition hover:bg-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     Next lesson <span aria-hidden="true">→</span>
                   </button>
@@ -677,7 +900,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
             <section className="mt-8" aria-labelledby="modules-title">
               <div className="mb-4 flex items-end justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#0645ff]">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--lms-blue)]">
                     The roadmap
                   </p>
                   <h3
@@ -701,7 +924,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                   return (
                     <article
                       key={module.id}
-                      className="overflow-hidden rounded-lg border border-[#e2e5eb] bg-white transition hover:border-[#0645ff] hover:shadow-sm"
+                      className="overflow-hidden rounded-lg border border-[var(--lms-border)] bg-white transition hover:border-[var(--lms-blue)] hover:shadow-sm"
                     >
                       <button
                         type="button"
@@ -710,13 +933,13 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                         onClick={() =>
                           setExpandedModuleId(isExpanded ? null : module.id)
                         }
-                        className="w-full p-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#0645ff]"
+                        className="w-full p-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[var(--lms-blue)]"
                       >
                         <div className="flex items-center justify-between gap-3">
-                          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#f0f2f7] text-xs font-extrabold text-[#0645ff]">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--lms-soft)] text-xs font-extrabold text-[var(--lms-blue)]">
                             {String(index + 1).padStart(2, "0")}
                           </span>
-                          <span className="text-[10px] font-bold text-[#737985]">
+                          <span className="text-[10px] font-bold text-[var(--lms-muted)]">
                             {completedCount}/{module.lessons.length} lessons
                           </span>
                         </div>
@@ -724,14 +947,14 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                           {module.title}
                           <span
                             aria-hidden="true"
-                            className="shrink-0 text-base text-[#0645ff]"
+                            className="shrink-0 text-base text-[var(--lms-blue)]"
                           >
                             {isExpanded ? "−" : "+"}
                           </span>
                         </span>
                         <span className="mt-3 block h-1.5 overflow-hidden rounded-full bg-[#e2e5eb]">
                           <span
-                            className="block h-full rounded-full bg-[#0645ff]"
+                            className="block h-full rounded-full bg-[var(--lms-blue)]"
                             style={{ width: `${moduleProgress}%` }}
                           />
                         </span>
@@ -739,7 +962,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                       {isExpanded && (
                         <ul
                           id={moduleLessonsId}
-                          className="space-y-1 border-t border-[#e2e5eb] px-3 py-3"
+                          className="space-y-1 border-t border-[var(--lms-border)] px-3 py-3"
                         >
                           {module.lessons.map((lesson) => {
                             const isComplete = completedLessons.includes(lesson.id);
@@ -758,10 +981,10 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                                         block: "start",
                                       });
                                   }}
-                                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#0645ff] ${
+                                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${
                                     isSelected
-                                      ? "bg-[#edf2ff] text-[#0645ff]"
-                                      : "text-[#737985] hover:bg-[#f0f2f7]"
+                                      ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
+                                      : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
                                   }`}
                                 >
                                   <LessonIcon completed={isComplete} />
@@ -769,7 +992,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                                     <span className="block text-xs font-bold leading-relaxed">
                                       {lesson.title}
                                     </span>
-                                    <span className="mt-1 block text-[10px] text-[#737985]">
+                                    <span className="mt-1 block text-[10px] text-[var(--lms-muted)]">
                                       {lesson.duration}
                                     </span>
                                   </span>
@@ -784,7 +1007,7 @@ function LMSDashboardContent({ email, packages, onLogout }) {
                 })}
               </div>
             </section>
-            <footer className="py-8 text-center text-[11px] text-[#737985]">
+            <footer className="py-8 text-center text-[11px] text-[var(--lms-muted)]">
               Keep going — every lesson brings your first order closer.
             </footer>
           </div>
@@ -901,7 +1124,7 @@ export default function LMSDashboard() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-7 font-[Inter,sans-serif] text-[#202124]">
+    <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-9 font-[Inter,sans-serif] text-[#202124]">
       <section className="w-full max-w-md rounded-lg border border-[#e2e5eb] bg-[#ffffff] p-6 shadow-sm sm:p-9">
         <a href="/" className="inline-flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0645ff] text-sm font-black tracking-tight text-[#ffffff]">
