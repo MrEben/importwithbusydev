@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams,Link } from "react-router-dom";
 import { COURSE_ADD_ONS, COACHING_PRICE_GHS } from "../data/course-offers.js";
 import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
