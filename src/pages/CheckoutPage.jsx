@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { COURSE_PRICE_GHS } from "../data/course-offers.js";
 import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 import { addToCart, viewContent } from "../utils/metaPixel.js";
@@ -321,7 +321,6 @@ export default function CourseDetail() {
             <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
               Send Message
             </Link>
-            .
           </div>
           <p>A course by</p>
           <div className="a-row"><div className="avatar lg">{COURSE.author[0]}</div><b>{COURSE.author}</b></div>
