@@ -77,7 +77,7 @@ export default function UpsellPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--page-bg)] px-4 py-8 font-sans text-[var(--text)] sm:px-6 sm:py-12">
+    <main className="min-h-screen bg-[var(--lms-page)] px-4 py-8 font-sans text-[var(--text)] sm:px-6 sm:py-12">
       <MetaPixel />
       <section className="mx-auto max-w-2xl">
         <header className="mb-8 text-center">
