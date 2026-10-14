@@ -1586,6 +1586,15 @@ export default function LMSDashboard() {
             >
               {isSubmitting ? "Checking access…" : "Sign in"}
             </button>
+            <p className="text-center text-sm text-[#202124]">
+              Don&apos;t have an account?{" "}
+              <a
+                href="https://importwithbusydev.vercel.app/upsell"
+                className="font-bold text-[#0645ff] underline underline-offset-2 hover:text-[#0038d9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0645ff]"
+              >
+                Enroll in the Course Now
+              </a>
+            </p>
           </form>
         )}
 

@@ -189,7 +189,7 @@ select {
   color: var(--text) !important;
 }
 
-[data-theme="light"] .lms-dashboard .lms-addon-payment-button {
+.lms-dashboard .lms-addon-payment-button {
   color: #ffffff !important;
 }
 
