@@ -77,7 +77,7 @@ export default function UpsellPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--lms-page)] px-4 py-8 font-sans text-[var(--text)] sm:px-6 sm:py-12">
+    <main className="min-h-screen bg-[#F3F6FB] px-4 py-8 font-sans text-[var(--text)] sm:px-6 sm:py-12">
       <MetaPixel />
       <section className="mx-auto max-w-2xl">
         <header className="mb-8 text-center">
@@ -175,7 +175,7 @@ export default function UpsellPage() {
             disabled={isStartingPayment}
             className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-purple-700 px-6 py-3 font-bold text-white transition hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-[var(--page-bg)] disabled:cursor-wait disabled:opacity-60"
           >
-            {isStartingPayment ? "Connecting to Paystack..." : "Make Payment"}
+            {isStartingPayment ? "Connecting to Paystack..." : `Pay ${formatGhs(total)} with Paystack`}
           </button>
           <p className="text-center text-xs text-[var(--text-muted)]">Secure payment via Paystack</p>
         </form>
