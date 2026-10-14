@@ -1602,7 +1602,7 @@ export default function LMSDashboard() {
           Access is available to course purchasers. Use the same email address
           entered during checkout.
         </p>
-        <div className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
+        <div className="border-t border-slate-200 bg-slate-50 py-5 text-sm text-slate-600">
           Need help? Send me a message on whatsapp{" "}
           <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
             Send Message
