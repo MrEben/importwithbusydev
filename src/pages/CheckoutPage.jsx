@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { COURSE_PRICE_GHS } from "../data/course-offers.js";
 import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
@@ -83,8 +83,11 @@ export default function CourseDetail() {
   const [courseSections, setCourseSections] = useState([]);
   const [curriculumError, setCurriculumError] = useState("");
   const [curriculumReload, setCurriculumReload] = useState(0);
+  const viewContentTracked = useRef(false);
 
   useEffect(() => {
+    if (viewContentTracked.current) return;
+    viewContentTracked.current = true;
     viewContent({
       id: "complete-importation-masterclass",
       name: COURSE.title,
@@ -166,8 +169,8 @@ export default function CourseDetail() {
         <div className="meta-row">
           <span className="muted cat">Lesson Overview</span>
           <div className="actions">
-            <button><I size={22}><path d="M6 3h12v18l-6-4-6 4z" /></I>Wishlist</button>
-            <button><I size={22}><path d="M14 4l7 7-7 7v-4c-6 0-9 2-11 6 1-7 4-12 11-12z" /></I>Share</button>
+            <a href="https://importwithbusydev.vercel.app/lms"><I size={22}><path d="M6 3h12v18l-6-4-6 4z" /></I>Wishlist</a>
+            <a href="https://importwithbusydev.vercel.app/lms"><I size={22}><path d="M14 4l7 7-7 7v-4c-6 0-9 2-11 6 1-7 4-12 11-12z" /></I>Share</a>
           </div>
         </div>
 
@@ -371,9 +374,8 @@ const CSS = `
 .cep .muted{color:var(--muted)}
 .cep h1{font-size:28px;font-weight:700;margin:26px 0 30px;letter-spacing:-.01em}
 .cep .meta-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:22px}
-.cep .cat{padding-top:20px}
 .cep .actions{display:flex;gap:28px;margin-top:22px;color:var(--muted)}
-.cep .actions button{display:flex;align-items:center;gap:10px;font-size:22px;color:var(--muted)}
+.cep .actions a{display:flex;align-items:center;gap:10px;font-size:22px;color:var(--muted);text-decoration:none}
 
 .cep .video{position:relative;margin-top:38px;aspect-ratio:509/270;background:#2b2b2b;overflow:hidden}
 .cep .video video{width:100%;height:100%;object-fit:cover;display:block}
@@ -471,7 +473,7 @@ const CSS = `
   .cep .page{padding:28px 20px 30px}
   .cep .rating-row{font-size:17px}.cep .rating-row svg{width:20px;height:20px}
   .cep h1{font-size:22px;margin:20px 0 22px}
-  .cep .meta-row,.cep .actions button{font-size:17px}.cep .actions{gap:20px;margin-top:14px}
+  .cep .meta-row,.cep .actions a{font-size:17px}.cep .actions{gap:20px;margin-top:14px}
   .cep .actions svg{width:18px;height:18px}
   .cep .video{margin-top:26px}.cep .big-play{width:56px;height:56px}
   .cep .time{font-size:14px}.cep .controls{gap:10px;padding:0 12px 8px}.cep .controls svg{width:22px;height:22px}

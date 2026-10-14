@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { COURSE_ADD_ONS, COURSE_PRICE_GHS } from "../data/course-offers.js";
 import { initiateCheckout, lead } from "../utils/metaPixel.js";
@@ -24,6 +24,7 @@ export default function UpsellPage() {
   const [isStartingPayment, setIsStartingPayment] = useState(false);
   const [error, setError] = useState("");
   const [countdownSeconds, setCountdownSeconds] = useState(5 * 60);
+  const checkoutTracked = useRef(false);
 
   const total =
     COURSE_PRICE_GHS +
@@ -45,6 +46,8 @@ export default function UpsellPage() {
   }, [countdownSeconds]);
 
   useEffect(() => {
+    if (checkoutTracked.current) return;
+    checkoutTracked.current = true;
     initiateCheckout({
       id: "complete-importation-masterclass",
       name: "The Complete Importation Masterclass",
