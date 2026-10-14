@@ -11,7 +11,7 @@ const COURSE = {
   title: "The Complete Importation Masterclass",
   category: "Importation Business",
   rating: 5.0,
-  price: "GH₵420.00",
+  price: `GH₵${COURSE_PRICE_GHS.toFixed(2)}`,
   level: "Beginner Friendly",
   enrolled: 220,
   updated: "Sept 12, 2026",

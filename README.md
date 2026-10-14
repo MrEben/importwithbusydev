@@ -13,7 +13,7 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 ## Paystack webhook
 
-The `/upsell` page offers the GHS 420 masterclass and optional add-ons for GHS 30 and GHS 20. It collects the buyer's email and posts selected add-on IDs to `/api/initialize-payment`. The server calculates the total in pesewas, initializes a Paystack transaction, and redirects the customer to Paystack. Use a test secret key in Vercel Preview/development and a live secret key in Production; do not put either key in the frontend. The old static links are kept in `src/data/paystack-links.json` for reference, but dynamic checkout uses the secret key's test/live mode.
+The `/upsell` page offers the GHS 360 masterclass, the Importer's Blueprint Book for GHS 40, and the Supplier Communication Guide for GHS 20. It collects the buyer's email and posts selected add-on IDs to `/api/initialize-payment`. The server calculates the total in pesewas, initializes a Paystack transaction, and redirects the customer to Paystack. Use a test secret key in Vercel Preview/development and a live secret key in Production; do not put either key in the frontend. The old static links are kept in `src/data/paystack-links.json` for reference, but dynamic checkout uses the secret key's test/live mode.
 
 After course payment, the thank-you page also offers optional one-on-one coaching for GHS 950 with weekly assistance calls. The coaching transaction is initialized through Paystack using the configured `PAYSTACK_SECRET_KEY`. After successful payment, the page offers a WhatsApp booking button; replace the dummy URL in `src/data/coaching-contact.json` with the correct WhatsApp link.
 
