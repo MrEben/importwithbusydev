@@ -2,7 +2,10 @@ import { Buffer } from "node:buffer";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { env } from "node:process";
 import { COURSE_ADD_ONS, COURSE_PACKAGES, getCoursePackage } from "../src/data/course-offers.js";
-import { storeCoursePurchase } from "../lib/server/lmsPurchases.js";
+import {
+  storeCourseAddonPurchase,
+  storeCoursePurchase,
+} from "../lib/server/lmsPurchases.js";
 
 export const config = {
   api: {
@@ -74,6 +77,33 @@ export default async function handler(req, res) {
     const coursePackage = COURSE_PACKAGES.find(
       (candidate) => candidate.amountPesewas === amount,
     );
+    const addOn = event.data?.metadata?.purchase_type === "lms_addon"
+      ? COURSE_ADD_ONS.find(
+          (candidate) => candidate.id === event.data.metadata.add_on_id,
+        )
+      : null;
+    if (
+      payment.status === "success" &&
+      currency === "GHS" &&
+      typeof reference === "string" &&
+      addOn &&
+      amount === addOn.priceGhs * 100
+    ) {
+      try {
+        await storeCourseAddonPurchase({
+          email: payment.customer?.email,
+          reference,
+          addOnId: addOn.id,
+          amountPesewas: amount,
+          purchasedAt: payment.paid_at,
+        });
+      } catch (error) {
+        console.error("Unable to update LMS account for verified add-on payment", error);
+        return res.status(503).json({ message: "Could not update existing course purchase" });
+      }
+      return res.status(200).json({ status: "success" });
+    }
+
     if (
       payment.status === "success" &&
       currency === "GHS" &&

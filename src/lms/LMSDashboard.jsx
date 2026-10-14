@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { COURSE_ADD_ONS } from "../data/course-offers.js";
 import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
 
 const progressStorageKey = "busydev-lms-completed-lessons";
 const themeStorageKey = "busydev-lms-theme";
+const formatGhs = (amount) =>
+  new Intl.NumberFormat("en-GH", {
+    style: "currency",
+    currency: "GHS",
+    minimumFractionDigits: 2,
+  }).format(amount);
 
 function readSavedTheme() {
   try {
@@ -117,6 +123,7 @@ function LMSDashboardContent({
   email,
   packages,
   addOnDownloads,
+  addonPaymentNotice,
   onLogout,
 }) {
   const courseModules = useMemo(
@@ -155,6 +162,9 @@ function LMSDashboardContent({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [selectedAddOnId, setSelectedAddOnId] = useState(null);
+  const [isStartingAddOnPayment, setIsStartingAddOnPayment] = useState(false);
+  const [addOnPaymentError, setAddOnPaymentError] = useState("");
   const profileMenuRef = useRef(null);
   const [isMobileViewport, setIsMobileViewport] = useState(() =>
     window.matchMedia("(max-width: 767px)").matches,
@@ -205,7 +215,12 @@ function LMSDashboardContent({
   }, [isProfileMenuOpen]);
 
   useEffect(() => {
-    if (!isMobileMenuOpen && !isProfileMenuOpen && !isSettingsOpen) {
+    if (
+      !isMobileMenuOpen &&
+      !isProfileMenuOpen &&
+      !isSettingsOpen &&
+      !selectedAddOnId
+    ) {
       return undefined;
     }
 
@@ -214,12 +229,45 @@ function LMSDashboardContent({
         setIsMobileMenuOpen(false);
         setIsProfileMenuOpen(false);
         setIsSettingsOpen(false);
+        setSelectedAddOnId(null);
       }
     }
 
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [isMobileMenuOpen, isProfileMenuOpen, isSettingsOpen]);
+  }, [isMobileMenuOpen, isProfileMenuOpen, isSettingsOpen, selectedAddOnId]);
+
+  const purchasedAddOnIds = useMemo(
+    () => new Set(packages.flatMap((coursePackage) => coursePackage.addOnIds)),
+    [packages],
+  );
+  const selectedAddOn = COURSE_ADD_ONS.find(
+    (addOn) => addOn.id === selectedAddOnId,
+  );
+
+  async function startAddOnPayment() {
+    if (!selectedAddOn) return;
+    setIsStartingAddOnPayment(true);
+    setAddOnPaymentError("");
+
+    try {
+      const response = await fetch("/api/initialize-addon-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ addOnId: selectedAddOn.id }),
+      });
+      const result = await readApiResponse(response, "Add-on payment setup");
+      if (!response.ok || typeof result.authorizationUrl !== "string") {
+        throw new Error(result.message || "Could not start add-on payment. Please try again.");
+      }
+
+      window.location.assign(result.authorizationUrl);
+    } catch (error) {
+      console.error("Unable to start LMS add-on payment", error);
+      setAddOnPaymentError(error.message || "Could not start add-on payment. Please try again.");
+      setIsStartingAddOnPayment(false);
+    }
+  }
 
   const selectedLesson =
     allLessons.find((lesson) => lesson.id === selectedLessonId) ?? allLessons[0];
@@ -421,9 +469,87 @@ function LMSDashboardContent({
                 </button>
               </div>
             )}
+
           </div>
         </div>
       </header>
+
+      {selectedAddOn && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <button
+            type="button"
+            aria-label="Close add-on purchase"
+            onClick={() => setSelectedAddOnId(null)}
+            className="absolute inset-0 bg-black/50"
+          />
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="addon-purchase-title"
+            className="relative z-10 w-full max-w-md rounded-lg border border-[var(--lms-border)] bg-[var(--lms-surface)] p-6 text-[var(--lms-ink)] shadow-xl"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 id="addon-purchase-title" className="text-xl font-extrabold">
+                  Add this to your course
+                </h2>
+                <p className="mt-2 text-sm text-[var(--lms-muted)]">
+                  This add-on will be added to your existing LMS account.
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Close add-on purchase"
+                onClick={() => setSelectedAddOnId(null)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-xl text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
+              >
+                ×
+              </button>
+            </div>
+            <div className="mt-5 rounded-lg border border-[var(--lms-border)] bg-[var(--lms-page)] p-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="font-bold">{selectedAddOn.name}</h3>
+                  <p className="mt-1 text-sm leading-relaxed text-[var(--lms-muted)]">
+                    {selectedAddOn.description}
+                  </p>
+                </div>
+                <span className="shrink-0 font-extrabold text-[var(--lms-blue)]">
+                  {formatGhs(selectedAddOn.priceGhs)}
+                </span>
+              </div>
+              <p className="mt-3 border-t border-[var(--lms-border)] pt-3 text-xs text-[var(--lms-muted)]">
+                Payment will use your signed-in account: {email}
+              </p>
+            </div>
+            {addOnPaymentError && (
+              <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-800">
+                {addOnPaymentError}
+              </p>
+            )}
+            <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedAddOnId(null)}
+                disabled={isStartingAddOnPayment}
+                className="min-h-11 rounded-lg border border-[var(--lms-border)] px-5 py-2 text-sm font-bold hover:bg-[var(--lms-soft)] disabled:opacity-60"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={startAddOnPayment}
+                disabled={isStartingAddOnPayment}
+                className="min-h-11 rounded-lg bg-[var(--lms-blue)] px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+              >
+                {isStartingAddOnPayment
+                  ? "Connecting to Paystack…"
+                  : `Pay ${formatGhs(selectedAddOn.priceGhs)} with Paystack`}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
 
       {isSettingsOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -688,7 +814,7 @@ function LMSDashboardContent({
                         <span>Complete Importation Masterclass</span>
                       </li>
                       {COURSE_ADD_ONS.map((addOn) => {
-                        const purchased = coursePackage.addOnIds.includes(addOn.id);
+                        const purchased = purchasedAddOnIds.has(addOn.id);
                         const downloadUrl = addOnDownloads[addOn.id];
 
                         return (
@@ -721,12 +847,16 @@ function LMSDashboardContent({
                                 </span>
                               )
                             ) : (
-                              <Link
-                                to={`/upsell?addOn=${encodeURIComponent(addOn.id)}`}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setAddOnPaymentError("");
+                                  setSelectedAddOnId(addOn.id);
+                                }}
                                 className="rounded bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800 underline decoration-amber-700 underline-offset-2 hover:bg-amber-200"
                               >
                                 Get it
-                              </Link>
+                              </button>
                             )}
                           </li>
                         );
@@ -736,6 +866,18 @@ function LMSDashboardContent({
                 ))}
               </div>
             </section>
+            {addonPaymentNotice && (
+              <p
+                role={addonPaymentNotice.type === "success" ? "status" : "alert"}
+                className={`mt-4 rounded-lg border p-4 text-sm ${
+                  addonPaymentNotice.type === "success"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : "border-amber-200 bg-amber-50 text-amber-900"
+                }`}
+              >
+                {addonPaymentNotice.message}
+              </p>
+            )}
 
             {/* <section
               aria-labelledby="continue-title"
@@ -1076,6 +1218,7 @@ function LMSDashboardContent({
 }
 
 export default function LMSDashboard() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [authState, setAuthState] = useState("checking");
   const [email, setEmail] = useState("");
   const [packages, setPackages] = useState([]);
@@ -1087,6 +1230,11 @@ export default function LMSDashboard() {
   const [curriculum, setCurriculum] = useState(null);
   const [curriculumError, setCurriculumError] = useState("");
   const [curriculumCheck, setCurriculumCheck] = useState(0);
+  const [addonPaymentNotice, setAddonPaymentNotice] = useState(null);
+  const verifiedAddonReferences = useRef(new Set());
+  const addonPaymentReference =
+    searchParams.get("reference") ?? searchParams.get("trxref");
+  const addonPaymentCallback = searchParams.get("addonPayment") === "1";
 
   useEffect(() => {
     const controller = new AbortController();
@@ -1151,6 +1299,68 @@ export default function LMSDashboard() {
     checkSession();
     return () => controller.abort();
   }, [sessionCheck]);
+
+  useEffect(() => {
+    if (
+      authState !== "authenticated" ||
+      !addonPaymentCallback ||
+      !addonPaymentReference ||
+      verifiedAddonReferences.current.has(addonPaymentReference)
+    ) {
+      return undefined;
+    }
+    verifiedAddonReferences.current.add(addonPaymentReference);
+    const controller = new AbortController();
+
+    async function verifyAddonPayment() {
+      try {
+        const response = await fetch(
+          `/api/verify-addon-payment?reference=${encodeURIComponent(addonPaymentReference)}`,
+          { signal: controller.signal, cache: "no-store" },
+        );
+        const result = await readApiResponse(response, "Add-on payment verification");
+        if (!response.ok) {
+          throw new Error(result.message || "Could not verify your add-on payment.");
+        }
+
+        if (!result.verified) {
+          setAddonPaymentNotice({
+            type: "error",
+            message: "Your add-on payment could not be confirmed. No changes were made to your account.",
+          });
+        } else {
+          setAddonPaymentNotice({
+            type: "success",
+            message: `${result.addOnName} has been added to your existing account.`,
+          });
+          setSessionCheck((current) => current + 1);
+        }
+        setSearchParams((current) => {
+          const next = new URLSearchParams(current);
+          next.delete("addonPayment");
+          next.delete("reference");
+          next.delete("trxref");
+          return next;
+        }, { replace: true });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Unable to verify LMS add-on payment", error);
+          setAddonPaymentNotice({
+            type: "error",
+            message: error.message || "Could not verify your add-on payment. Reload this page to retry.",
+          });
+        }
+      }
+    }
+
+    verifyAddonPayment();
+    return () => controller.abort();
+  }, [
+    addonPaymentCallback,
+    addonPaymentReference,
+    authState,
+    setSearchParams,
+  ]);
 
   async function handleLogin(event) {
     event.preventDefault();
@@ -1243,6 +1453,7 @@ export default function LMSDashboard() {
         email={email}
         packages={packages}
         addOnDownloads={addOnDownloads}
+        addonPaymentNotice={addonPaymentNotice}
         onLogout={handleLogout}
       />
     );

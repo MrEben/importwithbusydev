@@ -1,6 +1,7 @@
 import { Buffer } from "node:buffer";
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { timingSafeEqual } from "node:crypto";
 import { env } from "node:process";
+import { createSessionSignature, getSessionEmail } from "../lib/server/lmsSession.js";
 import {
   getCourseAddonDownloads,
   getCoursePurchases,
@@ -48,10 +49,6 @@ function setNoStoreHeaders(res) {
   res.setHeader("Vary", "Cookie");
 }
 
-function createSignature(value, secret) {
-  return createHmac("sha256", secret).update(value).digest();
-}
-
 function createSessionToken(email, secret) {
   const payload = Buffer.from(
     JSON.stringify({
@@ -59,45 +56,8 @@ function createSessionToken(email, secret) {
       expiresAt: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS,
     }),
   ).toString("base64url");
-  const signature = createSignature(payload, secret).toString("base64url");
+  const signature = createSessionSignature(payload, secret).toString("base64url");
   return `${payload}.${signature}`;
-}
-
-function getSessionEmail(req, secret) {
-  const cookieHeader = req.headers.cookie;
-  if (typeof cookieHeader !== "string") return null;
-
-  const sessionCookie = cookieHeader
-    .split(";")
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${SESSION_COOKIE}=`));
-  if (!sessionCookie) return null;
-
-  const token = sessionCookie.slice(SESSION_COOKIE.length + 1);
-  const [payload, encodedSignature, extra] = token.split(".");
-  if (!payload || !encodedSignature || extra) return null;
-
-  let receivedSignature;
-  let session;
-  try {
-    receivedSignature = Buffer.from(encodedSignature, "base64url");
-    session = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
-  } catch {
-    return null;
-  }
-
-  const expectedSignature = createSignature(payload, secret);
-  if (
-    receivedSignature.length !== expectedSignature.length ||
-    !timingSafeEqual(expectedSignature, receivedSignature) ||
-    typeof session.email !== "string" ||
-    typeof session.expiresAt !== "number" ||
-    session.expiresAt <= Math.floor(Date.now() / 1000)
-  ) {
-    return null;
-  }
-
-  return session.email;
 }
 
 function setSessionCookie(res, token, maxAge = SESSION_TTL_SECONDS) {
@@ -117,8 +77,8 @@ function getClientIdentifier(req) {
 }
 
 function passwordsMatch(inputPassword, configuredPassword, secret) {
-  const inputDigest = createSignature(inputPassword, secret);
-  const configuredDigest = createSignature(configuredPassword, secret);
+  const inputDigest = createSessionSignature(inputPassword, secret);
+  const configuredDigest = createSessionSignature(configuredPassword, secret);
   return timingSafeEqual(inputDigest, configuredDigest);
 }
 
