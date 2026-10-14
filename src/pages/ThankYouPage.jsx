@@ -81,6 +81,7 @@ export default function ThankYouPage() {
   const isCoachingPayment =
     isConfirmed && verification.packageId === "one-on-one-coaching";
   const isChecking = verificationState === "checking";
+  const [coachingCountdownSeconds, setCoachingCountdownSeconds] = useState(10 * 60);
   const [coachingEmail, setCoachingEmail] = useState("");
   const [isStartingCoachingPayment, setIsStartingCoachingPayment] = useState(false);
   const [coachingError, setCoachingError] = useState("");
@@ -92,6 +93,23 @@ export default function ThankYouPage() {
         : verificationState === "error"
           ? "We couldn’t verify your payment"
           : "Payment not confirmed";
+  const coachingCountdownMinutes = String(Math.floor(coachingCountdownSeconds / 60)).padStart(
+    2,
+    "0",
+  );
+  const coachingCountdownRemainder = String(coachingCountdownSeconds % 60).padStart(2, "0");
+
+  useEffect(() => {
+    if (!isConfirmed || isCoachingPayment || coachingCountdownSeconds === 0) {
+      return undefined;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setCoachingCountdownSeconds((seconds) => Math.max(seconds - 1, 0));
+    }, 1000);
+
+    return () => window.clearTimeout(timeout);
+  }, [coachingCountdownSeconds, isConfirmed, isCoachingPayment]);
 
   useEffect(() => {
     if (!isConfirmed || !reference || trackedPurchaseReferences.current.has(reference)) {
@@ -329,6 +347,33 @@ export default function ThankYouPage() {
                   </div>
                 ) : isConfirmed && !isCoachingPayment ? (
                   <div className="mt-8 border-t border-slate-200 pt-7">
+                    <div
+                      className="mb-6 text-center"
+                      role="timer"
+                      aria-label={`This coaching offer expires in ${coachingCountdownMinutes}:${coachingCountdownRemainder}`}
+                    >
+                      <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-slate-900">
+                        This offer expires in
+                      </p>
+                      <div className="mt-3 flex justify-center gap-3">
+                        <div className="flex h-24 w-28 flex-col items-center justify-center rounded-2xl bg-[#111111] shadow-md sm:h-28 sm:w-32">
+                          <span className="text-4xl font-black leading-none tabular-nums text-[#F5C542] sm:text-5xl">
+                            {coachingCountdownMinutes}
+                          </span>
+                          <span className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
+                            Min
+                          </span>
+                        </div>
+                        <div className="flex h-24 w-28 flex-col items-center justify-center rounded-2xl bg-[#111111] shadow-md sm:h-28 sm:w-32">
+                          <span className="text-4xl font-black leading-none tabular-nums text-[#F5C542] sm:text-5xl">
+                            {coachingCountdownRemainder}
+                          </span>
+                          <span className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
+                            Sec
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                     <p className="mb-2 text-center text-sm font-bold italic text-amber-700">
                       Introducing...
                     </p>

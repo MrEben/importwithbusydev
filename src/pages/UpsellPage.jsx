@@ -23,6 +23,7 @@ export default function UpsellPage() {
   });
   const [isStartingPayment, setIsStartingPayment] = useState(false);
   const [error, setError] = useState("");
+  const [countdownSeconds, setCountdownSeconds] = useState(5 * 60);
 
   const total =
     COURSE_PRICE_GHS +
@@ -30,6 +31,18 @@ export default function UpsellPage() {
       (sum, addOn) => sum + (selectedAddOns.includes(addOn.id) ? addOn.priceGhs : 0),
       0,
     );
+
+  useEffect(() => {
+    if (countdownSeconds === 0) {
+      return undefined;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setCountdownSeconds((seconds) => Math.max(seconds - 1, 0));
+    }, 1000);
+
+    return () => window.clearTimeout(timeout);
+  }, [countdownSeconds]);
 
   useEffect(() => {
     initiateCheckout({
@@ -75,6 +88,10 @@ export default function UpsellPage() {
       setIsStartingPayment(false);
     }
   }
+
+  const countdownDisplay = `${String(Math.floor(countdownSeconds / 60)).padStart(2, "0")}:${String(
+    countdownSeconds % 60,
+  ).padStart(2, "0")}`;
 
   return (
     <main className="min-h-screen bg-[#F3F6FB] px-4 py-8 font-sans text-[var(--text)] sm:px-6 sm:py-12">
@@ -179,6 +196,26 @@ export default function UpsellPage() {
           </button>
           <p className="text-center text-xs text-[var(--text-muted)]">Secure payment via Paystack</p>
         </form>
+
+        <div className="mt-5 text-center" role="timer" aria-label={`This price expires in ${countdownDisplay}`}>
+          <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-[var(--text)]">
+            This price expires in
+          </p>
+          <div className="mt-3 flex justify-center gap-3">
+            <div className="flex h-24 w-28 flex-col items-center justify-center rounded-2xl bg-[#111111] shadow-md sm:h-28 sm:w-32">
+              <span className="text-4xl font-black leading-none tabular-nums text-[#F5C542] sm:text-5xl">
+                {String(Math.floor(countdownSeconds / 60)).padStart(2, "0")}
+              </span>
+              <span className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-white">Min</span>
+            </div>
+            <div className="flex h-24 w-28 flex-col items-center justify-center rounded-2xl bg-[#111111] shadow-md sm:h-28 sm:w-32">
+              <span className="text-4xl font-black leading-none tabular-nums text-[#F5C542] sm:text-5xl">
+                {String(countdownSeconds % 60).padStart(2, "0")}
+              </span>
+              <span className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-white">Sec</span>
+            </div>
+          </div>
+        </div>
 
         <div className="mt-6 text-center">
           <Link to="/checkout" className="text-sm font-medium text-[var(--text-muted)] transition hover:text-[var(--text)]">
