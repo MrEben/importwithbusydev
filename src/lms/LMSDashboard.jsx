@@ -1586,7 +1586,7 @@ export default function LMSDashboard() {
             >
               {isSubmitting ? "Checking access…" : "Sign in"}
             </button>
-            <p className="text-center text-sm text-[#202124]">
+            <p className="text-left text-sm text-[#202124]">
               Don&apos;t have an account?{" "}
               <a
                 href="https://importwithbusydev.vercel.app/upsell"
@@ -1602,6 +1602,12 @@ export default function LMSDashboard() {
           Access is available to course purchasers. Use the same email address
           entered during checkout.
         </p>
+        <div className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
+          Need help? Send me a message on whatsapp{" "}
+          <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
+            Send Message
+          </Link>
+        </div>
       </section>
     </main>
   );
