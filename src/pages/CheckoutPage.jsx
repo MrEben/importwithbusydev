@@ -135,9 +135,9 @@ export default function CourseDetail() {
 
       {/* NAVBAR */}
       <header className="nav">
-        <div className="text-lg font-bold uppercase tracking-wide">
-          <span className="text-purple-700">Import</span>withBusyDev
-        </div>
+        <div to="/checkout" className="text-lg font-extrabold tracking-tight text-slate-950 sm:text-xl">
+            <span className="text-blue-700">Import</span>withBusyDev
+          </div>
         <div className="flex items-center gap-4">
           <button
             type="button"
@@ -164,7 +164,7 @@ export default function CourseDetail() {
         </div>
         <h1>{COURSE.title}</h1>
         <div className="meta-row">
-          <span className="muted cat">Lesson 1</span>
+          <span className="muted cat">Lesson Overview</span>
           <div className="actions">
             <button><I size={22}><path d="M6 3h12v18l-6-4-6 4z" /></I>Wishlist</button>
             <button><I size={22}><path d="M14 4l7 7-7 7v-4c-6 0-9 2-11 6 1-7 4-12 11-12z" /></I>Share</button>

@@ -324,6 +324,17 @@ export default function ThankYouPage() {
                     >
                       Go to the LMS
                     </a>
+                    <a
+                    href="https://chat.whatsapp.com/JqQGNjO53DcCFFmMvGaCaA"
+                    target="_blank"
+                          className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
+                        >
+                          Join the Whatsapp Community
+                          <svg aria-hidden="true" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none">
+                            <path d="M11 3h6v6m0-6-8 8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M15 11v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                          </svg>
+                        </a>
                   </div>
                 )}
 
