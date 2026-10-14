@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { COURSE_ADD_ONS } from "../data/course-offers.js";
+import { COURSE_ADD_ONS, COACHING_PRICE_GHS } from "../data/course-offers.js";
 import { fetchCourseCurriculum } from "../utils/fetchCourseCurriculum.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
 
@@ -109,8 +109,8 @@ function LessonIcon({ completed = false }) {
     <span
       aria-hidden="true"
       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${completed
-          ? "bg-emerald-100 text-emerald-700"
-          : "bg-[#f0f2f7] text-[#737985]"
+        ? "bg-emerald-100 text-emerald-700"
+        : "bg-[#f0f2f7] text-[#737985]"
         }`}
     >
       {completed ? "✓" : "▶"}
@@ -163,6 +163,7 @@ function LMSDashboardContent({
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectedAddOnId, setSelectedAddOnId] = useState(null);
+  const [isCoachingModalOpen, setIsCoachingModalOpen] = useState(false);
   const [isStartingAddOnPayment, setIsStartingAddOnPayment] = useState(false);
   const [addOnPaymentError, setAddOnPaymentError] = useState("");
   const profileMenuRef = useRef(null);
@@ -219,7 +220,8 @@ function LMSDashboardContent({
       !isMobileMenuOpen &&
       !isProfileMenuOpen &&
       !isSettingsOpen &&
-      !selectedAddOnId
+      !selectedAddOnId &&
+      !isCoachingModalOpen
     ) {
       return undefined;
     }
@@ -230,12 +232,13 @@ function LMSDashboardContent({
         setIsProfileMenuOpen(false);
         setIsSettingsOpen(false);
         setSelectedAddOnId(null);
+        setIsCoachingModalOpen(false);
       }
     }
 
     document.addEventListener("keydown", closeOnEscape);
     return () => document.removeEventListener("keydown", closeOnEscape);
-  }, [isMobileMenuOpen, isProfileMenuOpen, isSettingsOpen, selectedAddOnId]);
+  }, [isMobileMenuOpen, isProfileMenuOpen, isSettingsOpen, selectedAddOnId, isCoachingModalOpen]);
 
   const purchasedAddOnIds = useMemo(
     () => new Set(packages.flatMap((coursePackage) => coursePackage.addOnIds)),
@@ -246,7 +249,7 @@ function LMSDashboardContent({
   );
 
   async function startAddOnPayment() {
-    if (!selectedAddOn) return;
+    if (!selectedAddOn && !isCoachingModalOpen) return;
     setIsStartingAddOnPayment(true);
     setAddOnPaymentError("");
 
@@ -254,17 +257,21 @@ function LMSDashboardContent({
       const response = await fetch("/api/initialize-addon-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ addOnId: selectedAddOn.id }),
+        body: JSON.stringify(
+          selectedAddOn
+            ? { addOnId: selectedAddOn.id }
+            : { productId: "one-on-one-coaching" },
+        ),
       });
-      const result = await readApiResponse(response, "Add-on payment setup");
+      const result = await readApiResponse(response, "LMS payment setup");
       if (!response.ok || typeof result.authorizationUrl !== "string") {
-        throw new Error(result.message || "Could not start add-on payment. Please try again.");
+        throw new Error(result.message || "Could not start payment. Please try again.");
       }
 
       window.location.assign(result.authorizationUrl);
     } catch (error) {
-      console.error("Unable to start LMS add-on payment", error);
-      setAddOnPaymentError(error.message || "Could not start add-on payment. Please try again.");
+      console.error("Unable to start LMS payment", error);
+      setAddOnPaymentError(error.message || "Could not start payment. Please try again.");
       setIsStartingAddOnPayment(false);
     }
   }
@@ -420,7 +427,7 @@ function LMSDashboardContent({
                   </svg>
                   Settings
                 </button>
-                <a
+                {/* <a
                   href="/"
                   className="flex min-h-10 items-center gap-3 rounded-md px-3 text-sm font-semibold text-[var(--lms-ink)] hover:bg-[var(--lms-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--lms-blue)]"
                 >
@@ -445,7 +452,7 @@ function LMSDashboardContent({
                     />
                   </svg>
                   Back to site
-                </a>
+                </a> */}
                 <button
                   type="button"
                   onClick={onLogout}
@@ -474,33 +481,41 @@ function LMSDashboardContent({
         </div>
       </header>
 
-      {selectedAddOn && (
+      {(selectedAddOn || isCoachingModalOpen) && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <button
             type="button"
-            aria-label="Close add-on purchase"
-            onClick={() => setSelectedAddOnId(null)}
+            aria-label="Close purchase"
+            onClick={() => {
+              setSelectedAddOnId(null);
+              setIsCoachingModalOpen(false);
+            }}
             className="absolute inset-0 bg-black/50"
           />
           <section
             role="dialog"
             aria-modal="true"
-            aria-labelledby="addon-purchase-title"
+            aria-labelledby="lms-purchase-title"
             className="relative z-10 w-full max-w-md rounded-lg border border-[var(--lms-border)] bg-[var(--lms-surface)] p-6 text-[var(--lms-ink)] shadow-xl"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 id="addon-purchase-title" className="text-xl font-extrabold">
-                  Add this to your course
+                <h2 id="lms-purchase-title" className="text-xl font-extrabold">
+                  {isCoachingModalOpen ? "Get one-on-one coaching" : "Add this to your course"}
                 </h2>
                 <p className="mt-2 text-sm text-[var(--lms-muted)]">
-                  This add-on will be added to your existing LMS account.
+                  {isCoachingModalOpen
+                    ? "You’re about to pay for one-on-one coaching using your signed-in account."
+                    : "This add-on will be added to your existing LMS account."}
                 </p>
               </div>
               <button
                 type="button"
-                aria-label="Close add-on purchase"
-                onClick={() => setSelectedAddOnId(null)}
+                aria-label="Close purchase"
+                onClick={() => {
+                  setSelectedAddOnId(null);
+                  setIsCoachingModalOpen(false);
+                }}
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-xl text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
               >
                 ×
@@ -509,17 +524,21 @@ function LMSDashboardContent({
             <div className="mt-5 rounded-lg border border-[var(--lms-border)] bg-[var(--lms-page)] p-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="font-bold">{selectedAddOn.name}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-[var(--lms-muted)]">
-                    {selectedAddOn.description}
-                  </p>
+                  <h3 className="font-bold">
+                    {selectedAddOn?.name ?? "One-on-one coaching"}
+                  </h3>
+                  {selectedAddOn && (
+                    <p className="mt-1 text-sm leading-relaxed text-[var(--lms-muted)]">
+                      {selectedAddOn.description}
+                    </p>
+                  )}
                 </div>
                 <span className="shrink-0 font-extrabold text-[var(--lms-blue)]">
-                  {formatGhs(selectedAddOn.priceGhs)}
+                  {formatGhs(selectedAddOn?.priceGhs ?? COACHING_PRICE_GHS)}
                 </span>
               </div>
               <p className="mt-3 border-t border-[var(--lms-border)] pt-3 text-xs text-[var(--lms-muted)]">
-                Payment will use your signed-in account: {email}
+                This payment will use your signed-in email: {email}
               </p>
             </div>
             {addOnPaymentError && (
@@ -530,7 +549,10 @@ function LMSDashboardContent({
             <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button
                 type="button"
-                onClick={() => setSelectedAddOnId(null)}
+                onClick={() => {
+                  setSelectedAddOnId(null);
+                  setIsCoachingModalOpen(false);
+                }}
                 disabled={isStartingAddOnPayment}
                 className="min-h-11 rounded-lg border border-[var(--lms-border)] px-5 py-2 text-sm font-bold hover:bg-[var(--lms-soft)] disabled:opacity-60"
               >
@@ -544,7 +566,7 @@ function LMSDashboardContent({
               >
                 {isStartingAddOnPayment
                   ? "Connecting to Paystack…"
-                  : `Pay ${formatGhs(selectedAddOn.priceGhs)} with Paystack`}
+                  : `Pay ${formatGhs(selectedAddOn?.priceGhs ?? COACHING_PRICE_GHS)} with Paystack`}
               </button>
             </div>
           </section>
@@ -635,8 +657,8 @@ function LMSDashboardContent({
           aria-hidden={isMobileViewport && !isMobileMenuOpen}
           inert={isMobileViewport && !isMobileMenuOpen}
           className={`fixed bottom-0 left-0 top-[72px] z-40 w-[min(88vw,320px)] overflow-y-auto border-r border-[var(--lms-border)] bg-[var(--lms-surface)] px-5 py-6 shadow-sm transition-[transform,visibility] duration-300 md:sticky md:top-[72px] md:z-auto md:h-[calc(100vh-72px)] md:shadow-none md:px-6 ${isMobileMenuOpen
-              ? "visible translate-x-0"
-              : "invisible -translate-x-full"
+            ? "visible translate-x-0"
+            : "invisible -translate-x-full"
             } md:visible md:translate-x-0`}
         >
           <div className="mb-5 flex items-center justify-between md:hidden">
@@ -732,8 +754,8 @@ function LMSDashboardContent({
                             setIsMobileMenuOpen(false);
                           }}
                           className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${isSelected
-                              ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
-                              : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
+                            ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
+                            : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
                             }`}
                         >
                           <LessonIcon completed={isComplete} />
@@ -861,6 +883,22 @@ function LMSDashboardContent({
                           </li>
                         );
                       })}
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAddOnPaymentError("");
+                            setIsCoachingModalOpen(true);
+                          }}
+                          className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
+                        >
+                          Get One-on-One Coaching
+                          <svg aria-hidden="true" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none">
+                            <path d="M11 3h6v6m0-6-8 8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M15 11v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+                          </svg>
+                        </button>
+                      </li>
                     </ul>
                   </article>
                 ))}
@@ -869,11 +907,10 @@ function LMSDashboardContent({
             {addonPaymentNotice && (
               <p
                 role={addonPaymentNotice.type === "success" ? "status" : "alert"}
-                className={`mt-4 rounded-lg border p-4 text-sm ${
-                  addonPaymentNotice.type === "success"
-                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                    : "border-amber-200 bg-amber-50 text-amber-900"
-                }`}
+                className={`mt-4 rounded-lg border p-4 text-sm ${addonPaymentNotice.type === "success"
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                  : "border-amber-200 bg-amber-50 text-amber-900"
+                  }`}
               >
                 {addonPaymentNotice.message}
               </p>
@@ -999,11 +1036,10 @@ function LMSDashboardContent({
                     </p>
                   </div>
                 )}
-                <p className="mt-2 text-xs leading-relaxed text-[var(--lms-muted)]">
-                  Double tap on the video to open in full screen
-                </p>
               </div>
-
+              <p className="mt-2 text-xs leading-relaxed text-[var(--lms-muted)]">
+                Double tap on the video to open in full screen
+              </p>
               <div className="mt-6 border-t border-[var(--lms-border)] pt-5">
                 <section
                   aria-labelledby="lesson-resources-title"
@@ -1076,8 +1112,8 @@ function LMSDashboardContent({
                     type="button"
                     onClick={toggleLessonComplete}
                     className={`rounded-full border px-4 py-2.5 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] ${completedLessons.includes(selectedLesson.id)
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
-                        : "border-[var(--lms-border)] bg-white text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
+                      : "border-[var(--lms-border)] bg-white text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
                       }`}
                   >
                     {completedLessons.includes(selectedLesson.id)
@@ -1183,8 +1219,8 @@ function LMSDashboardContent({
                                       });
                                   }}
                                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${isSelected
-                                      ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
-                                      : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
+                                    ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
+                                    : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
                                     }`}
                                 >
                                   <LessonIcon completed={isComplete} />
