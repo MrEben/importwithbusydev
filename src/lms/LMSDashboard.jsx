@@ -540,7 +540,7 @@ function LMSDashboardContent({
                 type="button"
                 onClick={startAddOnPayment}
                 disabled={isStartingAddOnPayment}
-                className="min-h-11 rounded-lg bg-[var(--lms-blue)] px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
+                className="lms-addon-payment-button min-h-11 rounded-lg bg-[var(--lms-blue)] px-5 py-2 text-sm font-bold text-white hover:opacity-90 disabled:cursor-wait disabled:opacity-60"
               >
                 {isStartingAddOnPayment
                   ? "Connecting to Paystack…"

@@ -189,6 +189,10 @@ select {
   color: var(--text) !important;
 }
 
+[data-theme="light"] .lms-dashboard .lms-addon-payment-button {
+  color: #ffffff !important;
+}
+
 [data-theme="light"] .text-gray-400,
 [data-theme="light"] .text-gray-500 {
   color: var(--text-muted) !important;

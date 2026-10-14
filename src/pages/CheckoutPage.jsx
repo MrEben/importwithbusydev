@@ -34,28 +34,38 @@ const OFFER_ITEMS = [
 const OFFER_TOTAL = OFFER_ITEMS.reduce((total, item) => total + item.value, 0);
 
 const REVIEWS = [
-  { initials: "AA", name: "Ama Agyeman", when: "2 months ago", stars: 5,
-    text: "This course helped me to understand how to communicate with suppliers before ordering. I feel confident starting my own import business." },
-  { initials: "DW", name: "Daniel Wiafe", when: "4 months ago", stars: 5,
-    text: "I loved how practical the lessons were. It was not just theory. I learned how to make handle payments to my suppliers" },
-  { initials: "EO", name: "Efua Owusu", when: "7 months ago", stars: 5,
-    text: "The training was easy to follow and very practical. I especially liked the part on supplier communication and payment methods. It saved me from making costly mistakes before I even started." },
-  { initials: "KY", name: "Kojo Yeboah", when: "1 month ago", stars: 5,
-    text: "I have taken an importation course before but this one was more detailed. I now know how to source for products, communicate with suppliers, and pay my suppliers. The lessons are beginner-friendly and very practical." },
-  { initials: "MB", name: "Mabel Boateng", when: "5 months ago", stars: 5,
-    text: "I was scared to start, but now I know how to avoid fake sellers and identify genuine suppliers and shipping agents." },
+  {
+    initials: "AA", name: "Ama Agyeman", when: "2 months ago", stars: 5,
+    text: "This course helped me to understand how to communicate with suppliers before ordering. I feel confident starting my own import business."
+  },
+  {
+    initials: "DW", name: "Daniel Wiafe", when: "4 months ago", stars: 5,
+    text: "I loved how practical the lessons were. It was not just theory. I learned how to make handle payments to my suppliers"
+  },
+  {
+    initials: "EO", name: "Efua Owusu", when: "7 months ago", stars: 5,
+    text: "The training was easy to follow and very practical. I especially liked the part on supplier communication and payment methods. It saved me from making costly mistakes before I even started."
+  },
+  {
+    initials: "KY", name: "Kojo Yeboah", when: "1 month ago", stars: 5,
+    text: "I have taken an importation course before but this one was more detailed. I now know how to source for products, communicate with suppliers, and pay my suppliers. The lessons are beginner-friendly and very practical."
+  },
+  {
+    initials: "MB", name: "Mabel Boateng", when: "5 months ago", stars: 5,
+    text: "I was scared to start, but now I know how to avoid fake sellers and identify genuine suppliers and shipping agents."
+  },
 ];
 
 /* ---------- ICONS ---------- */
 const I = ({ children, size = 24, fill = "none", ...p }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke="currentColor"
-       strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}>
+    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}>
     {children}
   </svg>
 );
 const Star = ({ size = 24, filled = true }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true"
-       fill={filled ? "#f4b942" : "none"} stroke="#f4b942" strokeWidth="1.8" strokeLinejoin="round">
+    fill={filled ? "#f4b942" : "none"} stroke="#f4b942" strokeWidth="1.8" strokeLinejoin="round">
     <path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2 6.3 20.3l1.2-6.4L2.8 9.5l6.4-.8z" />
   </svg>
 );
@@ -125,18 +135,18 @@ export default function CourseDetail() {
 
       {/* NAVBAR */}
       <header className="nav">
-       <div className="text-lg font-bold uppercase tracking-wide">
+        <div className="text-lg font-bold uppercase tracking-wide">
           <span className="text-purple-700">Import</span>withBusyDev
         </div>
         <div className="flex items-center gap-4">
-         <button
+          <button
             type="button"
             onClick={handleCheckout}
             className="rounded-sm bg-purple-700 px-6 py-2 text-white font-semibold transition hover:bg-orange-700"
           >
             ENROLL
           </button>
-          </div>
+        </div>
         {/* <div className="logo">Create &amp; <span>Earn</span> <small>PROGRAM</small></div> */}
         {/* <button className="burger" aria-label="Menu">
           <svg width="28" height="28" viewBox="0 0 24 24" stroke="#6926E8" strokeWidth="2.2" strokeLinecap="round">
@@ -177,7 +187,7 @@ export default function CourseDetail() {
               <div className="video-bg" style={COURSE.poster ? { backgroundImage: `url(${COURSE.poster})` } : {}} />
               <button className="big-play" onClick={() => setPlaying(!playing)} aria-label="Play">
                 {playing
-                  ? <svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+                  ? <svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14" /><rect x="14" y="5" width="4" height="14" /></svg>
                   : <svg width="38" height="38" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z" /></svg>}
               </button>
               <div className="controls">
@@ -194,7 +204,7 @@ export default function CourseDetail() {
                 </button>
                 <div className="vol"><i /><b /></div>
                 <button aria-label="Settings">
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.4-2.5 1a7.5 7.5 0 00-1.7-1L15 3.3h-4l-.4 2.7a7.5 7.5 0 00-1.7 1l-2.5-1-2 3.4L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.4 2.5-1c.5.4 1.1.7 1.7 1l.4 2.7h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.4zM13 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" transform="translate(-1 0)"/></svg>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M19.4 13a7.6 7.6 0 000-2l2.1-1.6-2-3.4-2.5 1a7.5 7.5 0 00-1.7-1L15 3.3h-4l-.4 2.7a7.5 7.5 0 00-1.7 1l-2.5-1-2 3.4L6.6 11a7.6 7.6 0 000 2l-2.1 1.6 2 3.4 2.5-1c.5.4 1.1.7 1.7 1l.4 2.7h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.4zM13 15.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" transform="translate(-1 0)" /></svg>
                 </button>
                 <button aria-label="Fullscreen">
                   <I size={26} style={{ color: "#fff" }}><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></I>
@@ -313,15 +323,15 @@ export default function CourseDetail() {
             <li><I size={24}><path d="M20 12a8 8 0 01-14 5.3M4 12a8 8 0 0114-5.3" /><path d="M18 3v4h-4M6 21v-4h4" /></I>{COURSE.updated} Last Updated</li>
           </ul>
         </div>
-
+        <div className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
+          Need help? Send me a message on whatsapp{" "}
+          <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
+            Send Message
+          </Link>
+        </div>
         {/* AUTHOR */}
         <div className="author">
-           <div className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
-            Need help? Send me a message on whatsapp{" "}
-            <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
-              Send Message
-            </Link>
-          </div>
+
           <p>A course by</p>
           <div className="a-row"><div className="avatar lg">{COURSE.author[0]}</div><b>{COURSE.author}</b></div>
         </div>
