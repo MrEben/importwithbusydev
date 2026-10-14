@@ -47,9 +47,9 @@ function getVideoSource(videoUrl) {
         url.pathname.match(/^\/embed\/medias\/([a-z0-9]+)$/i)?.[1];
       return wistiaMediaId
         ? {
-            type: "embed",
-            src: `https://fast.wistia.net/embed/iframe/${wistiaMediaId}?seo=false&videoFoam=true`,
-          }
+          type: "embed",
+          src: `https://fast.wistia.net/embed/iframe/${wistiaMediaId}?seo=false&videoFoam=true`,
+        }
         : { type: "unsupported" };
     }
 
@@ -102,11 +102,10 @@ function LessonIcon({ completed = false }) {
   return (
     <span
       aria-hidden="true"
-      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${
-        completed
+      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm ${completed
           ? "bg-emerald-100 text-emerald-700"
           : "bg-[#f0f2f7] text-[#737985]"
-      }`}
+        }`}
     >
       {completed ? "✓" : "▶"}
     </span>
@@ -471,14 +470,12 @@ function LMSDashboardContent({
                 aria-checked={isDarkMode}
                 aria-label="Dark mode"
                 onClick={() => setIsDarkMode((enabled) => !enabled)}
-                className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] ${
-                  isDarkMode ? "bg-[var(--lms-blue)]" : "bg-slate-300"
-                }`}
+                className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] ${isDarkMode ? "bg-[var(--lms-blue)]" : "bg-slate-300"
+                  }`}
               >
                 <span
-                  className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                    isDarkMode ? "translate-x-6" : "translate-x-1"
-                  }`}
+                  className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${isDarkMode ? "translate-x-6" : "translate-x-1"
+                    }`}
                 />
               </button>
             </div>
@@ -511,11 +508,10 @@ function LMSDashboardContent({
           aria-label={isMobileMenuOpen ? "Course menu" : undefined}
           aria-hidden={isMobileViewport && !isMobileMenuOpen}
           inert={isMobileViewport && !isMobileMenuOpen}
-          className={`fixed bottom-0 left-0 top-[72px] z-40 w-[min(88vw,320px)] overflow-y-auto border-r border-[var(--lms-border)] bg-[var(--lms-surface)] px-5 py-6 shadow-sm transition-[transform,visibility] duration-300 md:sticky md:top-[72px] md:z-auto md:h-[calc(100vh-72px)] md:shadow-none md:px-6 ${
-            isMobileMenuOpen
+          className={`fixed bottom-0 left-0 top-[72px] z-40 w-[min(88vw,320px)] overflow-y-auto border-r border-[var(--lms-border)] bg-[var(--lms-surface)] px-5 py-6 shadow-sm transition-[transform,visibility] duration-300 md:sticky md:top-[72px] md:z-auto md:h-[calc(100vh-72px)] md:shadow-none md:px-6 ${isMobileMenuOpen
               ? "visible translate-x-0"
               : "invisible -translate-x-full"
-          } md:visible md:translate-x-0`}
+            } md:visible md:translate-x-0`}
         >
           <div className="mb-5 flex items-center justify-between md:hidden">
             <span className="text-xs font-extrabold uppercase tracking-[0.15em] text-[var(--lms-muted)]">
@@ -609,11 +605,10 @@ function LMSDashboardContent({
                             setSelectedLessonId(lesson.id);
                             setIsMobileMenuOpen(false);
                           }}
-                          className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${
-                            isSelected
+                          className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${isSelected
                               ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
                               : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
-                          }`}
+                            }`}
                         >
                           <LessonIcon completed={isComplete} />
                           <span className="min-w-0">
@@ -862,6 +857,9 @@ function LMSDashboardContent({
                     </p>
                   </div>
                 )}
+                <p className="mt-2 text-xs leading-relaxed text-[var(--lms-muted)]">
+                  Double tap on the video to open in full screen
+                </p>
               </div>
 
               <div className="mt-6 border-t border-[var(--lms-border)] pt-5">
@@ -935,11 +933,10 @@ function LMSDashboardContent({
                   <button
                     type="button"
                     onClick={toggleLessonComplete}
-                    className={`rounded-full border px-4 py-2.5 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] ${
-                      completedLessons.includes(selectedLesson.id)
+                    className={`rounded-full border px-4 py-2.5 text-xs font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)] ${completedLessons.includes(selectedLesson.id)
                         ? "border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100"
                         : "border-[var(--lms-border)] bg-white text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
-                    }`}
+                      }`}
                   >
                     {completedLessons.includes(selectedLesson.id)
                       ? "✓ Completed · Mark incomplete"
@@ -1043,11 +1040,10 @@ function LMSDashboardContent({
                                         block: "start",
                                       });
                                   }}
-                                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${
-                                    isSelected
+                                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--lms-blue)] ${isSelected
                                       ? "bg-[var(--lms-soft-blue)] text-[var(--lms-blue)]"
                                       : "text-[var(--lms-muted)] hover:bg-[var(--lms-soft)]"
-                                  }`}
+                                    }`}
                                 >
                                   <LessonIcon completed={isComplete} />
                                   <span className="min-w-0 flex-1">
