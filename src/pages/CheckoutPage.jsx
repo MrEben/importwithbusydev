@@ -316,6 +316,13 @@ export default function CourseDetail() {
 
         {/* AUTHOR */}
         <div className="author">
+           <div className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
+            Need help? Send me a message on whatsapp{" "}
+            <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
+              Send Message
+            </Link>
+            .
+          </div>
           <p>A course by</p>
           <div className="a-row"><div className="avatar lg">{COURSE.author[0]}</div><b>{COURSE.author}</b></div>
         </div>

@@ -208,7 +208,7 @@ export default function ThankYouPage() {
             {isConfirmed && !isCoachingPayment && (
               <p className="mt-4 text-xl font-extrabold leading-snug sm:text-2xl">
                 But I have{" "}
-                <span className="text-amber-400">something extra</span> for you. Sroll down a bit to see it.
+                <span className="text-amber-400">something extra</span> for you. Scroll down a bit to see it.
               </p>
             )}
           </div>
@@ -351,7 +351,7 @@ export default function ThankYouPage() {
                           htmlFor="coaching-email"
                           className="mb-2 block font-bold text-slate-900"
                         >
-                          Email for your coaching payment
+                          Enter your email to pay for your one-on-one coaching payment
                         </label>
                         <input
                           id="coaching-email"
@@ -431,9 +431,9 @@ export default function ThankYouPage() {
           </div>
 
           <footer className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
-            Need help? Return to the{" "}
-            <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="/checkout">
-              course page
+            Need help? Send me a message on whatsapp{" "}
+            <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
+              Send Message
             </Link>
             .
           </footer>
