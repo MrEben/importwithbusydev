@@ -327,7 +327,7 @@ export default function CourseDetail() {
           </ul>
         </div>
         <div className="border-t border-slate-200 bg-slate-50 px-6 py-5 text-sm text-slate-600 sm:px-10">
-          Need help? Send me a message on whatsapp{" "}
+          Need help? Send me a message on Whatsapp{" "}
           <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
             Send Message
           </Link>

@@ -310,7 +310,12 @@ function LMSDashboardContent({
       (lesson) => lesson.id === selectedLesson.id,
     );
     const nextLesson = allLessons[currentIndex + 1];
-    if (nextLesson) setSelectedLessonId(nextLesson.id);
+    if (nextLesson) {
+      setSelectedLessonId(nextLesson.id);
+      document
+        .getElementById("lesson-workspace")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 
   return (
@@ -1079,7 +1084,7 @@ function LMSDashboardContent({
                     </div>
                     <div>
                       <h5 className="text-xs font-extrabold text-[var(--lms-ink)]">
-                        Related YouTube videos
+                        Additional Resources
                       </h5>
                       {selectedLesson.resources?.youtubeLinks?.length ? (
                         <ul className="mt-2 space-y-2">
@@ -1093,7 +1098,7 @@ function LMSDashboardContent({
                                   className="inline-flex items-start gap-2 text-xs font-semibold leading-relaxed text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
                                 >
                                   <span aria-hidden="true">▶</span>
-                                  {youtubeLink.title || `YouTube resource ${index + 1}`}
+                                  {youtubeLink.title || `Resource ${index + 1}`}
                                 </a>
                               </li>
                             ),
@@ -1101,7 +1106,7 @@ function LMSDashboardContent({
                         </ul>
                       ) : (
                         <p className="mt-2 text-xs leading-relaxed text-[var(--lms-muted)]">
-                          No related YouTube videos have been added yet.
+                          No additional resources have been added yet.
                         </p>
                       )}
                     </div>
@@ -1603,7 +1608,7 @@ export default function LMSDashboard() {
           entered during checkout.
         </p>
         <div className="border-t border-slate-200 bg-slate-50 py-5 text-sm text-slate-600">
-          Need help? Send me a message on whatsapp{" "}
+          Need help? Send me a message on Whatsapp{" "}
           <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
             Send Message
           </Link>

@@ -10,11 +10,13 @@ import ThankYouPage from './pages/ThankYouPage.jsx'
 import UpsellPage from './pages/UpsellPage.jsx'
 import LMSDashboard from './lms/LMSDashboard.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
+import DemoActivityNotification from './components/DemoActivityNotification.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ScrollToTop />
+      <DemoActivityNotification />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/checkout" element={<CheckoutPage />} />
