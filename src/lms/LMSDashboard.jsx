@@ -1108,15 +1108,15 @@ function LMSDashboardContent({
                         <ul className="mt-2 space-y-2">
                           {selectedLesson.resources.youtubeLinks.map(
                             (youtubeLink, index) => (
-                              <li key={`${youtubeLink.url}-${index}`}>
+                              <li key={`${youtubeLink}-${index}`}>
                                 <a
-                                  href={youtubeLink.url}
+                                  href={youtubeLink}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex cursor-pointer items-start gap-2 text-xs font-semibold leading-relaxed text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
+                                  className="inline-flex cursor-pointer items-start gap-2 break-all text-xs font-semibold leading-relaxed text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
                                 >
                                   <span aria-hidden="true">▶</span>
-                                  {youtubeLink.title || `Resource ${index + 1}`}
+                                  {youtubeLink}
                                 </a>
                               </li>
                             ),
