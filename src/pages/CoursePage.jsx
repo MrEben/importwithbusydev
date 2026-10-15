@@ -136,14 +136,16 @@ export default function CoursePage() {
   }, [curriculumReload]);
 
   function openRegistration() {
-    if (pixelId) {
-      try {
-        initiateCheckout({ name: "Import with BusyDev Masterclass", price: 0 });
-      } catch (error) {
-        console.error("InitiateCheckout tracking failed:", error);
-      }
-    }
-    setRegistrationOpen(true);
+    // if (pixelId) {
+    //   try {
+    //     initiateCheckout({ name: "Import with BusyDev Masterclass", price: 0 });
+    //   } catch (error) {
+    //     console.error("InitiateCheckout tracking failed:", error);
+    //   }
+    // }
+    // setRegistrationOpen(true);
+    // Opens the link in a new tab
+    window.open("https://importwithbusydev.vercel.app/upsell", "_blank");
   }
 
   return (
