@@ -157,11 +157,12 @@ export default function CoursePage() {
             <p className="course-hero__subtitle">Learn how to source, ship, and sell products from China, Turkey, Dubai, etc</p>
             <div className="course-video">
               <iframe
-                src="https://www.youtube-nocookie.com/embed/WMR2w8ZK-UI"
-                title="Import with BusyDev course preview"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
+                src="https://play.gumlet.io/embed/6ac32813d6a6ba7c2cc3baeb"
+                title="Importation course video"
+                loading="lazy"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write"
+                referrerPolicy="origin"
+                style={{ border: "none", width: "100%", height: "100%", display: "block" }}
               />
             </div>
           </div>
