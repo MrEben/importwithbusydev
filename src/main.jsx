@@ -16,10 +16,17 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ScrollToTop />
-      <DemoActivityNotification />
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route
+          path="/checkout"
+          element={
+            <>
+              <CheckoutPage />
+              <DemoActivityNotification />
+            </>
+          }
+        />
         <Route path="/upsell" element={<UpsellPage />} />
         <Route path="/course" element={<CoursePage />} />
         <Route path="/lms" element={<LMSDashboard />} />
