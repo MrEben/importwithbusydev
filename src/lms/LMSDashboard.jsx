@@ -1089,7 +1089,7 @@ function LMSDashboardContent({
                           href={selectedLesson.resources.powerpointUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-2 inline-flex items-center gap-2 text-xs font-bold text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
+                          className="mt-2 inline-flex cursor-pointer items-center gap-2 text-xs font-bold text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
                         >
                           Download PowerPoint slides
                           <span aria-hidden="true">↗</span>
@@ -1113,7 +1113,7 @@ function LMSDashboardContent({
                                   href={youtubeLink.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="inline-flex items-start gap-2 text-xs font-semibold leading-relaxed text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
+                                  className="inline-flex cursor-pointer items-start gap-2 text-xs font-semibold leading-relaxed text-[var(--lms-blue)] underline decoration-[var(--lms-blue)] underline-offset-4 hover:text-[var(--lms-blue-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lms-blue)]"
                                 >
                                   <span aria-hidden="true">▶</span>
                                   {youtubeLink.title || `Resource ${index + 1}`}
