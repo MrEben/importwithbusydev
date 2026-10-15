@@ -118,6 +118,24 @@ function LessonIcon({ completed = false }) {
   );
 }
 
+function LMSPreloader({ message }) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-9 font-[Inter,sans-serif] text-[#202124]">
+      <div
+        className="flex flex-col items-center gap-4 text-center"
+        role="status"
+        aria-live="polite"
+      >
+        <span
+          aria-hidden="true"
+          className="h-10 w-10 animate-spin rounded-full border-4 border-[#e2e5eb] border-t-[#0645ff]"
+        />
+        <p className="text-sm text-[#737985]">{message}</p>
+      </div>
+    </main>
+  );
+}
+
 function LMSDashboardContent({
   curriculum,
   email,
@@ -1459,30 +1477,32 @@ export default function LMSDashboard() {
     }
   }
 
+  if (authState === "checking") {
+    return <LMSPreloader message="Checking your secure course session…" />;
+  }
+
   if (authState === "authenticated") {
     if (!curriculum) {
+      if (!curriculumError) {
+        return <LMSPreloader message="Loading your course content…" />;
+      }
+
       return (
         <main className="flex min-h-screen items-center justify-center bg-[#f3f6fb] px-5 py-9 font-[Inter,sans-serif] text-[#202124]">
           <section className="w-full max-w-md rounded-lg border border-[#e2e5eb] bg-white p-6 shadow-sm sm:p-9">
-            {curriculumError ? (
-              <div role="alert">
-                <h1 className="text-2xl font-extrabold">Course content unavailable</h1>
-                <p className="mt-3 text-sm leading-relaxed text-[#737985]">
-                  {curriculumError}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setCurriculumCheck((current) => current + 1)}
-                  className="mt-5 rounded-lg bg-[#0645ff] px-5 py-3 text-sm font-extrabold text-white"
-                >
-                  Try again
-                </button>
-              </div>
-            ) : (
-              <p role="status" className="text-sm text-[#737985]">
-                Loading course content…
+            <div role="alert">
+              <h1 className="text-2xl font-extrabold">Course content unavailable</h1>
+              <p className="mt-3 text-sm leading-relaxed text-[#737985]">
+                {curriculumError}
               </p>
-            )}
+              <button
+                type="button"
+                onClick={() => setCurriculumCheck((current) => current + 1)}
+                className="mt-5 rounded-lg bg-[#0645ff] px-5 py-3 text-sm font-extrabold text-white"
+              >
+                Try again
+              </button>
+            </div>
           </section>
         </main>
       );
@@ -1522,12 +1542,6 @@ export default function LMSDashboard() {
           Use the email address from your course purchase and the course password
           to continue learning.
         </p>
-
-        {authState === "checking" && (
-          <p role="status" className="mt-6 rounded-lg bg-[#f0f2f7] p-4 text-sm text-[#737985]">
-            Checking your secure course session…
-          </p>
-        )}
 
         {authState === "error" && (
           <div className="mt-6" role="alert">
