@@ -7,6 +7,7 @@ import App from './App.jsx'
 import CheckoutPage from './pages/CheckoutPage.jsx'
 import CoursePage from './pages/CoursePage.jsx'
 import ThankYouPage from './pages/ThankYouPage.jsx'
+import TrainingThankYouPage from './pages/TrainingThankYouPage.jsx'
 import UpsellPage from './pages/UpsellPage.jsx'
 import LMSDashboard from './lms/LMSDashboard.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
@@ -32,6 +33,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/lms" element={<LMSDashboard />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
         <Route path="/thank-you." element={<ThankYouPage />} />
+        <Route path="/training-thank-you" element={<TrainingThankYouPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

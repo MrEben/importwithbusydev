@@ -3,9 +3,39 @@ import { initiateCheckout as trackInitiateCheckout, lead as trackLead } from "./
 import MetaPixel from "./components/MetaPixel";
 import { Link } from "react-router-dom";
 
-const GOOGLE_SCRIPT_URL = import.meta.env.VITE_APP_TITLE;
 const PIXEL_ID = import.meta.env.PIXEL_ID;
 const PIXEL_ENABLED = Boolean(PIXEL_ID);
+const BASE_TRAINING_PRICE_GHS = 20;
+const GHANA_PAYMENT_URL = "https://paystack.shop/pay/m642ykdoz7";
+const NIGERIA_PAYMENT_URL = "https://nestuge.com/checkout?items=%5B%7B%22id%22%3A%22pr_mvath4cjmibi9d9cb2cjxx3jjb6kl%22%2C%22type%22%3A%22registration%22%2C%22plan%22%3A%22pl_mvats770fxry0iv8mcf8dtgjdihpc%22%2C%22count%22%3A1%2C%22affiliate%22%3Anull%7D%5D&currency=NGN&redirectUrl=https%3A%2F%2Fnestuge.com%2Fc0ntm5nqj";
+const KENYA_PAYMENT_URL = NIGERIA_PAYMENT_URL.replace("currency=NGN", "currency=KES");
+
+const COUNTRY_SETTINGS = {
+  GH: {
+    currency: "GHS",
+    locale: "en-GH",
+    name: "Ghanaian",
+    phonePattern: "^(\\+?233|0)[2357]\\d{8}$",
+    phoneRegex: /^(?:\+?233|0)[2357]\d{8}$/,
+    phoneExample: "0241234567 or +233241234567",
+  },
+  NG: {
+    currency: "NGN",
+    locale: "en-NG",
+    name: "Nigerian",
+    phonePattern: "^(\\+234|234|0)[789]\\d{9}$",
+    phoneRegex: /^(?:\+234|234|0)[789]\d{9}$/,
+    phoneExample: "08012345678 or +2348012345678",
+  },
+  KE: {
+    currency: "KES",
+    locale: "en-KE",
+    name: "Kenyan",
+    phonePattern: "^(\\+254|254|0)[17]\\d{8}$",
+    phoneRegex: /^(?:\+254|254|0)[17]\d{8}$/,
+    phoneExample: "0712345678 or +254712345678",
+  },
+};
 
 const trainingSections = {
   china: {
@@ -73,8 +103,65 @@ export default function App() {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [countryCode, setCountryCode] = useState("GH");
+  const [trainingPrice, setTrainingPrice] = useState(BASE_TRAINING_PRICE_GHS);
+  const [isPriceLoading, setIsPriceLoading] = useState(true);
   const [registrationDetails, setRegistrationDetails] = useState({ name: "", phone: "", training: "" });
   const testimonialCarouselRef = useRef(null);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function detectCountryAndPrice() {
+      try {
+        const locationResponse = await fetch("https://ipapi.co/json/");
+        if (!locationResponse.ok) {
+          throw new Error(`Location lookup failed with status ${locationResponse.status}`);
+        }
+
+        const location = await locationResponse.json();
+        const detectedCountry = location.country_code;
+        if (!Object.hasOwn(COUNTRY_SETTINGS, detectedCountry)) {
+          if (isActive) setCountryCode("GH");
+          return;
+        }
+
+        if (detectedCountry === "GH") {
+          if (isActive) setCountryCode("GH");
+          return;
+        }
+
+        const ratesResponse = await fetch("https://open.er-api.com/v6/latest/GHS");
+        if (!ratesResponse.ok) {
+          throw new Error(`Exchange rate lookup failed with status ${ratesResponse.status}`);
+        }
+
+        const ratesData = await ratesResponse.json();
+        const exchangeRate = ratesData.rates?.[COUNTRY_SETTINGS[detectedCountry].currency];
+        if (ratesData.result !== "success" || !Number.isFinite(exchangeRate) || exchangeRate <= 0) {
+          throw new Error(`A valid GHS to ${COUNTRY_SETTINGS[detectedCountry].currency} exchange rate was not returned`);
+        }
+
+        if (isActive) {
+          setCountryCode(detectedCountry);
+          setTrainingPrice(BASE_TRAINING_PRICE_GHS * exchangeRate);
+        }
+      } catch (error) {
+        console.error("Unable to detect location or convert the training price; using GHS.", error);
+        if (isActive) {
+          setCountryCode("GH");
+          setTrainingPrice(BASE_TRAINING_PRICE_GHS);
+        }
+      } finally {
+        if (isActive) setIsPriceLoading(false);
+      }
+    }
+
+    detectCountryAndPrice();
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!PIXEL_ENABLED) {
@@ -157,15 +244,15 @@ export default function App() {
     const name = registrationDetails.name.trim();
     const phone = registrationDetails.phone.trim();
     const training = registrationDetails.training.trim();
-    const phoneRegex = /^(?:\+233|233|0)(2[03456789]|5[0-9])[0-9]{7}$/;
+    const phoneRule = COUNTRY_SETTINGS[countryCode];
 
     if (!name || !phone || !training) {
       alert("Please fill all fields");
       return;
     }
 
-    if (!phoneRegex.test(phone)) {
-      alert("Please enter a valid Ghanaian phone number");
+    if (!phoneRule.phoneRegex.test(phone)) {
+      alert(`Please enter a valid ${phoneRule.name} phone number, e.g. ${phoneRule.phoneExample}`);
       return;
     }
 
@@ -179,39 +266,52 @@ export default function App() {
       }
     }
 
-    const sendRegistrationInBackground = async () => {
-      if (!GOOGLE_SCRIPT_URL) {
-        console.error("Google Script URL is missing");
-        return;
-      }
+    // const sendRegistrationInBackground = async () => {
+    //   if (!GOOGLE_SCRIPT_URL) {
+    //     console.error("Google Script URL is missing");
+    //     return;
+    //   }
 
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-          },
-          body: JSON.stringify({
-            secret: "IMPORTWITHBUSYDEV123",
-            name,
-            phone,
-            training,
-          }),
-        });
+    //   try {
+    //     await fetch(GOOGLE_SCRIPT_URL, {
+    //       method: "POST",
+    //       mode: "no-cors",
+    //       headers: {
+    //         "Content-Type": "text/plain;charset=utf-8",
+    //       },
+    //       body: JSON.stringify({
+    //         secret: "IMPORTWITHBUSYDEV123",
+    //         name,
+    //         phone,
+    //         training,
+    //         countryCode,
+    //       }),
+    //     });
 
-        console.log("Registration sent to Google Sheets");
-      } catch (error) {
-        console.error("Registration submission failed:", error);
-      }
-    };
+    //     console.log("Registration sent to Google Sheets");
+    //   } catch (error) {
+    //     console.error("Registration submission failed:", error);
+    //   }
+    // };
 
-    sendRegistrationInBackground();
-    window.open("https://chat.whatsapp.com/Kfdh6Yy422y0eR5vaLji4k", "_blank", "noopener,noreferrer");
+    // sendRegistrationInBackground();
+    const paymentUrl = countryCode === "GH"
+      ? GHANA_PAYMENT_URL
+      : countryCode === "KE"
+        ? KENYA_PAYMENT_URL
+        : NIGERIA_PAYMENT_URL;
+    window.open(paymentUrl, "_blank", "noopener,noreferrer");
     setIsRegistrationOpen(false);
     setRegistrationDetails({ name: "", phone: "", training: "" });
     setIsSending(false);
   }
+
+  const priceSettings = COUNTRY_SETTINGS[countryCode];
+  const formattedTrainingPrice = new Intl.NumberFormat(priceSettings.locale, {
+    style: "currency",
+    currency: priceSettings.currency,
+    maximumFractionDigits: priceSettings.currency === "GHS" ? 2 : 0,
+  }).format(trainingPrice);
 
   return (
     <div className="min-h-screen bg-[var(--page-bg)] text-[var(--text)]">
@@ -453,7 +553,7 @@ export default function App() {
               />
               <button 
                 type="submit"
-                disabled={isSending}
+                disabled={isSending || isPriceLoading}
                 className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition disabled:opacity-50"
               >
                 {isSending ? "Subscribing..." : "Subscribe"}
@@ -576,8 +676,8 @@ export default function App() {
                   onChange={(event) => setRegistrationDetails({ ...registrationDetails, phone: event.target.value })}
                   required
                   inputMode="tel"
-                  pattern="^(\+?233|0)[2357]\d{8}$"
-                  title="Enter a valid Ghanaian phone number, for example 0241234567 or +233241234567"
+                  pattern={COUNTRY_SETTINGS[countryCode].phonePattern}
+                  title={`Enter a valid ${COUNTRY_SETTINGS[countryCode].name} phone number, for example ${COUNTRY_SETTINGS[countryCode].phoneExample}`}
                   className="w-full rounded-md border-2 border-slate-200 px-4 py-3 focus:border-orange-600 focus:outline-none"
                 />
               </div>
@@ -603,11 +703,11 @@ export default function App() {
                 disabled={isSending}
                 className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-2 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSending ? "Submitting..." : "Pay 20 GHS to Join Training"}
+                {isSending ? "Submitting..." : isPriceLoading ? "Loading local price..." : `Pay ${formattedTrainingPrice} to Join Training`}
               </button>
             </form>
              <div className="mt-2 text-left text-xs text-slate-600">
-                After Paying, you'll be redirected to a WhatsApp group where the training will be conducted. Please ensure your phone number is active on WhatsApp.
+                You’ll be taken to the checkout provider to complete your payment. Please ensure your phone number is active on WhatsApp for training updates.
               </div>
               <div className="mt-2 text-left text-xs text-slate-600">
                 Need some more info? Send me a message on Whatsapp{" "}
