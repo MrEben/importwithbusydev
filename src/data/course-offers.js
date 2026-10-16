@@ -1,5 +1,5 @@
-export const COURSE_PRICE_GHS = 360;
-export const COACHING_PRICE_GHS = 950;
+export const COURSE_PRICE_GHS = 300;
+export const COACHING_PRICE_GHS = 450;
 
 export const COURSE_ADD_ONS = [
   {
@@ -12,7 +12,7 @@ export const COURSE_ADD_ONS = [
     id: "supplier-communication",
     name: "Supplier Communication Guide",
     description: "Before you chat any supplier and buy from them, you need to read this. It'll guide you on what and what-not to say",
-    priceGhs: 20,
+    priceGhs: 60,
   },
 ];
 
