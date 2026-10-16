@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import MetaPixel from "../components/MetaPixel.jsx";
+import { completeRegistration } from "../utils/metaPixel.js";
 import { readApiResponse } from "../utils/readApiResponse.js";
 
 const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/Kfdh6Yy422y0eR5vaLji4k";
@@ -53,8 +55,20 @@ export default function TrainingThankYouPage() {
   const isConfirmed = verificationState === "confirmed";
   const isChecking = verificationState === "checking";
 
+  function handleJoinWhatsAppCommunity() {
+    try {
+      completeRegistration({
+        name: "Import with BusyDev Training Registration",
+        price: 20,
+      });
+    } catch (error) {
+      console.error("CompleteRegistration tracking failed:", error);
+    }
+  }
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10 text-slate-950">
+      <MetaPixel />
       <section
         aria-live="polite"
         className="w-full max-w-lg rounded-lg bg-white p-8 text-center shadow-lg sm:p-10"
@@ -82,6 +96,7 @@ export default function TrainingThankYouPage() {
               href={WHATSAPP_COMMUNITY_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleJoinWhatsAppCommunity}
               className="mt-7 inline-flex min-h-12 items-center justify-center rounded-md bg-green-600 px-6 py-3 font-bold text-white transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
             >
               Join the WhatsApp Community

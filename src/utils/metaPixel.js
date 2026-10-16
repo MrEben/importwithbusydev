@@ -63,3 +63,13 @@ export const lead = (product = {}) => {
     });
   }
 };
+
+export const completeRegistration = (product = {}) => {
+  if (window.fbq) {
+    window.fbq("track", "CompleteRegistration", {
+      content_name: product.name,
+      value: product.price,
+      currency: "GHS",
+    });
+  }
+};

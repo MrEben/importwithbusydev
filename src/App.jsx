@@ -1,12 +1,16 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { initiateCheckout as trackInitiateCheckout, lead as trackLead } from "./utils/metaPixel";
+import {
+  initiateCheckout as trackInitiateCheckout,
+  lead as trackLead,
+  viewContent as trackViewContent,
+} from "./utils/metaPixel";
 import MetaPixel from "./components/MetaPixel";
 import { Link } from "react-router-dom";
 
 const PIXEL_ID = import.meta.env.PIXEL_ID;
 const PIXEL_ENABLED = Boolean(PIXEL_ID);
 const BASE_TRAINING_PRICE_GHS = 20;
-const GHANA_PAYMENT_URL = "https://paystack.shop/pay/m642ykdoz7";
+const GHANA_PAYMENT_URL = "https://paystack.shop/pay/9nil5lyodo";
 const NIGERIA_PAYMENT_URL = "https://nestuge.com/checkout?items=%5B%7B%22id%22%3A%22pr_mvath4cjmibi9d9cb2cjxx3jjb6kl%22%2C%22type%22%3A%22registration%22%2C%22plan%22%3A%22pl_mvats770fxry0iv8mcf8dtgjdihpc%22%2C%22count%22%3A1%2C%22affiliate%22%3Anull%7D%5D&currency=NGN&redirectUrl=https%3A%2F%2Fnestuge.com%2Fc0ntm5nqj";
 const KENYA_PAYMENT_URL = NIGERIA_PAYMENT_URL.replace("currency=NGN", "currency=KES");
 
@@ -108,6 +112,21 @@ export default function App() {
   const [isPriceLoading, setIsPriceLoading] = useState(true);
   const [registrationDetails, setRegistrationDetails] = useState({ name: "", phone: "", training: "" });
   const testimonialCarouselRef = useRef(null);
+  const viewContentTracked = useRef(false);
+
+  useEffect(() => {
+    if (!PIXEL_ENABLED || viewContentTracked.current) return;
+    viewContentTracked.current = true;
+
+    try {
+      trackViewContent({
+        name: "Import with BusyDev Training Registration",
+        price: BASE_TRAINING_PRICE_GHS,
+      });
+    } catch (error) {
+      console.error("ViewContent tracking failed:", error);
+    }
+  }, []);
 
   useEffect(() => {
     let isActive = true;
@@ -224,17 +243,6 @@ export default function App() {
   }, []);
 
   function handleJoinClick() {
-    if (PIXEL_ENABLED) {
-      try {
-        trackInitiateCheckout({
-          name: "Import with BusyDev Masterclass",
-          price: 0,
-        });
-      } catch (error) {
-        console.error("InitiateCheckout tracking failed:", error);
-      }
-    }
-
     setIsRegistrationOpen(true);
   }
 
@@ -260,7 +268,7 @@ export default function App() {
 
     if (PIXEL_ENABLED) {
       try {
-        trackLead({ name, phone, training, price: 0 });
+        trackLead({ name: "Import with BusyDev Training Registration", price: trainingPrice });
       } catch (error) {
         console.error("Pixel tracking failed:", error);
       }
@@ -300,6 +308,16 @@ export default function App() {
       : countryCode === "KE"
         ? KENYA_PAYMENT_URL
         : NIGERIA_PAYMENT_URL;
+    if (PIXEL_ENABLED) {
+      try {
+        trackInitiateCheckout({
+          name: "Import with BusyDev Training Registration",
+          price: trainingPrice,
+        });
+      } catch (error) {
+        console.error("InitiateCheckout tracking failed:", error);
+      }
+    }
     window.open(paymentUrl, "_blank", "noopener,noreferrer");
     setIsRegistrationOpen(false);
     setRegistrationDetails({ name: "", phone: "", training: "" });
