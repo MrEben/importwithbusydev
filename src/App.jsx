@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { initiateCheckout as trackInitiateCheckout, lead as trackLead } from "./utils/metaPixel";
 import MetaPixel from "./components/MetaPixel";
+import { Link } from "react-router-dom";
 
 const GOOGLE_SCRIPT_URL = import.meta.env.VITE_APP_TITLE;
 const PIXEL_ID = import.meta.env.PIXEL_ID;
@@ -248,7 +249,7 @@ export default function App() {
 
             {/* Main CTA Button */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-              <button 
+              <button
                 onClick={handleJoinClick}
                 className="px-8 py-4 bg-orange-600 hover:bg-orange-500 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition bump-animation"
               >
@@ -315,13 +316,13 @@ export default function App() {
         </section>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center p-8">
-              <button 
-                onClick={handleJoinClick}
-                className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition bump-animation"
-              >
-                CLICK HERE TO JOIN THE FREE IMPORTATION TRAINING
-              </button>
-            </div>
+          <button
+            onClick={handleJoinClick}
+            className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition bump-animation"
+          >
+            CLICK HERE TO JOIN THE FREE IMPORTATION TRAINING
+          </button>
+        </div>
 
         {/* Student testimonial screenshots */}
         <section className="px-6 py-20 lg:px-10 bg-slate-50">
@@ -410,11 +411,11 @@ export default function App() {
 
             <div className="space-y-4">
               {faqItems.map((item, idx) => (
-                <div 
+                <div
                   key={idx}
                   className="border-2 border-slate-200 rounded-lg overflow-hidden hover:border-orange-600 transition"
                 >
-                  <button 
+                  <button
                     onClick={() => setExpandedFAQ(expandedFAQ === idx ? null : idx)}
                     className="w-full p-6 text-left flex items-center justify-between bg-white hover:bg-slate-50 transition"
                   >
@@ -470,8 +471,8 @@ export default function App() {
           <div className="max-w-4xl mx-auto text-center text-white space-y-8">
             <h2 className="text-4xl lg:text-5xl font-bold">Ready to Start Your Importation Journey?</h2>
             <p className="text-xl opacity-90">Join hundreds of successful entrepreneurs who've transformed their businesses with our training.</p>
-            
-            <button 
+
+            <button
               onClick={handleJoinClick}
               className="px-10 py-5 bg-white text-orange-600 font-bold text-lg rounded-lg shadow-lg hover:shadow-xl transition bump-animation"
             >
@@ -548,10 +549,10 @@ export default function App() {
             >
               &times;
             </button>
-            <h2 id="registration-title" className="pr-8 text-2xl font-bold">Register for free training</h2>
-            <p className="mt-2 text-slate-600">Enter your details to join the training community on WhatsApp.</p>
+            <h2 id="registration-title" className="pr-8 text-2xl font-bold">Register for training</h2>
+            <p className="text-sm mt-2 text-slate-600">Enter your details to join the training community on WhatsApp.</p>
 
-            <form onSubmit={handleRegistrationSubmit} className="mt-6 space-y-4">
+            <form onSubmit={handleRegistrationSubmit} className="mt-4 space-y-4">
               <div>
                 <label htmlFor="registration-name" className="mb-1 block text-sm font-semibold">Full name</label>
                 <input
@@ -600,11 +601,20 @@ export default function App() {
               <button
                 type="submit"
                 disabled={isSending}
-                className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-3 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-2 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSending ? "Submitting..." : "Register For Free Training"}
+                {isSending ? "Submitting..." : "Pay 20 GHS to Join Training"}
               </button>
             </form>
+             <div className="mt-2 text-left text-xs text-slate-600">
+                After Paying, you'll be redirected to a WhatsApp group where the training will be conducted. Please ensure your phone number is active on WhatsApp.
+              </div>
+              <div className="mt-2 text-left text-xs text-slate-600">
+                Need some more info? Send me a message on Whatsapp{" "}
+                <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
+                  Send Message
+                </Link>
+              </div>
           </div>
         </div>
       )}
