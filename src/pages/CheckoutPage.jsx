@@ -139,8 +139,8 @@ export default function CourseDetail() {
       {/* NAVBAR */}
       <header className="nav">
         <div to="/checkout" className="text-lg font-extrabold tracking-tight text-slate-950 sm:text-xl">
-            <span className="text-blue-700">Import</span>withBusyDev
-          </div>
+          <span className="text-blue-700">Import</span>withBusyDev
+        </div>
         <div className="flex items-center gap-4">
           <button
             type="button"
