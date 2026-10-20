@@ -314,7 +314,7 @@ export default function App() {
     };
 
     sendRegistrationInBackground();
-    window.open('_blank', 'https://chat.whatsapp.com/JqQGNjO53DcCFFmMvGaCaA');
+    window.open("https://chat.whatsapp.com/JqQGNjO53DcCFFmMvGaCaA", "_blank", "noopener,noreferrer");
     // const paymentUrl = countryCode === "GH"
     //   ? GHANA_PAYMENT_URL
     //   : countryCode === "KE"
