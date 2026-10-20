@@ -285,44 +285,45 @@ export default function App() {
       }
     }
 
-    // const sendRegistrationInBackground = async () => {
-    //   if (!GOOGLE_SCRIPT_URL) {
-    //     console.error("Google Script URL is missing");
-    //     return;
-    //   }
+    const sendRegistrationInBackground = async () => {
+      if (!GOOGLE_SCRIPT_URL) {
+        console.error("Google Script URL is missing");
+        return;
+      }
 
-    //   try {
-    //     await fetch(GOOGLE_SCRIPT_URL, {
-    //       method: "POST",
-    //       mode: "no-cors",
-    //       headers: {
-    //         "Content-Type": "text/plain;charset=utf-8",
-    //       },
-    //       body: JSON.stringify({
-    //         secret: "IMPORTWITHBUSYDEV123",
-    //         name,
-    //         phone,
-    //         training,
-    //         countryCode,
-    //       }),
-    //     });
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+          body: JSON.stringify({
+            secret: "IMPORTWITHBUSYDEV123",
+            name,
+            phone,
+            training,
+            countryCode,
+          }),
+        });
 
-    //     console.log("Registration sent to Google Sheets");
-    //   } catch (error) {
-    //     console.error("Registration submission failed:", error);
-    //   }
-    // };
+        console.log("Registration sent to Google Sheets");
+      } catch (error) {
+        console.error("Registration submission failed:", error);
+      }
+    };
 
-    // sendRegistrationInBackground();
-    const paymentUrl = countryCode === "GH"
-      ? GHANA_PAYMENT_URL
-      : countryCode === "KE"
-        ? KENYA_PAYMENT_URL
-        : NIGERIA_PAYMENT_URL;
-    window.open(paymentUrl, "_blank", "noopener,noreferrer");
-    setIsRegistrationOpen(false);
-    setRegistrationDetails({ name: "", phone: "", training: "" });
-    setIsSending(false);
+    sendRegistrationInBackground();
+    window.open('_blank', 'https://chat.whatsapp.com/JqQGNjO53DcCFFmMvGaCaA');
+    // const paymentUrl = countryCode === "GH"
+    //   ? GHANA_PAYMENT_URL
+    //   : countryCode === "KE"
+    //     ? KENYA_PAYMENT_URL
+    //     : NIGERIA_PAYMENT_URL;
+    // window.open(paymentUrl, "_blank", "noopener,noreferrer");
+    // setIsRegistrationOpen(false);
+    // setRegistrationDetails({ name: "", phone: "", training: "" });
+    // setIsSending(false);
   }
 
   const priceSettings = COUNTRY_SETTINGS[countryCode];
@@ -722,10 +723,11 @@ export default function App() {
                 disabled={isSending}
                 className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-2 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSending ? "Submitting..." : isPriceLoading ? "Loading local price..." : `Pay ${formattedTrainingPrice} to Join Training`}
+                {isSending ? "Submitting..." :  `Join Training`}
+                {/* {isSending ? "Submitting..." : isPriceLoading ? "Loading local price..." : `Pay ${formattedTrainingPrice} to Join Training`} */}
               </button>
             </form>
-             <div className="mt-2 text-left text-xs text-slate-600">
+             {/* <div className="mt-2 text-left text-xs text-slate-600">
                 You’ll be taken to the checkout provider to complete your payment. Please ensure your phone number is active on WhatsApp for training updates.
               </div>
               <div className="mt-2 text-left text-xs text-slate-600">
@@ -733,7 +735,7 @@ export default function App() {
                 <Link className="font-semibold text-blue-700 underline underline-offset-4 hover:text-blue-800" to="https://tinyurl.com/ymanwze6">
                   Send Message
                 </Link>
-              </div>
+              </div> */}
           </div>
         </div>
       )}
