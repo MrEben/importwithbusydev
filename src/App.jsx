@@ -7,6 +7,7 @@ import {
 import MetaPixel from "./components/MetaPixel";
 import { Link } from "react-router-dom";
 
+const GOOGLE_SCRIPT_URL = import.meta.env.VITE_APP_TITLE;
 const PIXEL_ID = import.meta.env.PIXEL_ID;
 const PIXEL_ENABLED = Boolean(PIXEL_ID);
 const BASE_TRAINING_PRICE_GHS = 20;
