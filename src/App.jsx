@@ -79,7 +79,7 @@ const testimonialScreenshots = [
 const faqItems = [
   {
     question: "Do I need capital to join this training?",
-    answer: "No, this training is a complete program. You only need internet access and a genuine desire to learn how to import products."
+    answer: "No, this training is completely FREE. You only need internet access and a genuine desire to learn how to import products."
   },
   {
     question: "How long is the training?",
@@ -373,7 +373,7 @@ export default function App() {
                 onClick={handleJoinClick}
                 className="px-8 py-4 bg-orange-600 hover:bg-orange-500 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition bump-animation"
               >
-                CLICK HERE TO JOIN THE IMPORTATION TRAINING
+                CLICK HERE TO JOIN THE FREE IMPORTATION TRAINING
               </button>
             </div>
 
@@ -387,7 +387,7 @@ export default function App() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-orange-600">100%</div>
-                  <div className="text-sm">Detailed Training</div>
+                  <div className="text-sm">Free Training</div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-orange-600">200+</div>
@@ -440,7 +440,7 @@ export default function App() {
             onClick={handleJoinClick}
             className="px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold text-lg rounded-lg shadow-lg hover:shadow-xl cursor-pointer transition bump-animation"
           >
-            CLICK HERE TO JOIN THE COMPLETE IMPORTATION TRAINING
+            CLICK HERE TO JOIN THE FREE IMPORTATION TRAINING
           </button>
         </div>
 
@@ -498,8 +498,8 @@ export default function App() {
                 <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-orange-600 text-white text-2xl font-bold mb-6">
                   1
                 </div>
-                <h3 className="text-2xl font-bold text-slate-950 mb-3">Enroll in the Complete Training</h3>
-                <p className="text-slate-600">Join our complete training program with a clear path from start to import success.</p>
+                <h3 className="text-2xl font-bold text-slate-950 mb-3">Enroll Free</h3>
+                <p className="text-slate-600">Join our free training program with no hidden charges or conditions.</p>
               </div>
 
               <div className="text-center">
@@ -596,10 +596,10 @@ export default function App() {
               onClick={handleJoinClick}
               className="px-10 py-5 bg-white text-orange-600 font-bold text-lg rounded-lg shadow-lg hover:shadow-xl transition bump-animation"
             >
-              CLICK HERE TO JOIN THE COMPLETE IMPORTATION TRAINING
+              CLICK HERE TO JOIN THE FREE IMPORTATION TRAINING
             </button>
 
-            <p className="text-sm opacity-75">It's a complete training experience. No hidden surprises. Join now!</p>
+            <p className="text-sm opacity-75">It's 100% FREE. No credit card required. Join now!</p>
           </div>
         </section>
       </main>
