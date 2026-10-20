@@ -724,7 +724,7 @@ export default function App() {
                 disabled={isSending}
                 className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-2 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSending ? "Submitting..." :  `Join Training`}
+                {isSending ? "Submitting..." :  `Join Free Training`}
                 {/* {isSending ? "Submitting..." : isPriceLoading ? "Loading local price..." : `Pay ${formattedTrainingPrice} to Join Training`} */}
               </button>
             </form>
