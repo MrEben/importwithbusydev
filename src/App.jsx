@@ -286,7 +286,7 @@ export default function App() {
     const trainingExpectation = registrationDetails.trainingExpectation;
     const phoneRule = COUNTRY_SETTINGS[countryCode];
 
-    if (!name || !phone || !training || !importGoal || !startTimeframe || !canAttendLive || !trainingExpectation) {
+    if (!name || !phone || !training || !trainingExpectation) {
       alert("Please fill all fields");
       return;
     }
@@ -332,7 +332,7 @@ export default function App() {
             hasCapital,
             canAttendLive,
             trainingExpectation,
-          }),
+          }), 
         });
 
         console.log("Registration sent to Google Sheets");
