@@ -107,11 +107,23 @@ const faqItems = [
 export default function App() {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [hasAcknowledgedRegistrationNotice, setHasAcknowledgedRegistrationNotice] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [countryCode, setCountryCode] = useState("GH");
   const [trainingPrice, setTrainingPrice] = useState(BASE_TRAINING_PRICE_GHS);
   const [isPriceLoading, setIsPriceLoading] = useState(true);
-  const [registrationDetails, setRegistrationDetails] = useState({ name: "", phone: "", training: "" });
+  const [registrationDetails, setRegistrationDetails] = useState({
+    name: "",
+    phone: "",
+    training: "",
+    importGoal: "",
+    startTimeframe: "",
+    productIdea: "",
+    budget: "",
+    hasCapital: "",
+    canAttendLive: "",
+    trainingExpectation: "",
+  });
   const testimonialCarouselRef = useRef(null);
   const viewContentTracked = useRef(false);
 
@@ -255,6 +267,7 @@ export default function App() {
       }
     }
 
+    setHasAcknowledgedRegistrationNotice(false);
     setIsRegistrationOpen(true);
   }
 
@@ -264,9 +277,16 @@ export default function App() {
     const name = registrationDetails.name.trim();
     const phone = registrationDetails.phone.trim();
     const training = registrationDetails.training.trim();
+    const importGoal = registrationDetails.importGoal;
+    const startTimeframe = registrationDetails.startTimeframe;
+    const productIdea = registrationDetails.productIdea.trim();
+    const budget = registrationDetails.budget;
+    const hasCapital = registrationDetails.hasCapital;
+    const canAttendLive = registrationDetails.canAttendLive;
+    const trainingExpectation = registrationDetails.trainingExpectation;
     const phoneRule = COUNTRY_SETTINGS[countryCode];
 
-    if (!name || !phone || !training) {
+    if (!name || !phone || !training || !importGoal || !startTimeframe || !canAttendLive || !trainingExpectation) {
       alert("Please fill all fields");
       return;
     }
@@ -305,6 +325,13 @@ export default function App() {
             phone,
             training,
             countryCode,
+            importGoal,
+            startTimeframe,
+            productIdea,
+            budget,
+            hasCapital,
+            canAttendLive,
+            trainingExpectation,
           }),
         });
 
@@ -657,10 +684,10 @@ export default function App() {
           }}
         >
           <div
-            className="relative w-full max-w-md rounded-lg bg-white p-6 text-slate-950 shadow-2xl sm:p-8"
+            className={`relative flex ${hasAcknowledgedRegistrationNotice ? "h-[min(38rem,calc(100dvh-4rem))]" : "max-h-[calc(100dvh-4rem)]"} w-full max-w-md flex-col overflow-hidden rounded-lg bg-white p-6 text-slate-950 shadow-2xl sm:p-8`}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="registration-title"
+            aria-labelledby={hasAcknowledgedRegistrationNotice ? "registration-title" : "registration-notice-title"}
           >
             <button
               type="button"
@@ -670,64 +697,123 @@ export default function App() {
             >
               &times;
             </button>
-            <h2 id="registration-title" className="pr-8 text-2xl font-bold">Register for training</h2>
-            <p className="text-sm mt-2 text-slate-600">Enter your details to join the training community on WhatsApp.</p>
-
-            <form onSubmit={handleRegistrationSubmit} className="mt-4 space-y-4">
+            {!hasAcknowledgedRegistrationNotice ? (
               <div>
-                <label htmlFor="registration-name" className="mb-1 block text-sm font-semibold">Full name</label>
-                <input
-                  id="registration-name"
-                  type="text"
-                  value={registrationDetails.name}
-                  onChange={(event) => setRegistrationDetails({ ...registrationDetails, name: event.target.value })}
-                  required
+                <h2 id="registration-notice-title" className="pr-8 text-2xl font-bold">Please note</h2>
+                <p className="mt-3 text-slate-600">
+                  The free class only covers the basics of importation. You can get the full paid course after the class ends.
+                </p>
+                <button
+                  type="button"
                   autoFocus
-                  className="w-full rounded-md border-2 border-slate-200 px-4 py-3 focus:border-orange-600 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label htmlFor="registration-phone" className="mb-1 block text-sm font-semibold">
-                  Phone number <span className="text-xs font-normal text-slate-400">(must be active on WhatsApp)</span>
-                </label>
-                <input
-                  id="registration-phone"
-                  type="tel"
-                  value={registrationDetails.phone}
-                  onChange={(event) => setRegistrationDetails({ ...registrationDetails, phone: event.target.value })}
-                  required
-                  inputMode="tel"
-                  pattern={COUNTRY_SETTINGS[countryCode].phonePattern}
-                  title={`Enter a valid ${COUNTRY_SETTINGS[countryCode].name} phone number, for example ${COUNTRY_SETTINGS[countryCode].phoneExample}`}
-                  className="w-full rounded-md border-2 border-slate-200 px-4 py-3 focus:border-orange-600 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label htmlFor="registration-training" className="mb-1 block text-sm font-semibold">
-                  Which training are you most interested in?
-                </label>
-                <select
-                  id="registration-training"
-                  value={registrationDetails.training}
-                  onChange={(event) => setRegistrationDetails({ ...registrationDetails, training: event.target.value })}
-                  required
-                  className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 focus:border-orange-600 focus:outline-none"
+                  onClick={() => setHasAcknowledgedRegistrationNotice(true)}
+                  className="mt-6 w-full cursor-pointer rounded-md bg-orange-600 px-5 py-3 font-bold text-white transition hover:bg-orange-700"
                 >
-                  <option value="" disabled>Select a training</option>
-                  <option value="China Import Training">China Import Training</option>
-                  <option value="Turkey/Dubai/Bangladesh Import Training">Turkey/Dubai/Bangladesh Import Training</option>
-                  <option value="Both">Both</option>
-                </select>
+                  I understand
+                </button>
               </div>
-              <button
-                type="submit"
-                disabled={isSending}
-                className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-2 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isSending ? "Submitting..." :  `Join Free Training`}
-                {/* {isSending ? "Submitting..." : isPriceLoading ? "Loading local price..." : `Pay ${formattedTrainingPrice} to Join Training`} */}
-              </button>
-            </form>
+            ) : (
+              <>
+                <h2 id="registration-title" className="pr-8 text-2xl font-bold">Register for training</h2>
+                <p className="text-sm mt-2 text-slate-600">Enter your details to join the training community on WhatsApp.</p>
+
+                <form onSubmit={handleRegistrationSubmit} className="mt-4 min-h-0 flex-1 space-y-4 overflow-y-auto pr-2">
+                  <div>
+                    <label htmlFor="registration-name" className="mb-1 block text-sm font-semibold">Full name</label>
+                    <input
+                      id="registration-name"
+                      type="text"
+                      value={registrationDetails.name}
+                      onChange={(event) => setRegistrationDetails({ ...registrationDetails, name: event.target.value })}
+                      required
+                      autoFocus
+                      className="w-full rounded-md border-2 border-slate-200 px-4 py-3 focus:border-orange-600 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="registration-phone" className="mb-1 block text-sm font-semibold">
+                      Phone number <span className="text-xs font-normal text-slate-400">(must be active on WhatsApp)</span>
+                    </label>
+                    <input
+                      id="registration-phone"
+                      type="tel"
+                      value={registrationDetails.phone}
+                      onChange={(event) => setRegistrationDetails({ ...registrationDetails, phone: event.target.value })}
+                      required
+                      inputMode="tel"
+                      pattern={COUNTRY_SETTINGS[countryCode].phonePattern}
+                      title={`Enter a valid ${COUNTRY_SETTINGS[countryCode].name} phone number, for example ${COUNTRY_SETTINGS[countryCode].phoneExample}`}
+                      className="w-full rounded-md border-2 border-slate-200 px-4 py-3 focus:border-orange-600 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="registration-training" className="mb-1 block text-sm font-semibold">
+                      Which training are you most interested in?
+                    </label>
+                    <select
+                      id="registration-training"
+                      value={registrationDetails.training}
+                      onChange={(event) => setRegistrationDetails({ ...registrationDetails, training: event.target.value })}
+                      required
+                      className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 focus:border-orange-600 focus:outline-none"
+                    >
+                      <option value="" disabled>Select a training</option>
+                      <option value="China Import Training">China Import Training</option>
+                      <option value="Turkey/Dubai/Bangladesh Import Training">Turkey/Dubai/Bangladesh Import Training</option>
+                      <option value="Both">Both</option>
+                    </select>
+                  </div>
+
+                  {/* <div>
+                    <label htmlFor="registration-live" className="mb-1 block text-sm font-semibold">
+                      Can you attend the free class live?
+                    </label>
+                    <select
+                      id="registration-live"
+                      value={registrationDetails.canAttendLive}
+                      onChange={(event) => setRegistrationDetails({ ...registrationDetails, canAttendLive: event.target.value })}
+                      required
+                      className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 focus:border-orange-600 focus:outline-none"
+                    >
+                      <option value="" disabled>Select an answer</option>
+                      <option value="Yes">Yes, I will be there</option>
+                      <option value="Not sure yet">Not sure yet</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div> */}
+                  <div>
+                    <label htmlFor="registration-expectation" className="mb-1 block text-sm font-semibold">
+                      What are you hoping to get out of this free training?
+                    </label>
+                    <select
+                      id="registration-expectation"
+                      value={registrationDetails.trainingExpectation}
+                      onChange={(event) => setRegistrationDetails({ ...registrationDetails, trainingExpectation: event.target.value })}
+                      required
+                      className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 focus:border-orange-600 focus:outline-none"
+                    >
+                      <option value="" disabled>Select what best describes you</option>
+                      <option value="Step-by-step masterclass for first import">
+                        I’m looking for a step-by-step masterclass to help me source and ship my first batch of products.
+                      </option>
+                      <option value="Planning to import in the coming months">
+                        I plan to import in the coming months and want to see if this program is the right fit.
+                      </option>
+                      <option value="Looking for free information, not ready to invest">
+                        I'm mainly looking for free information at the moment, not ready to import yet.
+                      </option>
+                    </select>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSending}
+                    className="w-full cursor-pointer rounded-md bg-orange-600 px-5 py-2 font-bold text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isSending ? "Submitting..." : `Join Free Training`}
+                    {/* {isSending ? "Submitting..." : isPriceLoading ? "Loading local price..." : `Pay ${formattedTrainingPrice} to Join Training`} */}
+                  </button>
+
+                </form>
              {/* <div className="mt-2 text-left text-xs text-slate-600">
                 You’ll be taken to the checkout provider to complete your payment. Please ensure your phone number is active on WhatsApp for training updates.
               </div>
@@ -737,6 +823,8 @@ export default function App() {
                   Send Message
                 </Link>
               </div> */}
+              </>
+            )}
           </div>
         </div>
       )}
