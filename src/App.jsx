@@ -284,6 +284,12 @@ export default function App() {
     const hasCapital = registrationDetails.hasCapital;
     const canAttendLive = registrationDetails.canAttendLive;
     const trainingExpectation = registrationDetails.trainingExpectation;
+    const leadQualityByExpectation = {
+      "Step-by-step masterclass for first import": "high",
+      "Planning to import in the coming months": "mid",
+      "Looking for free information, not ready to invest": "low",
+    };
+    const leadQuality = leadQualityByExpectation[trainingExpectation];
     const phoneRule = COUNTRY_SETTINGS[countryCode];
 
     if (!name || !phone || !training || !trainingExpectation) {
@@ -325,13 +331,8 @@ export default function App() {
             phone,
             training,
             countryCode,
-            importGoal,
-            startTimeframe,
-            productIdea,
-            budget,
-            hasCapital,
-            canAttendLive,
             trainingExpectation,
+            leadQuality,
           }), 
         });
 
