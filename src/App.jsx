@@ -343,7 +343,7 @@ export default function App() {
     };
 
     sendRegistrationInBackground();
-    window.open("https://chat.whatsapp.com/BtFsWL05nGyEKRZs4J4uYh", "_blank", "noopener,noreferrer");
+    window.open("https://chat.whatsapp.com/ErUyouoXg9X2YDIeVlEszP", "_blank", "noopener,noreferrer");
     // const paymentUrl = countryCode === "GH"
     //   ? GHANA_PAYMENT_URL
     //   : countryCode === "KE"
