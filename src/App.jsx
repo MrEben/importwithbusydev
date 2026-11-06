@@ -104,6 +104,275 @@ const faqItems = [
   },
 ];
 
+const TRAINING_PAGE_CSS = `
+.training-page {
+  --brand: #6926e8;
+  --accent: #6926e8;
+  --ink: #111720;
+  --muted: #5d6470;
+  --line: #e5e7eb;
+  --light: #f5f5f5;
+  min-height: 100vh;
+  color: var(--ink);
+  background: #fff;
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.training-page *,
+.training-page *::before,
+.training-page *::after {
+  box-sizing: border-box;
+}
+.training-page header {
+  position: sticky;
+  height: 74px;
+  padding: 0 24px;
+  color: var(--ink);
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  box-shadow: none;
+}
+.training-page header > div:first-child {
+  font-size: 22px;
+}
+.training-page [class*="bg-orange-"] {
+  background-color: var(--brand) !important;
+}
+.training-page header span,
+.training-page [class*="text-orange-"] {
+  color: var(--brand) !important;
+}
+.training-page main {
+  padding-top: 0;
+}
+.training-page main > section {
+  padding: 44px 24px;
+  color: var(--ink);
+  background: #fff;
+}
+.training-page main > section > div {
+  width: min(100%, 900px);
+  margin-right: auto;
+  margin-left: auto;
+}
+.training-page #hero {
+  padding-top: 46px;
+  padding-bottom: 38px;
+  background: #fff;
+}
+.training-page #hero > div {
+  max-width: 760px;
+}
+.training-page #learn,
+.training-page #faq,
+.training-page main > section:last-of-type {
+  background: var(--light);
+}
+.training-page main > section:last-of-type h2,
+.training-page main > section:last-of-type p {
+  color: var(--ink);
+}
+.training-page main > section h1 {
+  margin: 20px 0;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.training-page main > section h2 {
+  color: var(--ink);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.training-page main > section h3 {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.training-page main > section p,
+.training-page main > section li {
+  color: var(--muted);
+  line-height: 1.65;
+}
+.training-page #hero p {
+  font-size: 18px;
+}
+.training-page #hero .border-t {
+  border-color: var(--line);
+}
+.training-page #hero .border-t [class*="text-slate-"] {
+  color: var(--muted);
+}
+.training-page #learn .mb-16,
+.training-page #faq .mb-16 {
+  margin-bottom: 28px;
+}
+.training-page #learn h3 {
+  margin-bottom: 20px;
+  font-size: 19px;
+}
+.training-page #learn ul {
+  gap: 10px;
+}
+.training-page main > div {
+  padding: 18px 24px;
+  background: #fff;
+}
+.training-page main > div > button,
+.training-page button[class*="bg-orange-"] {
+  border-radius: 6px;
+  background-color: var(--brand);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  box-shadow: none;
+  animation: none;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+.training-page button[class*="hover:bg-orange-"]:hover,
+.training-page main > div > button:hover {
+  background-color: #5720c4;
+}
+.training-page main > div > button {
+  padding: 14px 24px;
+}
+.training-page #learn .grid {
+  gap: 32px;
+}
+.training-page figure {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: none;
+}
+.training-page #faq .border-2 {
+  border-width: 1px;
+  border-color: var(--line);
+  border-radius: 6px;
+}
+.training-page #faq button {
+  padding: 18px 20px;
+  color: var(--ink);
+  background: #fff;
+}
+.training-page #faq button:hover,
+.training-page #faq [class*="bg-slate-50"] {
+  background: var(--light);
+}
+.training-page #faq h3 {
+  font-size: 18px;
+}
+.training-page #faq .border-t-2 {
+  border-top-width: 1px;
+  border-color: var(--line);
+}
+.training-page footer {
+  padding: 40px 24px 28px;
+  color: var(--ink);
+  background: #fff;
+  border-top: 1px solid var(--line);
+}
+.training-page footer h3,
+.training-page footer h4,
+.training-page footer a,
+.training-page footer p {
+  color: var(--ink);
+}
+.training-page footer p,
+.training-page footer li,
+.training-page footer a {
+  font-size: 14px;
+}
+.training-page footer .border-t {
+  border-color: var(--line);
+}
+.training-page footer .text-slate-400 {
+  color: var(--muted);
+}
+.training-page [role="dialog"] {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 18px 48px rgba(17, 23, 32, 0.18);
+}
+.training-page [role="dialog"] h2 {
+  color: var(--ink);
+  font-size: 24px;
+}
+.training-page [role="dialog"] input,
+.training-page [role="dialog"] select {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.training-page [role="dialog"] input:focus,
+.training-page [role="dialog"] select:focus {
+  border-color: var(--brand);
+  outline: 2px solid rgba(105, 38, 232, 0.16);
+}
+.training-page button:focus-visible {
+  outline: 3px solid rgba(105, 38, 232, 0.3);
+  outline-offset: 2px;
+}
+@media (max-width: 640px) {
+  .training-page header {
+    height: 56px;
+    padding: 0 20px;
+  }
+  .training-page header > div:first-child {
+    font-size: 20px;
+  }
+  .training-page header nav button {
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+  .training-page main > section {
+    padding: 32px 20px;
+  }
+  .training-page #hero {
+    padding-top: 30px;
+    padding-bottom: 28px;
+  }
+  .training-page main > section h1 {
+    margin: 18px 0;
+    font-size: 22px;
+  }
+  .training-page main > section h2 {
+    font-size: 20px;
+  }
+  .training-page main > section h3 {
+    font-size: 18px;
+  }
+  .training-page #hero p {
+    font-size: 17px;
+  }
+  .training-page #hero .border-t > div {
+    gap: 18px;
+  }
+  .training-page #learn .grid {
+    gap: 28px;
+  }
+  .training-page main > div {
+    padding: 16px 20px;
+  }
+  .training-page main > div > button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  .training-page #faq button {
+    padding: 16px;
+  }
+  .training-page #faq h3 {
+    font-size: 16px;
+  }
+  .training-page footer {
+    padding: 32px 20px 24px;
+  }
+}
+`;
+
 export default function App() {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
@@ -363,7 +632,8 @@ export default function App() {
   }).format(trainingPrice);
 
   return (
-    <div className="min-h-screen bg-[var(--page-bg)] text-[var(--text)]">
+    <div className="training-page min-h-screen">
+      <style>{TRAINING_PAGE_CSS}</style>
       <MetaPixel id={PIXEL_ID} />
       {/* Navigation */}
       <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-slate-200/80 bg-white/90 px-3 py-3 backdrop-blur-xl text-slate-950 shadow-sm sm:px-10">
@@ -411,7 +681,7 @@ export default function App() {
               {/* <p className="text-sm text-slate-600 mb-4">Trusted by entrepreneurs across Africa</p> */}
               <div className="flex justify-center gap-8 text-slate-700">
                 <div>
-                  <div className="text-2xl font-bold text-orange-600">500+</div>
+                  <div className="text-2xl font-bold text-orange-600">700+</div>
                   <div className="text-sm">Students Trained</div>
                 </div>
                 <div>
