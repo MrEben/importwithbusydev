@@ -123,22 +123,98 @@ const TRAINING_PAGE_CSS = `
 .training-page *::after {
   box-sizing: border-box;
 }
-.training-page header {
+.training-page .training-navbar {
   position: sticky;
-  height: 74px;
-  padding: 0 24px;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  height: 76px;
+  padding: 0 32px;
+  border-bottom: 1px solid rgba(17, 23, 32, 0.07);
+  background: rgba(255, 255, 255, 0.9);
   color: var(--ink);
-  background: #fff;
-  border-bottom: 1px solid var(--line);
-  box-shadow: none;
+  box-shadow: 0 8px 24px rgba(17, 23, 32, 0.04);
+  backdrop-filter: blur(18px);
 }
-.training-page header > div:first-child {
-  font-size: 22px;
+.training-page .training-navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100%, 1160px);
+  height: 100%;
+  margin: 0 auto;
+}
+.training-page .training-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  text-decoration: none;
+}
+.training-page .training-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  box-shadow: 0 5px 12px rgba(105, 38, 232, 0.2);
+}
+.training-page .training-brand-name {
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+.training-page .training-brand-name span {
+  color: var(--brand);
+  font-weight: 850;
+}
+.training-page .training-brand-name strong {
+  font-weight: 850;
+}
+.training-page .training-navbar nav {
+  display: flex;
+  align-items: center;
+}
+.training-page .training-navbar-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--brand);
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: 0.015em;
+  transition: background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.training-page .training-navbar-cta:hover {
+  transform: translateY(-1px);
+  background: #5720c4;
+  box-shadow: 0 7px 16px rgba(105, 38, 232, 0.22);
+}
+.training-page .training-navbar-cta svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 160ms ease;
+}
+.training-page .training-navbar-cta:hover svg {
+  transform: translateX(2px);
 }
 .training-page [class*="bg-orange-"] {
   background-color: var(--brand) !important;
 }
-.training-page header span,
+.training-page .training-brand-name > span,
 .training-page [class*="text-orange-"] {
   color: var(--brand) !important;
 }
@@ -156,12 +232,14 @@ const TRAINING_PAGE_CSS = `
   margin-left: auto;
 }
 .training-page #hero {
-  padding-top: 46px;
-  padding-bottom: 38px;
-  background: #fff;
+  padding-top: 72px;
+  padding-bottom: 56px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(105, 38, 232, 0.1), transparent 58%),
+    linear-gradient(180deg, #faf8ff 0%, #fff 82%);
 }
 .training-page #hero > div {
-  max-width: 760px;
+  max-width: 960px;
 }
 .training-page #learn,
 .training-page #faq,
@@ -179,6 +257,16 @@ const TRAINING_PAGE_CSS = `
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.3;
+}
+.training-page #hero h1 {
+  margin: 24px 0;
+  font-size: clamp(40px, 6.2vw, 76px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
+}
+.training-page #hero h1 span {
+  display: block;
 }
 .training-page main > section h2 {
   color: var(--ink);
@@ -198,7 +286,23 @@ const TRAINING_PAGE_CSS = `
   line-height: 1.65;
 }
 .training-page #hero p {
-  font-size: 18px;
+  max-width: 700px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 20px;
+  line-height: 1.65;
+}
+.training-page #hero .border-t {
+  margin-top: 12px;
+  padding-top: 26px;
+}
+.training-page #hero .border-t > div > div > div:first-child {
+  font-size: 36px;
+  letter-spacing: -0.04em;
+}
+.training-page #hero .border-t > div > div > div:last-child {
+  margin-top: 3px;
+  font-size: 14px;
 }
 .training-page #hero .border-t {
   border-color: var(--line);
@@ -316,27 +420,54 @@ const TRAINING_PAGE_CSS = `
   outline-offset: 2px;
 }
 @media (max-width: 640px) {
-  .training-page header {
-    height: 56px;
-    padding: 0 20px;
+  .training-page .training-navbar {
+    height: 66px;
+    padding: 0 18px;
   }
-  .training-page header > div:first-child {
-    font-size: 20px;
+  .training-page .training-brand {
+    gap: 8px;
   }
-  .training-page header nav button {
-    padding: 9px 16px;
-    font-size: 13px;
+  .training-page .training-brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+  .training-page .training-brand-name {
+    font-size: 15px;
+  }
+  .training-page .training-navbar-cta {
+    min-height: 40px;
+    gap: 6px;
+    padding: 0 12px;
+    font-size: 11px;
+  }
+  .training-page .training-navbar-cta svg {
+    width: 13px;
+    height: 13px;
+  }
+  @media (max-width: 380px) {
+    .training-page .training-brand-mark {
+      display: none;
+    }
+    .training-page .training-brand-name {
+      font-size: 14px;
+    }
+    .training-page .training-navbar {
+      padding: 0 16px;
+    }
   }
   .training-page main > section {
     padding: 32px 20px;
   }
   .training-page #hero {
-    padding-top: 30px;
-    padding-bottom: 28px;
+    padding-top: 44px;
+    padding-bottom: 36px;
   }
-  .training-page main > section h1 {
-    margin: 18px 0;
-    font-size: 22px;
+  .training-page #hero h1 {
+    margin: 20px 0;
+    font-size: clamp(38px, 10vw, 52px);
+    letter-spacing: -0.045em;
   }
   .training-page main > section h2 {
     font-size: 20px;
@@ -346,6 +477,16 @@ const TRAINING_PAGE_CSS = `
   }
   .training-page #hero p {
     font-size: 17px;
+  }
+  .training-page #hero .border-t {
+    margin-top: 4px;
+    padding-top: 22px;
+  }
+  .training-page #hero .border-t > div > div > div:first-child {
+    font-size: 28px;
+  }
+  .training-page #hero .border-t > div > div > div:last-child {
+    font-size: 12px;
   }
   .training-page #hero .border-t > div {
     gap: 18px;
@@ -636,21 +777,25 @@ export default function App() {
       <style>{TRAINING_PAGE_CSS}</style>
       <MetaPixel id={PIXEL_ID} />
       {/* Navigation */}
-      <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-slate-200/80 bg-white/90 px-3 py-3 backdrop-blur-xl text-slate-950 shadow-sm sm:px-10">
-         <div to="/checkout" className="text-lg font-extrabold tracking-tight text-slate-950 sm:text-xl">
-          <span className="text-orange-600">Import</span>withBusyDev
+      <header className="training-navbar">
+        <div className="training-navbar-inner">
+          <a href="#hero" className="training-brand" aria-label="Import with BusyDev home">
+            <span className="training-brand-mark" aria-hidden="true">IB</span>
+            <span className="training-brand-name"><span>Import</span> with <strong>BusyDev</strong></span>
+          </a>
+          <nav aria-label="Main navigation">
+            <button
+              type="button"
+              onClick={handleJoinClick}
+              className="training-navbar-cta"
+            >
+              Join free training
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4.5 10h11m0 0-4.5-4.5M15.5 10 11 14.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </nav>
         </div>
-        <nav className="flex flex-wrap items-center gap-6 text-sm font-semibold">
-          {/* <a href="#learn" className="text-slate-700 transition hover:text-slate-950">What You'll Learn</a> */}
-          {/* <a href="#faq" className="text-slate-700 transition hover:text-slate-950">FAQ</a> */}
-          <button
-            type="button"
-            onClick={handleJoinClick}
-            className="rounded-sm bg-orange-600 px-6 py-2 text-white font-semibold transition hover:bg-orange-700"
-          >
-            JOIN TRAINING
-          </button>
-        </nav>
       </header>
 
       <main className="pt-16">
@@ -658,6 +803,7 @@ export default function App() {
         <section id="hero" className="px-6 py-16 lg:px-10 bg-gradient-to-b from-slate-50 to-white ">
           <div className="max-w-5xl mx-auto text-center space-y-8">
             <div className="space-y-4">
+              {/* <div className="hero-eyebrow">Free Mini Importation Training</div> */}
               <h1 className="text-5xl lg:text-6xl font-bold tracking-tight text-slate-950">
                 Join Our Mini Importation <span className="text-orange-600">Business Training</span>
               </h1>
