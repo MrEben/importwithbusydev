@@ -753,7 +753,7 @@ export default function App() {
     };
 
     sendRegistrationInBackground();
-    window.open("https://chat.whatsapp.com/BtTNHlrXWRJJQ5yjVTahUs", "_blank", "noopener,noreferrer");
+    window.open("https://chat.whatsapp.com/C419yZntjpYExcnCFaRUMz", "_blank", "noopener,noreferrer");
     // const paymentUrl = countryCode === "GH"
     //   ? GHANA_PAYMENT_URL
     //   : countryCode === "KE"
